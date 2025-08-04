@@ -1,0 +1,30 @@
+
+
+.product-card {
+  height: 250px;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-card:hover {
+  height: 350px; 
+}
+
+.product-img {
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.product-card:hover .product-img {
+  transform: translateY(0);
+  opacity: 1;
+}
+.product-img {
+  display: block;
+  width: 100%; 
+  margin: 0 auto;
+}
+
+
