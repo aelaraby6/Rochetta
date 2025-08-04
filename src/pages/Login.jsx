@@ -33,7 +33,7 @@ const handleLogin = (e) => {
 
 
   return (
-    <div className="container d-flex justify-content-center align-items-center">
+    <div style={{marginTop:"130px"}} className="container d-flex justify-content-center align-items-center ">
   <div className="w-50">
     <h2 className="text-center mb-4">Login</h2>
     <form onSubmit={handleLogin}>

@@ -1,14 +1,29 @@
 import { Link } from "react-router-dom";
 
-export default function Navbar({ count, darkMode, setDarkMode ,user  }) {
-
-
+export default function Navbar({
+  count,
+  darkMode,
+  setDarkMode,
+  user,
+  searchTerm,
+  setSearchTerm,
+}) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 fixed-top">
+    <nav style={{backgroundColor:"green"}} className="navbar navbar-expand-lg navbar-dark px-4 fixed-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           Epharma
         </Link>
+
+              <form className="d-flex flex-grow-1 me-3">
+                <input
+                  className="form-control ms-5"
+                  type="search"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </form>
 
         <button
           className="navbar-toggler"

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function Home({ products, handleAdd, setProducts }) {
+//searchTerm handleAdd products
+export default function Home({ setProducts }) {
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -10,23 +11,22 @@ export default function Home({ products, handleAdd, setProducts }) {
     pieces: "",
     stripsPerBox: "",
   });
-  const [editingProductId, setEditingProductId] = useState(null);
-  const [editedProduct, setEditedProduct] = useState({ name: "", price: "" });
+  // const [editingProductId, setEditingProductId] = useState(null);
+  // const [editedProduct, setEditedProduct] = useState({ name: "", price: "" });
 
-  const handleDeleteProduct = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-    if (confirmDelete) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
+  // const handleDeleteProduct = (id) => {
+  //   const confirmDelete = window.confirm(
+  //     "Are you sure you want to delete this product?"
+  //   );
+  //   if (confirmDelete) {
+  //     setProducts((prev) => prev.filter((p) => p.id !== id));
+  //   }
+  // };
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  //  const filteredProducts = products.filter((product) =>
+  //   product.name.includes(searchTerm) ||
+  //   product.desc?.includes(searchTerm)
+  // );
 
   const [user, setUser] = useState(null);
 
@@ -37,32 +37,32 @@ export default function Home({ products, handleAdd, setProducts }) {
     }
   }, []);
 
-  const handleEdit = (product) => {
-    setEditingProductId(product.id);
-    setEditedProduct({
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      pieces: product.pieces,
-    });
-  };
+  // const handleEdit = (product) => {
+  //   setEditingProductId(product.id);
+  //   setEditedProduct({
+  //     name: product.name,
+  //     price: product.price,
+  //     image: product.image,
+  //     pieces: product.pieces,
+  //   });
+  // };
 
-  const handleUpdate = (e, id) => {
-    e.preventDefault();
-    const updatedProducts = products.map((product) =>
-      product.id === id
-        ? {
-            ...product,
-            name: editedProduct.name,
-            price: +editedProduct.price,
-            image: editedProduct.image,
-            pieces: +editedProduct.pieces,
-          }
-        : product
-    );
-    setProducts(updatedProducts);
-    setEditingProductId(null);
-  };
+  // const handleUpdate = (e, id) => {
+  //   e.preventDefault();
+  //   const updatedProducts = products.map((product) =>
+  //     product.id === id
+  //       ? {
+  //           ...product,
+  //           name: editedProduct.name,
+  //           price: +editedProduct.price,
+  //           image: editedProduct.image,
+  //           pieces: +editedProduct.pieces,
+  //         }
+  //       : product
+  //   );
+  //   setProducts(updatedProducts);
+  //   setEditingProductId(null);
+  // };
   const handleAddNewProduct = () => {
     const newItem = {
       ...newProduct,
@@ -81,17 +81,7 @@ export default function Home({ products, handleAdd, setProducts }) {
 
   return (
     <>
-      <div className="mb-4">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      <div className="row">
+      {/* <div className="row p-5">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div key={product.id} className="col-md-4 mb-4 ">
@@ -237,9 +227,9 @@ export default function Home({ products, handleAdd, setProducts }) {
             </div>
           ))
         ) : (
-          <p>No products found.</p>
-        )}
-      </div>
+          <p>No products found.</p> */}
+      {/* )}
+      </div> */}
       {user?.role === "admin" && (
         <div className="card p-3 mt-4">
           <h5>Add New Product</h5>

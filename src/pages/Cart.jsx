@@ -35,7 +35,7 @@ export default function Cart({
 
 
   return (
-    <div>
+    <div style={{marginTop:"70px"}}>
       <h3>Your Cart</h3>
       {cartItems.length === 0 ? (
         <p>No items in cart.</p>

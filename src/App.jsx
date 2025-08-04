@@ -8,9 +8,11 @@ import data from "./data";
 import { useEffect } from "react";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
-// import './App.css';
+import CategoryPage from "./pages/CategoryPage";
+import SubNavbar from "./pages/SubNavbar";
+import './App.css';
 
- function App() {
+function App() {
   const [products, setProducts] = useState(() => {
     const savedProducts = localStorage.getItem("products");
     return savedProducts ? JSON.parse(savedProducts) : data;
@@ -20,16 +22,16 @@ import Profile from "./pages/Profile";
     localStorage.setItem("products", JSON.stringify(products));
   }, [products]);
 
- const [user, setUser] = useState(() => {
-  const storedUser = localStorage.getItem("user");
-  return storedUser ? JSON.parse(storedUser) : null;
-});
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
+  const [searchTerm, setSearchTerm] = useState("");
 
-const [isLoggedIn, setIsLoggedIn] = useState(() => {
-  return localStorage.getItem("isLoggedIn") === "true";
-});
-
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
 
   useEffect(() => {
     const admin = {
@@ -47,11 +49,16 @@ const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+
+
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("user"));
-if (currentUser) {
-  localStorage.setItem(`cartItems_${currentUser.username}`, JSON.stringify(cartItems));
-}
+    if (currentUser) {
+      localStorage.setItem(
+        `cartItems_${currentUser.username}`,
+        JSON.stringify(cartItems)
+      );
+    }
   }, [cartItems]);
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -60,8 +67,7 @@ if (currentUser) {
   });
   useEffect(() => {
     document.body.className = darkMode
-      ? "bg-dark text-white"
-      : "bg-light text-dark";
+      ? "dark":"light"
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
@@ -137,47 +143,43 @@ if (currentUser) {
     localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
 
- const handleRemove = (product) => {
-  const updatedCart = [...cartItems];
-  const updatedProducts = [...products];
+  const handleRemove = (product) => {
+    const updatedCart = [...cartItems];
+    const updatedProducts = [...products];
 
-  const existingItemIndex = updatedCart.findIndex(
-    (item) => item.id === product.id && item.isStrip === product.isStrip
-  );
+    const existingItemIndex = updatedCart.findIndex(
+      (item) => item.id === product.id && item.isStrip === product.isStrip
+    );
 
-  if (existingItemIndex === -1) return;
+    if (existingItemIndex === -1) return;
 
-  const cartItem = updatedCart[existingItemIndex];
-  const stripsPerBox = cartItem.stripsPerBox || 1;
+    const cartItem = updatedCart[existingItemIndex];
+    const stripsPerBox = cartItem.stripsPerBox || 1;
 
-  if (cartItem.NOI === 1) {
+    if (cartItem.NOI === 1) {
+      updatedCart.splice(existingItemIndex, 1);
+    } else {
+      cartItem.NOI -= 1;
 
-    updatedCart.splice(existingItemIndex, 1);
-  } else {
+      const shouldRestorePiece =
+        !cartItem.isStrip || cartItem.NOI % stripsPerBox === 0;
 
-    cartItem.NOI -= 1;
-
-    const shouldRestorePiece =
-      !cartItem.isStrip || cartItem.NOI % stripsPerBox === 0;
-
-    if (shouldRestorePiece) {
-      const productIndex = updatedProducts.findIndex(
-        (p) => p.id === product.id
-      );
-      if (productIndex !== -1) {
-        updatedProducts[productIndex].pieces += 1;
+      if (shouldRestorePiece) {
+        const productIndex = updatedProducts.findIndex(
+          (p) => p.id === product.id
+        );
+        if (productIndex !== -1) {
+          updatedProducts[productIndex].pieces += 1;
+        }
       }
     }
-  }
 
-  setCartItems(updatedCart);
-  localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCartItems(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-  setProducts(updatedProducts);
-  localStorage.setItem("products", JSON.stringify(updatedProducts));
-};
-
-
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+  };
 
   const handleDelete = (cartItem) => {
     const updatedCart = cartItems.filter(
@@ -204,16 +206,21 @@ if (currentUser) {
 
   return (
     <div className=" pt-5">
-     <Navbar
-  count={cartItems.reduce((a, c) => a + c.NOI, 0)}
-  darkMode={darkMode}
-  setDarkMode={setDarkMode}
-  user={user}
-  setUser={setUser} 
-  isLoggedIn={isLoggedIn}
-/>
+      <Navbar
+        count={cartItems.reduce((a, c) => a + c.NOI, 0)}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        user={user}
+        setUser={setUser}
+        isLoggedIn={isLoggedIn}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+      <SubNavbar />
+    
 
       <div className="container mt-4">
+        
         <Routes>
           <Route
             path="/"
@@ -222,6 +229,7 @@ if (currentUser) {
                 products={products}
                 handleAdd={handleAdd}
                 setProducts={setProducts}
+                searchTerm={searchTerm}
               />
             }
           />
@@ -244,8 +252,28 @@ if (currentUser) {
               <ProductDetails handleAdd={handleAdd} products={products} />
             }
           />
-          <Route path="/login" element={<Login setCartItems={setCartItems} setUser={setUser} setIsLoggedIn={setIsLoggedIn}/>} />
-          <Route path="/profile" element={<Profile setCartItems={setCartItems} user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                setCartItems={setCartItems}
+                setUser={setUser}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                setCartItems={setCartItems}
+                user={user}
+                setUser={setUser}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
+          />
+          <Route path="/category/:categoryName" element={<CategoryPage />} />
         </Routes>
       </div>
     </div>
