@@ -1,0 +1,10 @@
+.landing-container {
+  background: linear-gradient(to left, #2c6e49, #0a3c2f);
+  overflow: hidden;
+}
+
+.doctor-img {
+  height: 90vh;
+  width: auto;
+  object-fit: contain;
+}

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "./navbar.css"
 
 export default function Navbar({
   count,
@@ -14,8 +15,8 @@ export default function Navbar({
       className="navbar navbar-expand-lg navbar-dark px-4 fixed-top"
     >
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          Epharma
+        <Link className="navbar-brand rochetta-font fs-3" to="/">
+          RochettaBalady
         </Link>
 
         <form className="d-flex flex-grow-1 me-3">

@@ -10,6 +10,7 @@ import Login from "./pages/Auth/Login";
 import Profile from "./pages/Profile";
 import CategoryPage from "./pages/CategoryPage";
 import SubNavbar from "./pages/SubNavbar";
+import LandingPage from "./pages/Home/landingPage"
 import './App.css';
 
 function App() {
@@ -218,6 +219,7 @@ function App() {
       />
       <SubNavbar />
     
+    <LandingPage/>
 
       <div className="container mt-4">
         
