@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Cart from "./pages/Cart";
+import Home from "./pages/Home/Home";
+import Cart from "./pages/Cart/Cart";
 import ProductDetails from "./pages/ProductDetails";
 import data from "./data";
 import { useEffect } from "react";
-import Login from "./pages/Login";
+import Login from "./pages/Auth/Login";
 import Profile from "./pages/Profile";
 import CategoryPage from "./pages/CategoryPage";
 import SubNavbar from "./pages/SubNavbar";

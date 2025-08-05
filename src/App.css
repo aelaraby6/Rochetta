@@ -27,13 +27,80 @@
   margin: 0 auto;
 } */
 
-.dark{
-  background-color: black;
-  color: white;
+body.light {
+  background-color: #ffffff;
+  color: #000000 ;
 }
-.light{
-  background-color: white;
-  color: black;
+
+body.dark {
+  background-color: #121212 ;
+  color: #ffffff ;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.light .card,
+.light .subnavbar,
+.light nav,
+.light .link-box,
+.light .category-badge   {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.dark .card,
+.dark .subnavbar,
+.dark nav,
+.dark .link-box,
+.dark .category-badge {
+  background-color: #3c3c3c !important; 
+  color: #ffffff !important;
+}
+
+
+.dark .shipping-box {
+  background-color: #155d15; 
+  color: #fff;
+}
+.card,
+.subnavbar,
+nav,
+.link-box,
+.category-badge,
+.shipping-box {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.subnavbar {
+  margin-bottom: 80px; 
+}
+
+@media (min-width: 1025px) {
+  .subnavbar {
+    margin-bottom: 80px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .subnavbar {
+    margin-bottom: 110px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 640px) {
+  .subnavbar {
+    margin-bottom: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .subnavbar {
+    margin-bottom: 230px;
+  }
 }
 
 
