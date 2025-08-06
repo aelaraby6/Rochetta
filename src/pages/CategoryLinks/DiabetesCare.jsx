@@ -1,6 +1,6 @@
 import ProductList from "../../components/ProductList/ProductList";
 
-function FirstAid({
+function DiabetesCare({
   products,
   handleAdd,
   user,
@@ -10,9 +10,12 @@ function FirstAid({
   editedProduct,
   editingProductId,
   setEditedProduct,
-  searchTerm
+  searchTerm,
+  newProduct,
+  setNewProduct,
+  handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "first-aid");
+  const filtered = products.filter((p) => p.category === "diabetes-care");
 
   return (
     <ProductList
@@ -26,7 +29,10 @@ function FirstAid({
       editingProductId={editingProductId}
       editedProduct={editedProduct}
       setEditedProduct={setEditedProduct}
+        newProduct={newProduct}
+      setNewProduct={setNewProduct}
+      handleAddNewProduct={handleAddNewProduct}
     />
   );
 }
-export default FirstAid;
+export default DiabetesCare;

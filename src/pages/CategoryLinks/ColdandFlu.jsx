@@ -1,6 +1,6 @@
 import ProductList from "../../components/ProductList/ProductList";
 
-function SkinCare({
+function ColdandFlu({
   products,
   handleAdd,
   user,
@@ -10,23 +10,29 @@ function SkinCare({
   editedProduct,
   editingProductId,
   setEditedProduct,
-  searchTerm
+  searchTerm ,
+  newProduct,
+  setNewProduct,
+  handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "skin-care");
+  const filtered = products.filter((p) => p.category === "cold-and-flu");
 
   return (
     <ProductList
-      searchTerm={searchTerm}
       products={filtered}
       user={user}
       handleAdd={handleAdd}
+      searchTerm={searchTerm}
       handleEdit={handleEdit}
       handleDeleteProduct={handleDeleteProduct}
       handleUpdate={handleUpdate}
       editingProductId={editingProductId}
       editedProduct={editedProduct}
       setEditedProduct={setEditedProduct}
+        newProduct={newProduct}
+      setNewProduct={setNewProduct}
+      handleAddNewProduct={handleAddNewProduct}
     />
   );
 }
-export default SkinCare;
+export default ColdandFlu;

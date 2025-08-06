@@ -10,12 +10,12 @@ import Login from "./pages/Auth/Login";
 import Profile from "./pages/Profile/Profile";
 import SubNavbar from "./components/SubNavBar/SubNavbar";
 import LandingPage from "./pages/Home/landingPage";
-import PainRelief from "./pages/Category/PainRelief";
-import SkinCare from "./pages/Category/SkinCare";
-import ChildBabyCare from "./pages/Category/ChildBabyCare";
-import ColdandFlu from "./pages/Category/ColdandFlu";
-import FirstAid from "./pages/Category/FirstAid";
-import DiabetesCare from "./pages/Category/DiabetesCare";
+import PainRelief from "./pages/CategoryLinks/PainRelief";
+import SkinCare from "./pages/CategoryLinks/SkinCare";
+import ChildBabyCare from "./pages/CategoryLinks/ChildBabyCare";
+import ColdandFlu from "./pages/CategoryLinks/ColdandFlu";
+import FirstAid from "./pages/CategoryLinks/FirstAid";
+import DiabetesCare from "./pages/CategoryLinks/DiabetesCare";
 import "./App.css";
 
 function App() {
@@ -54,6 +54,34 @@ function App() {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
+  });
+  const handleAddNewProduct = () => {
+    const newItem = {
+      ...newProduct,
+      id: Date.now(),
+    };
+
+    setProducts((prev) => [...prev, newItem]);
+
+    setNewProduct({
+      name: "",
+      price: "",
+      image: "",
+      desc: "",
+      pieces: "",
+      category: "",
+      stripsPerBox: "",
+    });
+  };
+
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: "",
+    image: "",
+    desc: "",
+    pieces: "",
+    category: "",
+    stripsPerBox: "",
   });
 
   useEffect(() => {
@@ -332,6 +360,9 @@ function App() {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                handleAddNewProduct={handleAddNewProduct}
               />
             }
           />
@@ -349,6 +380,9 @@ function App() {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                handleAddNewProduct={handleAddNewProduct}
               />
             }
           />
@@ -366,6 +400,9 @@ function App() {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                handleAddNewProduct={handleAddNewProduct}
               />
             }
           />
@@ -383,6 +420,9 @@ function App() {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                handleAddNewProduct={handleAddNewProduct}
               />
             }
           />
@@ -400,6 +440,9 @@ function App() {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                handleAddNewProduct={handleAddNewProduct}
               />
             }
           />
@@ -417,6 +460,9 @@ function App() {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                handleAddNewProduct={handleAddNewProduct}
               />
             }
           />

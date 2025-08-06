@@ -1,6 +1,6 @@
 import ProductList from "../../components/ProductList/ProductList";
 
-function DiabetesCare({
+function SkinCare({
   products,
   handleAdd,
   user,
@@ -10,15 +10,18 @@ function DiabetesCare({
   editedProduct,
   editingProductId,
   setEditedProduct,
-  searchTerm
+  searchTerm,
+  newProduct,
+  setNewProduct,
+  handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "diabetes-care");
+  const filtered = products.filter((p) => p.category === "skin-care");
 
   return (
     <ProductList
+      searchTerm={searchTerm}
       products={filtered}
       user={user}
-      searchTerm={searchTerm}
       handleAdd={handleAdd}
       handleEdit={handleEdit}
       handleDeleteProduct={handleDeleteProduct}
@@ -26,7 +29,10 @@ function DiabetesCare({
       editingProductId={editingProductId}
       editedProduct={editedProduct}
       setEditedProduct={setEditedProduct}
+      newProduct={newProduct}
+      setNewProduct={setNewProduct}
+      handleAddNewProduct={handleAddNewProduct}
     />
   );
 }
-export default DiabetesCare;
+export default SkinCare;

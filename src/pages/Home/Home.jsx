@@ -7,7 +7,7 @@ export default function Home({ setProducts }) {
     name: "",
     price: "",
     image: "",
-    description: "",
+    desc: "",
     pieces: "",
     stripsPerBox: "",
   });
@@ -72,7 +72,7 @@ export default function Home({ setProducts }) {
       name: "",
       price: "",
       image: "",
-      description: "",
+      desc: "",
     });
   };
 
@@ -282,9 +282,9 @@ export default function Home({ setProducts }) {
           <textarea
             className="form-control mb-2"
             placeholder="Desc.."
-            value={newProduct.description}
+            value={newProduct.desc}
             onChange={(e) =>
-              setNewProduct({ ...newProduct, description: e.target.value })
+              setNewProduct({ ...newProduct, desc: e.target.value })
             }
           />
 
