@@ -1,0 +1,18 @@
+.bubble {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c88a10, #f6c72e); 
+  position: absolute;
+  z-index: 1;
+}
+
+.bubble.top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+.bubble.bottom-left {
+  bottom: 1rem;
+  left: 1rem;
+}

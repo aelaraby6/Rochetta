@@ -1,9 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Landing.css";
 import landingImage from "../../assets/Home/doctor.png";
+import Footer from "../../components/Footer/footer";
 
 const Landing = () => {
   return (
+    <>
     <div className="landing-container vh-100 d-flex align-items-stretch text-white">
       <div className="container-fluid">
         <div className="row h-100">
@@ -28,6 +30,10 @@ const Landing = () => {
         </div>
       </div>
     </div>
+
+    <Footer /> 
+
+    </>
   );
 };
 

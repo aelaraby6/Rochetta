@@ -1,0 +1,24 @@
+.footer-container {
+  background-color: #198754; 
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: #f4a460;
+  text-decoration: underline;
+}
+
+.footer-icon {
+  font-size: 1.2rem;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-icon:hover {
+  color: #f4a460;
+}

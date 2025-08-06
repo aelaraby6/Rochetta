@@ -16,6 +16,7 @@ import ChildBabyCare from "./pages/CategoryLinks/ChildBabyCare";
 import ColdandFlu from "./pages/CategoryLinks/ColdandFlu";
 import FirstAid from "./pages/CategoryLinks/FirstAid";
 import DiabetesCare from "./pages/CategoryLinks/DiabetesCare";
+import Signup from "./pages/Auth/signup";
 import "./App.css";
 
 function App() {
@@ -325,6 +326,17 @@ function App() {
               <ProductDetails handleAdd={handleAdd} products={products} />
             }
           />
+          <Route
+            path="/signup"
+            element={
+              <Signup
+                setCartItems={setCartItems}
+                setUser={setUser}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
+          />
+
           <Route
             path="/login"
             element={

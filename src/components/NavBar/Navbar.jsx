@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./navbar.css"
+import "./navbar.css";
 
 export default function Navbar({
   count,
@@ -64,15 +64,20 @@ export default function Navbar({
               </button>
             </li>
 
-            <li className="nav-item">
+            <li className="nav-item d-flex gap-2">
               {user ? (
                 <Link className="nav-link" to="/profile">
-                  <i className="bi bi-person-circle fs-5"></i>{" "}
+                  <i className="bi bi-person-circle fs-5"></i>
                 </Link>
               ) : (
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
+                <>
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                  <Link className="nav-link" to="/signup">
+                    Signup
+                  </Link>
+                </>
               )}
             </li>
           </ul>
