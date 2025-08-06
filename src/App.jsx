@@ -1,17 +1,22 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Cart from "./pages/Cart/Cart";
-import ProductDetails from "./pages/ProductDetails";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import data from "./data";
 import { useEffect } from "react";
 import Login from "./pages/Auth/Login";
-import Profile from "./pages/Profile";
-import CategoryPage from "./pages/CategoryPage";
-import SubNavbar from "./pages/SubNavbar";
-import LandingPage from "./pages/Home/landingPage"
-import './App.css';
+import Profile from "./pages/Profile/Profile";
+import SubNavbar from "./components/SubNavBar/SubNavbar";
+import LandingPage from "./pages/Home/landingPage";
+import PainRelief from "./pages/Category/PainRelief";
+import SkinCare from "./pages/Category/SkinCare";
+import ChildBabyCare from "./pages/Category/ChildBabyCare";
+import ColdandFlu from "./pages/Category/ColdandFlu";
+import FirstAid from "./pages/Category/FirstAid";
+import DiabetesCare from "./pages/Category/DiabetesCare";
+import "./App.css";
 
 function App() {
   const [products, setProducts] = useState(() => {
@@ -51,7 +56,6 @@ function App() {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("user"));
     if (currentUser) {
@@ -67,8 +71,7 @@ function App() {
     return savedTheme === "dark";
   });
   useEffect(() => {
-    document.body.className = darkMode
-      ? "dark":"light"
+    document.body.className = darkMode ? "dark" : "light";
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
@@ -204,6 +207,49 @@ function App() {
     setProducts(updatedProducts);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
+  const handleDeleteProduct = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
+    );
+    if (confirmDelete) {
+      const updated = products.filter((p) => p.id !== id);
+      setProducts(updated);
+      localStorage.setItem("products", JSON.stringify(updated));
+    }
+  };
+
+  const [editingProductId, setEditingProductId] = useState(null);
+  const [editedProduct, setEditedProduct] = useState({ name: "", price: "" });
+
+  const handleEdit = (product) => {
+    setEditingProductId(product.id);
+    setEditedProduct({
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      pieces: product.pieces,
+      stripsPerBox: product.stripsPerBox,
+    });
+  };
+
+  const handleUpdate = (e, id) => {
+    e.preventDefault();
+    const updatedProducts = products.map((product) =>
+      product.id === id
+        ? {
+            ...product,
+            name: editedProduct.name,
+            price: +editedProduct.price,
+            image: editedProduct.image,
+            pieces: +editedProduct.pieces,
+            stripsPerBox: +editedProduct.stripsPerBox,
+          }
+        : product
+    );
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+    setEditingProductId(null);
+  };
 
   return (
     <div className=" pt-5">
@@ -218,16 +264,13 @@ function App() {
         setSearchTerm={setSearchTerm}
       />
       <SubNavbar />
-    
-    <LandingPage/>
 
       <div className="container mt-4">
-        
         <Routes>
           <Route
             path="/"
             element={
-              <Home
+              <LandingPage
                 products={products}
                 handleAdd={handleAdd}
                 setProducts={setProducts}
@@ -244,7 +287,7 @@ function App() {
                 handleRemove={handleRemove}
                 handleDelete={handleDelete}
                 handleClearCart={handleClearCart}
-                setCartItems={setCartItems} // ✅
+                setCartItems={setCartItems}
               />
             }
           />
@@ -275,7 +318,108 @@ function App() {
               />
             }
           />
-          <Route path="/category/:categoryName" element={<CategoryPage />} />
+          <Route
+            path="/category/pain-relief"
+            element={
+              <PainRelief
+                searchTerm={searchTerm}
+                products={products}
+                user={user}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDeleteProduct={handleDeleteProduct}
+                handleUpdate={handleUpdate}
+                editingProductId={editingProductId}
+                editedProduct={editedProduct}
+                setEditedProduct={setEditedProduct}
+              />
+            }
+          />
+          <Route
+            path="/category/skin-care"
+            element={
+              <SkinCare
+                searchTerm={searchTerm}
+                products={products}
+                user={user}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDeleteProduct={handleDeleteProduct}
+                handleUpdate={handleUpdate}
+                editingProductId={editingProductId}
+                editedProduct={editedProduct}
+                setEditedProduct={setEditedProduct}
+              />
+            }
+          />
+          <Route
+            path="/category/child-and-baby-care"
+            element={
+              <ChildBabyCare
+                searchTerm={searchTerm}
+                products={products}
+                user={user}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDeleteProduct={handleDeleteProduct}
+                handleUpdate={handleUpdate}
+                editingProductId={editingProductId}
+                editedProduct={editedProduct}
+                setEditedProduct={setEditedProduct}
+              />
+            }
+          />
+          <Route
+            path="/category/cold-and-flu"
+            element={
+              <ColdandFlu
+                searchTerm={searchTerm}
+                products={products}
+                user={user}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDeleteProduct={handleDeleteProduct}
+                handleUpdate={handleUpdate}
+                editingProductId={editingProductId}
+                editedProduct={editedProduct}
+                setEditedProduct={setEditedProduct}
+              />
+            }
+          />
+          <Route
+            path="/category/first-aid"
+            element={
+              <FirstAid
+                searchTerm={searchTerm}
+                products={products}
+                user={user}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDeleteProduct={handleDeleteProduct}
+                handleUpdate={handleUpdate}
+                editingProductId={editingProductId}
+                editedProduct={editedProduct}
+                setEditedProduct={setEditedProduct}
+              />
+            }
+          />
+          <Route
+            path="/category/diabetes-care"
+            element={
+              <DiabetesCare
+                searchTerm={searchTerm}
+                products={products}
+                user={user}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDeleteProduct={handleDeleteProduct}
+                handleUpdate={handleUpdate}
+                editingProductId={editingProductId}
+                editedProduct={editedProduct}
+                setEditedProduct={setEditedProduct}
+              />
+            }
+          />
         </Routes>
       </div>
     </div>

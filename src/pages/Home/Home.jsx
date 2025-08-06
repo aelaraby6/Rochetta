@@ -23,10 +23,7 @@ export default function Home({ setProducts }) {
   //   }
   // };
 
-  //  const filteredProducts = products.filter((product) =>
-  //   product.name.includes(searchTerm) ||
-  //   product.desc?.includes(searchTerm)
-  // );
+  
 
   const [user, setUser] = useState(null);
 
