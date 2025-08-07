@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
-import Home from "./pages/Home/Home";
 import Cart from "./pages/Cart/Cart";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import data from "./data";
@@ -294,7 +293,7 @@ function App() {
       />
       <SubNavbar />
 
-      <div className="container mt-4">
+      <div className="container-fluid mt-4 p-0">
         <Routes>
           <Route
             path="/"

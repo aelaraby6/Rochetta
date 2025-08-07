@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import "./Signup.css"; 
-import SignUpImg from "../../assets/Auth/signup.jpg"
+import { useNavigate } from "react-router-dom";
+import "./Signup.css";
+import SignUpImg from "../../assets/Auth/signup.jpg";
 
-export default function Signup() {
+export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,17 +24,23 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
     } else {
       setError("");
-      console.log("Form Submitted", formData);
+      localStorage.setItem("user", JSON.stringify(formData));
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("cart", JSON.stringify([]));
+      setUser(formData);
+      setIsLoggedIn(true);
+      setCartItems([]);
+      navigate("/profile");
     }
   };
 
   return (
     <div className="container-fluid d-flex flex-column flex-md-row min-vh-100 bg-light">
-      {/* Left Side - Form */}
       <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative">
         <a
           href="#"
@@ -114,20 +123,12 @@ export default function Signup() {
           <button type="submit" className="btn btn-success w-100">
             Create Account
           </button>
-
-          <p className="text-center mt-3 mb-0">
-            Already have an account?
-            <a href="#login" className="text-success text-decoration-underline ms-1">
-              Login
-            </a>
-          </p>
         </form>
       </div>
 
       <div className="d-none d-md-flex col-md-6 align-items-center justify-content-center bg-success position-relative text-white">
         <div className="bubble top-right"></div>
         <div className="bubble bottom-left"></div>
-
         <img
           src={SignUpImg}
           alt="signup"

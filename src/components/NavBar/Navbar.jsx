@@ -16,7 +16,7 @@ export default function Navbar({
     >
       <div className="container-fluid">
         <Link className="navbar-brand rochetta-font fs-3" to="/">
-          Rochetta
+          PharmaXpress
         </Link>
 
         <form className="d-flex flex-grow-1 me-3">

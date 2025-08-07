@@ -9,8 +9,6 @@ const SubNavbar = () => {
         <Link style={{backgroundColor:"#ffffffff", borderRadius:"8px", padding:"5px"}} to="/category/cold-and-flu" className="link-box text-decoration-none text-dark px-2">Cold and Flu</Link>
         <Link style={{backgroundColor:"#ffffffff", borderRadius:"8px" ,padding:"5px"}} to="/category/diabetes-care" className="link-box text-decoration-none text-dark px-2">Diabetes Care</Link>
         <Link style={{backgroundColor:"#ffffffff" ,borderRadius:"8px" ,padding:"5px"}} to="/category/first-aid" className="link-box text-decoration-none text-dark px-2">First Aid</Link>
-        <Link style={{backgroundColor:"#ffffffff", borderRadius:"8px" ,padding:"5px"}} to="/category/skin-care" className="link-box text-decoration-none text-dark px-2">Skin Care</Link>
-        <Link style={{backgroundColor:"#ffffffff", borderRadius:"8px", padding:"5px"}} to="/category/child-and-baby-care" className="link-box text-decoration-none text-dark px-2">Child & Baby Care</Link>
       </div>
       <div className="shipping-box"  style={{backgroundColor:"#22b422ff",padding:"10px", marginRight:"30px", borderRadius:"8px"}} >
          Free Shipping Order By August

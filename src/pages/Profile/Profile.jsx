@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Profile({setCartItems ,user, setUser, setIsLoggedIn}) {
+export default function Profile({
+  setCartItems,
+  user,
+  setUser,
+  setIsLoggedIn,
+}) {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
-    }else {
+    } else {
       const orderKey = `orders_${user.username}`;
       const storedOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
       setOrders(storedOrders);
     }
-  }, [navigate,user]);
+  }, [navigate, user]);
 
   const handleLogout = () => {
     localStorage.setItem("isLoggedIn", "false");
@@ -24,90 +29,101 @@ export default function Profile({setCartItems ,user, setUser, setIsLoggedIn}) {
   };
 
   const handleCancelOrder = (index) => {
-  const updatedOrders = [...orders];
-  updatedOrders.splice(index, 1);
+    const updatedOrders = [...orders];
+    updatedOrders.splice(index, 1);
+    const orderKey = `orders_${user.username}`;
+    localStorage.setItem(orderKey, JSON.stringify(updatedOrders));
+    setOrders(updatedOrders);
+  };
 
-  const orderKey = `orders_${user.username}`;
-  localStorage.setItem(orderKey, JSON.stringify(updatedOrders));
-  setOrders(updatedOrders);
-};
-
+  const handleResetOrders = () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser) return;
+    const orderKey = `orders_${storedUser.username}`;
+    localStorage.removeItem(orderKey);
+    setOrders([]);
+    alert("All orders have been cleared!");
+  };
 
   if (!user) return null;
 
   return (
-    <div className="container mt-5 text-center">
-      <h2> Welcome, {user.username}</h2>
+    <div className="container my-5">
+      <div className="card shadow-lg border-0 p-4">
+        <h2 className="text-center mb-4 text-success fw-bold">
+          Welcome, {user.name}
+        </h2>
 
-      <p className="mt-4">
-         Your purchases will be shown here (يمكنك إضافة قائمة لاحقًا)
-      </p>
-      <hr className="my-4" />
-      <h4 className="text-center"> طلباتك السابقة</h4>
-
-      {orders.length === 0 ? (
-        <p className="text-center text-muted">لا يوجد طلبات حالية.</p>
-      ) : (
-        orders.map((order, index) => {
-          const total = order.items.reduce(
-            (acc, item) => acc + item.price * item.NOI,
-            0
-          );
-
-          return (
-            <div key={index} className="border rounded p-3 mb-3">
-              <p className="mb-2">
-                <strong> التاريخ:</strong>{" "}
-                {new Date(order.date).toLocaleString("en-GB")}
-              </p>
-
-              <ul className="list-group mb-2">
-                {order.items.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="list-group-item d-flex justify-content-between"
-                  >
-                    <span>
-                      {item.name} ({item.NOI})
-                    </span>
-                    <span> price: ${item.price}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <p className="text-end fw-bold">الإجمالي: ${total.toFixed(2)}</p>
-              <button
-  className="btn btn-outline-danger btn-sm mt-2"
-  onClick={() => handleCancelOrder(index)}
->
-   Cancel Order
-</button>
-
+        <div className="row g-4 mb-4">
+            <div className="bg-light rounded p-3 h-100">
+              <h5 className="text-success mb-3">Contact Info</h5>
+              <p><strong>Email:</strong> {user.email}</p>
             </div>
-          );
-        })
-      )}
-      <div className=" d-flex justify-content-center flex-column gap-5">
-        <button
-          className="btn btn-outline-danger "
-          onClick={() => {
-            const storedUser = JSON.parse(localStorage.getItem("user"));
-            if (!storedUser) return;
+        </div>
 
-            const orderKey = `orders_${storedUser.username}`;
-            localStorage.removeItem(orderKey);
+        <hr />
 
-            setOrders([]);
+        <h4 className="text-success text-center mb-4">Your Orders</h4>
 
-            alert(" تم مسح كل الطلبات!");
-          }}
-        >
-           Reset Orders
-        </button>
+        {orders.length === 0 ? (
+          <p className="text-center text-muted">You have no orders yet.</p>
+        ) : (
+          orders.map((order, index) => {
+            const total = order.items.reduce(
+              (acc, item) => acc + item.price * item.NOI,
+              0
+            );
 
-        <button className="btn btn-danger " onClick={handleLogout}>
-          Logout
-        </button>
+            return (
+              <div
+                key={index}
+                className="card mb-3 border-success border-2 shadow-sm"
+              >
+                <div className="card-body">
+                  <p className="mb-2">
+                    <strong>Date:</strong>{" "}
+                    {new Date(order.date).toLocaleString("en-GB")}
+                  </p>
+
+                  <ul className="list-group mb-3">
+                    {order.items.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                      >
+                        <span>{item.name} (x{item.NOI})</span>
+                        <span>${item.price.toFixed(2)}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="d-flex justify-content-between align-items-center">
+                    <strong className="text-success">Total: ${total.toFixed(2)}</strong>
+                    <button
+                      className="btn btn-outline-success btn-sm"
+                      onClick={() => handleCancelOrder(index)}
+                    >
+                      Cancel Order
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+
+        <div className="d-flex flex-column gap-3 mt-4">
+          <button
+            className="btn btn-outline-success"
+            onClick={handleResetOrders}
+          >
+            Reset All Orders
+          </button>
+
+          <button className="btn btn-success" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );
