@@ -25,7 +25,7 @@ export default function Login({ setUser, setIsLoggedIn }) {
   };
 
   return (
-    <div className="login-container d-flex align-items-center justify-content-center">
+    <div style={{height:"100vh"}} className="login-container d-flex align-items-center justify-content-center card ">
       <div className="card shadow p-4 login-card">
         <div className="row g-0 align-items-center">
           <div className="col-md-6">
@@ -74,8 +74,7 @@ export default function Login({ setUser, setIsLoggedIn }) {
                 </div>
                 <button
                   type="submit"
-                  className="btn w-100 text-white"
-                  style={{ backgroundColor: "green" }}
+                  className="btn w-100 btn-success text-white"
                 >
                   Login
                 </button>

@@ -22,12 +22,11 @@ function ProductList({
   );
   return (
     <>
-      <div className="row p-5">
+      <div className="row p-5 justify-content-center">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <div key={product.id} className="col-md-4 mb-4">
+            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 col-12 m-4">
               <div className="card h-100 shadow-sm border-0 d-flex flex-column justify-content-between">
-                {/* صورة المنتج */}
                 <div className="d-flex justify-content-center align-items-center p-3">
                   <Link to={`/product/${product.id}`}>
                     <img
@@ -35,9 +34,10 @@ function ProductList({
                       alt={product.name}
                       className="img-fluid"
                       style={{
-                        maxHeight: "150px",
+                        maxHeight: "180px",
                         objectFit: "contain",
                         opacity: 0.7,
+                        marginBottom: "8px",
                       }}
                     />
                   </Link>
@@ -45,9 +45,7 @@ function ProductList({
 
                 <div className="card-body d-flex flex-column justify-content-between pt-0">
                   <div>
-                    <p className="mb-0 small">
-                      {product.pieces} pieces
-                    </p>
+                    <p className="mb-0 small">{product.pieces} pieces</p>
 
                     <h3 className="card-title text-truncate mb-3">
                       <Link
@@ -61,10 +59,7 @@ function ProductList({
 
                   <div className="d-flex justify-content-between align-items-center mt-auto">
                     <div>
-                      <p className="mb-1 fw-bold">${product.price}</p>
-                      <p className="mb-0 small text-muted">
-                        {product.pieces} pcs
-                      </p>
+                      <p className="mb-1 fs-4 fw-bold">${product.price}</p>
                     </div>
 
                     {user?.role !== "admin" && (
@@ -72,7 +67,11 @@ function ProductList({
                         {product.stripsPerBox > 0 ? (
                           <>
                             <button
-                              style={{ borderRadius: "50%" }}
+                              style={{
+                                height: "50px",
+                                width: "50px",
+                                borderRadius: "50%",
+                              }}
                               className="btn btn-sm btn-success"
                               onClick={() =>
                                 handleAdd({ ...product, isStrip: true })
@@ -82,7 +81,11 @@ function ProductList({
                             </button>
 
                             <button
-                              style={{ borderRadius: "50%" }}
+                              style={{
+                                height: "50px",
+                                width: "50px",
+                                borderRadius: "50%",
+                              }}
                               className="btn btn-sm btn-outline-success"
                               onClick={() =>
                                 handleAdd({
@@ -97,7 +100,11 @@ function ProductList({
                           </>
                         ) : (
                           <button
-                            style={{ borderRadius: "50%" }}
+                            style={{
+                              height: "50px",
+                              width: "50px",
+                              borderRadius: "50%",
+                            }}
                             className="btn btn-sm btn-success"
                             onClick={() => handleAdd(product)}
                           >

@@ -27,6 +27,21 @@
   margin: 0 auto;
 } */
 /* Light Mode Basics */
+
+body.light .login-card,
+body.light .signup-card {
+  background-color: #ffffff;
+  color: #000;
+}
+body.light .card { background-color: #ffffff; }
+body.dark .card { background-color: #3c3c3c; }
+
+
+body.dark .login-card,
+body.dark .signup-card {
+  background-color: #3c3c3c;
+  color: #fff;
+}
 body.light {
   background-color: #ffffff;
   color: #000000;
