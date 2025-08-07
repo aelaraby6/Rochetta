@@ -32,7 +32,7 @@ export default function Cart({
   };
 
   return (
-    <div style={{ marginTop: "70px" }}>
+    <div className=" container" style={{ marginTop: "90px" }}>
       <h3>Your Cart</h3>
       {cartItems.length === 0 ? (
         <p>No items in cart.</p>

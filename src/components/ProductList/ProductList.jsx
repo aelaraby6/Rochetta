@@ -25,7 +25,7 @@ function ProductList({
       <div className="row p-5 justify-content-center">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 col-12 m-4">
+            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 col-12 m-5">
               <div className="card h-100 shadow-sm border-0 d-flex flex-column justify-content-between">
                 <div className="d-flex justify-content-center align-items-center p-3">
                   <Link to={`/product/${product.id}`}>
@@ -77,7 +77,7 @@ function ProductList({
                                 handleAdd({ ...product, isStrip: true })
                               }
                             >
-                              <i className="bi bi-collection"></i>
+                              <i className="bi bi-building-fill-add"></i>
                             </button>
 
                             <button

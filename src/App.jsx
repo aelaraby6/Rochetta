@@ -257,6 +257,7 @@ function App() {
       image: product.image,
       pieces: product.pieces,
       stripsPerBox: product.stripsPerBox,
+      desc:product.desc
     });
   };
 

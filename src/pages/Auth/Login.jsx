@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import LoginImg from "../../assets/Auth/login.jpg";
 
-export default function Login({ setUser, setIsLoggedIn }) {
+export default function Login({setIsLoggedIn ,setUser }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -18,11 +19,36 @@ export default function Login({ setUser, setIsLoggedIn }) {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setUser({ name: "User", email: formData.email });
-    setIsLoggedIn(true);
-    navigate("/");
+  e.preventDefault();
+
+  const storedAdmin = JSON.parse(localStorage.getItem("adminAccount"));
+
+  let role = "user";
+  let name = "User";
+
+  if (
+    storedAdmin &&
+    formData.email === storedAdmin.username &&
+    formData.password === storedAdmin.password
+  ) {
+    role = "admin";
+    name = "Admin";
+  }
+
+  const loggedInUser = {
+    name,
+    email: formData.email,
+    role,
   };
+
+  setUser(loggedInUser);
+  setIsLoggedIn(true);
+  localStorage.setItem("user", JSON.stringify(loggedInUser));
+  localStorage.setItem("isLoggedIn", "true");
+
+  navigate("/");
+};
+
 
   return (
     <div style={{height:"100vh"}} className="login-container d-flex align-items-center justify-content-center card ">
