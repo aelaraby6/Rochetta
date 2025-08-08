@@ -354,6 +354,7 @@ function App() {
                 user={user}
                 setUser={setUser}
                 setIsLoggedIn={setIsLoggedIn}
+                setProducts={setProducts}
               />
             }
           />

@@ -25,8 +25,17 @@ function ProductList({
       <div className="row p-5 justify-content-center">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 col-12 m-5">
-              <div className="card h-100 shadow-sm border-1 d-flex flex-column justify-content-between">
+            <div
+              key={product.id}
+              className="col-lg-3 col-md-4 col-sm-6 col-12 m-5"
+            >
+              <div
+                className={`card h-100 shadow-sm border-1 d-flex flex-column justify-content-between ${
+                  product.IsRoshetta
+                    ? "border-danger border-3 shadow-danger"
+                    : ""
+                }`}
+              >
                 <div className="p-2">
                   <Link to={`/product/${product.id}`}>
                     <img
@@ -36,7 +45,7 @@ function ProductList({
                       style={{
                         maxHeight: "230px",
                         objectFit: "contain",
-                        opacity: 0.7,
+                        opacity: 0.9,
                         marginBottom: "8px",
                       }}
                     />
@@ -52,7 +61,7 @@ function ProductList({
                         to={`/product/${product.id}`}
                         className="text-decoration-none text-dark"
                       >
-                        {product.name}
+                        {product.name}<h6 style={{color:"red"}}>{product.IsRoshetta? "RoshettaInDeed":""}</h6>
                       </Link>
                     </h3>
                   </div>
@@ -76,6 +85,7 @@ function ProductList({
                               onClick={() =>
                                 handleAdd({ ...product, isStrip: true })
                               }
+                              disabled={product.pieces === 0 || product.IsRoshetta==true}
                             >
                               <i className="bi bi-building-fill-add"></i>
                             </button>
@@ -94,6 +104,7 @@ function ProductList({
                                   NOI: product.stripsPerBox,
                                 })
                               }
+                              disabled={product.pieces === 0 || product.IsRoshetta==true}
                             >
                               <i className="bi bi-cart-plus"></i>
                             </button>
@@ -107,6 +118,7 @@ function ProductList({
                             }}
                             className="btn btn-sm btn-success scale-btn"
                             onClick={() => handleAdd(product)}
+                            disabled={product.pieces === 0 || product.IsRoshetta==true}
                           >
                             <i className="bi bi-cart-plus"></i>
                           </button>

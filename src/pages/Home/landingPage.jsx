@@ -15,7 +15,33 @@ import Selim from "../../assets/Home/selim.jpeg";
 import Footer from "../../components/Footer/footer";
 import { useState } from "react";
 
-const Landing = () => {
+const Landing = ({ handleAdd }) => {
+  const products = [
+    {
+      id: 1,
+      name: "Solgar ESTER 100 PLUS Kapsul",
+      price: 43,
+      image: ProductOne,
+    },
+    {
+      id: 2,
+      name: "Cetirizine 50ml Coated Creme",
+      price: 43,
+      image: ProductTwo,
+    },
+    {
+      id: 3,
+      name: "Sunscreen® Stick 250ml 50+",
+      price: 43,
+      image: ProductThree,
+    },
+    {
+      id: 4,
+      name: "Sunscreen Care 200ml Lotion",
+      price: 43,
+      image: ProductFour,
+    },
+  ];
   const [activeIndex, setActiveIndex] = useState(null);
 
   const faqs = [
@@ -153,69 +179,32 @@ const Landing = () => {
       <div className="container my-5">
         <h3 className="mb-4">Top Selling Products</h3>
         <div className="row g-4">
-          <div className="col-md-3">
-            <div className="product-card p-3 border rounded">
-              <img
-                src={ProductOne}
-                alt="Product 1"
-                className="img-fluid mb-3"
-              />
-              <div className="text-warning mb-2">★★★★★</div>
-              <h6>Solgar ESTER 100 PLUS Kapsul</h6>
-              <p className="fw-bold">$43.00</p>
-              <button className="btn btn-success w-100">
-                <i className="bi bi-cart me-2"></i>Add To Cart
-              </button>
+          {products.map((product) => (
+            <div className="col-md-3">
+              <div key={product.id} className="product-card p-3 border rounded">
+                <img
+                  src={product.image}
+                  alt="Product 1"
+                  className="img-fluid mb-3"
+                />
+                <div className="text-warning mb-2">★★★★★</div>
+                <h6>Solgar ESTER 100 PLUS Kapsul</h6>
+                <p className="fw-bold">$43.00</p>
+                <button
+                  onClick={() =>
+                    handleAdd({
+                      ...product,
+                      isStrip: false,
+                      NOI: product.stripsPerBox,
+                    })
+                  }
+                  className="btn btn-success w-100"
+                >
+                  <i className="bi bi-cart me-2"></i>Add To Cart
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div className="col-md-3">
-            <div className="product-card p-3 border rounded">
-              <img
-                src={ProductTwo}
-                alt="Product 2"
-                className="img-fluid mb-3"
-              />
-              <div className="text-warning mb-2">★★★★★</div>
-              <h6>Cetirizine 50ml Coated Creme</h6>
-              <p className="fw-bold">$43.00</p>
-              <button className="btn btn-success w-100">
-                <i className="bi bi-cart me-2"></i>Add To Cart
-              </button>
-            </div>
-          </div>
-
-          <div className="col-md-3">
-            <div className="product-card p-3 border rounded">
-              <img
-                src={ProductThree}
-                alt="Product 3"
-                className="img-fluid mb-3"
-              />
-              <div className="text-warning mb-2">★★★★★</div>
-              <h6>Sunscreen® Stick 250ml 50+</h6>
-              <p className="fw-bold">$43.00</p>
-              <button className="btn btn-success w-100">
-                <i className="bi bi-cart me-2"></i>Add To Cart
-              </button>
-            </div>
-          </div>
-
-          <div className="col-md-3">
-            <div className="product-card p-3 border rounded">
-              <img
-                src={ProductFour}
-                alt="Product 4"
-                className="img-fluid mb-3"
-              />
-              <div className="text-warning mb-2">★★★★★</div>
-              <h6>Sunscreen Care 200ml Lotion</h6>
-              <p className="fw-bold">$43.00</p>
-              <button className="btn btn-success w-100">
-                <i className="bi bi-cart me-2"></i>Add To Cart
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 

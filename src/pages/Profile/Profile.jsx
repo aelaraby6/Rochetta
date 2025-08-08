@@ -5,6 +5,7 @@ export default function Profile({
   setCartItems,
   user,
   setUser,
+  setProducts,
   setIsLoggedIn,
 }) {
   const navigate = useNavigate();
@@ -28,13 +29,34 @@ export default function Profile({
     navigate("/login");
   };
 
-  const handleCancelOrder = (index) => {
-    const updatedOrders = [...orders];
-    updatedOrders.splice(index, 1);
-    const orderKey = `orders_${user.username}`;
-    localStorage.setItem(orderKey, JSON.stringify(updatedOrders));
-    setOrders(updatedOrders);
-  };
+ const handleCancelOrder = (index) => {
+  const orderToCancel = orders[index];
+
+  // استرجاع المنتجات من localStorage
+  let storedProducts = JSON.parse(localStorage.getItem("products")) || [];
+
+  storedProducts = storedProducts.map(prod => {
+    const canceledItem = orderToCancel.items.find(i => i.id === prod.id);
+    if (canceledItem) {
+      return { ...prod, pieces: prod.pieces + canceledItem.NOI };
+    }
+    return prod;
+  });
+
+  // حفظ المخزون بعد التعديل
+  localStorage.setItem("products", JSON.stringify(storedProducts));
+
+  // شيل الأوردر من القائمة
+  const updatedOrders = [...orders];
+  updatedOrders.splice(index, 1);
+  const orderKey = `orders_${user.username}`;
+  localStorage.setItem(orderKey, JSON.stringify(updatedOrders));
+  setOrders(updatedOrders);
+  setProducts(storedProducts);
+
+};
+
+
 
   const handleResetOrders = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
