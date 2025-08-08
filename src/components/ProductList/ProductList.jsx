@@ -26,15 +26,15 @@ function ProductList({
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 col-12 m-5">
-              <div className="card h-100 shadow-sm border-0 d-flex flex-column justify-content-between">
-                <div className="d-flex justify-content-center align-items-center p-3">
+              <div className="card h-100 shadow-sm border-1 d-flex flex-column justify-content-between">
+                <div className="p-2">
                   <Link to={`/product/${product.id}`}>
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="img-fluid"
+                      className=" w-100 "
                       style={{
-                        maxHeight: "180px",
+                        maxHeight: "230px",
                         objectFit: "contain",
                         opacity: 0.7,
                         marginBottom: "8px",
@@ -72,7 +72,7 @@ function ProductList({
                                 width: "50px",
                                 borderRadius: "50%",
                               }}
-                              className="btn btn-sm btn-success"
+                              className="btn btn-sm btn-success scale-btn"
                               onClick={() =>
                                 handleAdd({ ...product, isStrip: true })
                               }
@@ -86,7 +86,7 @@ function ProductList({
                                 width: "50px",
                                 borderRadius: "50%",
                               }}
-                              className="btn btn-sm btn-outline-success"
+                              className="btn btn-sm btn-outline-success scale-btn"
                               onClick={() =>
                                 handleAdd({
                                   ...product,
@@ -105,7 +105,7 @@ function ProductList({
                               width: "50px",
                               borderRadius: "50%",
                             }}
-                            className="btn btn-sm btn-success"
+                            className="btn btn-sm btn-success scale-btn"
                             onClick={() => handleAdd(product)}
                           >
                             <i className="bi bi-cart-plus"></i>
@@ -118,7 +118,7 @@ function ProductList({
                     <div className="mt-2 d-flex flex-column gap-2">
                       <div className="d-flex gap-2">
                         <button
-                          className="btn btn-sm btn-warning"
+                          className="btn btn-sm btn-warning "
                           onClick={() => handleEdit(product)}
                         >
                           Edit

@@ -7,7 +7,10 @@ export default function ProductDetails({ handleAdd, products }) {
   if (!product) return <p>Product not found</p>;
 
   return (
-    <div className="row">
+    <div
+      style={{ marginTop: "150px", marginLeft: "50px" }}
+      className="row w-75"
+    >
       <div className="col-md-6">
         <img src={product.image} alt={product.name} className="img-fluid" />
       </div>

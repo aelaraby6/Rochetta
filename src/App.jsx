@@ -10,8 +10,6 @@ import Profile from "./pages/Profile/Profile";
 import SubNavbar from "./components/SubNavBar/SubNavbar";
 import LandingPage from "./pages/Home/landingPage";
 import PainRelief from "./pages/CategoryLinks/PainRelief";
-import SkinCare from "./pages/CategoryLinks/SkinCare";
-import ChildBabyCare from "./pages/CategoryLinks/ChildBabyCare";
 import ColdandFlu from "./pages/CategoryLinks/ColdandFlu";
 import FirstAid from "./pages/CategoryLinks/FirstAid";
 import DiabetesCare from "./pages/CategoryLinks/DiabetesCare";
@@ -363,46 +361,6 @@ function App() {
             path="/category/pain-relief"
             element={
               <PainRelief
-                searchTerm={searchTerm}
-                products={products}
-                user={user}
-                handleAdd={handleAdd}
-                handleEdit={handleEdit}
-                handleDeleteProduct={handleDeleteProduct}
-                handleUpdate={handleUpdate}
-                editingProductId={editingProductId}
-                editedProduct={editedProduct}
-                setEditedProduct={setEditedProduct}
-                newProduct={newProduct}
-                setNewProduct={setNewProduct}
-                handleAddNewProduct={handleAddNewProduct}
-              />
-            }
-          />
-          <Route
-            path="/category/skin-care"
-            element={
-              <SkinCare
-                searchTerm={searchTerm}
-                products={products}
-                user={user}
-                handleAdd={handleAdd}
-                handleEdit={handleEdit}
-                handleDeleteProduct={handleDeleteProduct}
-                handleUpdate={handleUpdate}
-                editingProductId={editingProductId}
-                editedProduct={editedProduct}
-                setEditedProduct={setEditedProduct}
-                newProduct={newProduct}
-                setNewProduct={setNewProduct}
-                handleAddNewProduct={handleAddNewProduct}
-              />
-            }
-          />
-          <Route
-            path="/category/child-and-baby-care"
-            element={
-              <ChildBabyCare
                 searchTerm={searchTerm}
                 products={products}
                 user={user}

@@ -52,8 +52,8 @@ export default function Navbar({
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link me-lg-2" to="/cart">
-                Cart
+              <Link className="nav-link fs- me-lg-2" to="/cart">
+                <i className="bi bi-cart"></i>
                 {count > 0 && (
                   <span className="badge bg-danger ms-2">{count}</span>
                 )}
@@ -69,7 +69,7 @@ export default function Navbar({
               </button>
             </li>
 
-            <li className="nav-item d-flex flex-column flex-lg-row gap-2 mt-2 mt-lg-0">
+            <li className="nav-item d-flex flex-column flex-lg-row gap-2 ms-2 mt-2 mt-lg-0">
               {user ? (
                 <Link className="nav-link" to="/profile">
                   <i className="bi bi-person-circle fs-5"></i>

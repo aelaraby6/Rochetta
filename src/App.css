@@ -27,15 +27,23 @@
   margin: 0 auto;
 } */
 /* Light Mode Basics */
+.scale-btn:active {
+  transform: scale(0.90) !important;
+  transition: transform 0.1s ease-in-out !important;
+}
 
  .login-card,
  .signup-card {
   background-color: #ffffff;
   color: #000;
 }
- .card { background-color: #ffffff; }
-.card { background-color: #3c3c3c; }
 
+.card:hover{
+  box-shadow: 0px 0px 18px rgba(0,0,0,0.3) !important;
+}
+.card {
+  transition: all 0.3s ease !important;
+}
 
 body.light {
   background-color: #ffffff;
