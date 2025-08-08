@@ -40,8 +40,8 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
   };
 
   return (
-    <div className="container-fluid d-flex flex-column flex-md-row min-vh-100 bg-light">
-      <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative">
+    <div className="container-fluid d-flex flex-column flex-md-row min-vh-100">
+      <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative ">
         <a
           href="#"
           className="position-absolute top-0 start-0 m-4 fs-4 fw-bold text-success text-decoration-none"
@@ -55,7 +55,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
         </div>
 
         <form
-          className="mx-auto bg-white p-4 rounded shadow w-100"
+          className="mx-auto p-4 rounded shadow w-100 card "
           style={{ maxWidth: "600px" }}
           onSubmit={handleSubmit}
         >

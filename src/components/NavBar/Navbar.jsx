@@ -17,7 +17,7 @@ export default function Navbar({
       <div className="container-fluid">
         {/* Logo */}
         <Link className="navbar-brand rochetta-font fs-3" to="/">
-          PharmaXpress
+          Rochetta
         </Link>
 
         {/* Toggle Button */}

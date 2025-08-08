@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     const admin = {
-      username: "abdelrahman",
+      username: "abdelrahman@gmail.com",
       password: "admin123",
       role: "admin",
     };
@@ -258,6 +258,7 @@ function App() {
       image: product.image,
       pieces: product.pieces,
       stripsPerBox: product.stripsPerBox,
+      desc:product.desc
     });
   };
 

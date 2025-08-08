@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import LoginImg from "../../assets/Auth/login.jpg";
 
-export default function Login({ setUser, setIsLoggedIn }) {
+export default function Login({setIsLoggedIn ,setUser }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -18,14 +19,39 @@ export default function Login({ setUser, setIsLoggedIn }) {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setUser({ name: "User", email: formData.email });
-    setIsLoggedIn(true);
-    navigate("/");
+  e.preventDefault();
+
+  const storedAdmin = JSON.parse(localStorage.getItem("adminAccount"));
+
+  let role = "user";
+  let name = "User";
+
+  if (
+    storedAdmin &&
+    formData.email === storedAdmin.username &&
+    formData.password === storedAdmin.password
+  ) {
+    role = "admin";
+    name = "Admin";
+  }
+
+  const loggedInUser = {
+    name,
+    email: formData.email,
+    role,
   };
 
+  setUser(loggedInUser);
+  setIsLoggedIn(true);
+  localStorage.setItem("user", JSON.stringify(loggedInUser));
+  localStorage.setItem("isLoggedIn", "true");
+
+  navigate("/");
+};
+
+
   return (
-    <div className="login-container d-flex align-items-center justify-content-center">
+    <div style={{height:"100vh"}} className="login-container d-flex align-items-center justify-content-center card ">
       <div className="card shadow p-4 login-card">
         <div className="row g-0 align-items-center">
           <div className="col-md-6">
@@ -74,8 +100,7 @@ export default function Login({ setUser, setIsLoggedIn }) {
                 </div>
                 <button
                   type="submit"
-                  className="btn w-100 text-white"
-                  style={{ backgroundColor: "green" }}
+                  className="btn w-100 btn-success text-white"
                 >
                   Login
                 </button>

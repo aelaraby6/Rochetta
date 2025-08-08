@@ -7,68 +7,65 @@ export default function Cart({
   handleRemove,
   handleDelete,
   handleClearCart,
-  setCartItems
+  setCartItems,
 }) {
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.NOI,
     0
   );
   const handleCreateOrder = () => {
-  const storedUser = JSON.parse(localStorage.getItem("user"));
-  if (!storedUser) return;
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser) return;
 
-  const orderKey = `orders_${storedUser.username}`;
-  const existingOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
+    const orderKey = `orders_${storedUser.username}`;
+    const existingOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
 
-  const newOrder = {
-    date: new Date().toISOString(),
-    items: cartItems,
+    const newOrder = {
+      date: new Date().toISOString(),
+      items: cartItems,
+    };
+
+    const updatedOrders = [...existingOrders, newOrder];
+    localStorage.setItem(orderKey, JSON.stringify(updatedOrders));
+
+    setCartItems([]);
+    localStorage.setItem("cart", JSON.stringify([]));
+
+    alert("✅ تم إنشاء الطلب بنجاح!");
   };
 
-  const updatedOrders = [...existingOrders, newOrder];
-  localStorage.setItem(orderKey, JSON.stringify(updatedOrders));
-
-  setCartItems([]);
-  localStorage.setItem("cart", JSON.stringify([]));
-
-  alert("✅ تم إنشاء الطلب بنجاح!");
-};
-
-
   return (
-    <div style={{marginTop:"70px"}}>
+    <div className=" container" style={{ marginTop: "90px" }}>
       <h3>Your Cart</h3>
       {cartItems.length === 0 ? (
         <p>No items in cart.</p>
       ) : (
         <>
-          {cartItems.map((item,index) => (
-            <div  
-              key={`${item.id}-${item.isStrip ? 'strip' : 'box'}-${index}`}
+          {cartItems.map((item, index) => (
+            <div
+              key={`${item.id}-${item.isStrip ? "strip" : "box"}-${index}`}
               className="d-flex justify-content-between align-items-center border-bottom py-2"
             >
               <div>
-                          <h5>
-            {item.name}{" "}
-            <span className="text-muted fs-6">
-              ({item.pieces} available)
-            </span>
-          </h5>
+                <h5>
+                  {item.name}{" "}
+                  <span className="text-muted fs-6">
+                    ({item.pieces} available)
+                  </span>
+                </h5>
 
-          {item.stripsPerBox > 0 ? (
-            <p>
-              {item.NOI} strip(s)
-              {item.NOI % item.stripsPerBox === 0 &&
-                ` = ${item.NOI / item.stripsPerBox} box(es)`}
-              <br />
-              ${item.price} × {item.NOI} = ${item.price * item.NOI}
-            </p>
-          ) : (
-            <p>
-              ${item.price} × {item.NOI} = ${item.price * item.NOI}
-            </p>
-          )}
-
+                {item.stripsPerBox > 0 ? (
+                  <p>
+                    {item.NOI} strip(s)
+                    {item.NOI % item.stripsPerBox === 0 &&
+                      ` = ${item.NOI / item.stripsPerBox} box(es)`}
+                    <br />${item.price} × {item.NOI} = ${item.price * item.NOI}
+                  </p>
+                ) : (
+                  <p>
+                    ${item.price} × {item.NOI} = ${item.price * item.NOI}
+                  </p>
+                )}
               </div>
               <div>
                 <button
@@ -99,15 +96,13 @@ export default function Cart({
               Clear Cart
             </button>
             {cartItems.length > 0 && (
-  <div className="text-end mt-3">
-    <button className="btn btn-success" onClick={handleCreateOrder}>
-      Create Order
-    </button>
-  </div>
-)}
-
+              <div className="text-end mt-3">
+                <button className="btn btn-success" onClick={handleCreateOrder}>
+                  Create Order
+                </button>
+              </div>
+            )}
           </div>
-          
         </>
       )}
      { /*<Footer />*/} 

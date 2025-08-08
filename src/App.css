@@ -27,12 +27,22 @@
   margin: 0 auto;
 } */
 /* Light Mode Basics */
+
+ .login-card,
+ .signup-card {
+  background-color: #ffffff;
+  color: #000;
+}
+ .card { background-color: #ffffff; }
+.card { background-color: #3c3c3c; }
+
+
 body.light {
   background-color: #ffffff;
   color: #000000;
 }
 
-body.light .form-control::placeholder {
+ .form-control::placeholder {
   color: #000000 !important;
 }
 
@@ -111,33 +121,32 @@ input,
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
-.subnavbar {
-  margin-bottom: 80px; 
+.landing-container{
+  margin-top: 0px;
 }
 
-@media (min-width: 1025px) {
-  .subnavbar {
+/* @media (min-width: 1025px) {
+  .landiglanding-container {
     margin-bottom: 80px;
   }
-}
+} */
 
-@media (min-width: 641px) and (max-width: 1024px) {
-  .subnavbar {
-    margin-bottom: 110px;
+@media (max-width: 770px) {
+  .landing-container {
+    margin-top: 99px;
   }
 }
 
-@media (min-width: 481px) and (max-width: 640px) {
-  .subnavbar {
+/* @media (min-width: 481px) and (max-width: 640px) {
+  .landing-container {
     margin-bottom: 150px;
   }
 }
 
 @media (max-width: 480px) {
-  .subnavbar {
+  .landing-container {
     margin-bottom: 230px;
   }
-}
+} */
 
 
