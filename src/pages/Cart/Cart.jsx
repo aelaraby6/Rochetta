@@ -1,3 +1,4 @@
+import Footer from "../../components/Footer/footer";
 
 
 export default function Cart({
@@ -109,6 +110,7 @@ export default function Cart({
           
         </>
       )}
+     { /*<Footer />*/} 
     </div>
   );
 }

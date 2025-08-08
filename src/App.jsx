@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/NavBar/Navbar";
 import Cart from "./pages/Cart/Cart";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import data from "./data";
@@ -16,6 +16,7 @@ import ColdandFlu from "./pages/CategoryLinks/ColdandFlu";
 import FirstAid from "./pages/CategoryLinks/FirstAid";
 import DiabetesCare from "./pages/CategoryLinks/DiabetesCare";
 import Signup from "./pages/Auth/signup";
+import NotFound from "./pages/Errors/NotFound";
 import "./App.css";
 
 function App() {
@@ -477,6 +478,8 @@ function App() {
               />
             }
           />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>

@@ -4,3 +4,17 @@
   font-family: 'Pacifico', cursive;
   letter-spacing: 1px;
 }
+
+@media (max-width: 768px) {
+  .navbar form {
+    width: 100%;
+  }
+
+  .navbar .btn {
+    width: 100%;
+  }
+
+  .navbar-nav .nav-link {
+    padding-left: 0;
+  }
+}
