@@ -20,32 +20,65 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-    } else {
-      setError("");
+  // basic validation
+  const name = formData.name.trim();
+  const email = formData.email.trim().toLowerCase();
+  const password = formData.password;
+  const confirmPassword = formData.confirmPassword;
 
-      const newUserAccount = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      };
+  if (!name || !email || !password || !confirmPassword) {
+    setError("Please fill all fields");
+    return;
+  }
 
-      localStorage.setItem("userAccount", JSON.stringify(newUserAccount));
-      localStorage.setItem("user", JSON.stringify(newUserAccount));
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("cart", JSON.stringify([]));
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
 
-      setUser(newUserAccount);
-      setIsLoggedIn(true);
-      setCartItems([]);
+  // users array in localStorage
+  const users = JSON.parse(localStorage.getItem("users")) || [];
 
-      navigate("/profile");
-    }
+  // prevent duplicate email
+  const exists = users.some((u) => u.email === email);
+  if (exists) {
+    setError("An account with this email already exists");
+    return;
+  }
+
+  // create new user object (store minimal safe data)
+  const newUserAccount = {
+    name,
+    email,
+    password,
+    role: "user",
   };
+
+  // save to users array
+  users.push(newUserAccount);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  // create user-specific cart key and init it
+  const userCartKey = `cart_${email}`;
+  localStorage.setItem(userCartKey, JSON.stringify([]));
+
+  // set logged-in user (public profile)
+  const loggedInUser = { name, email, role: "user" };
+  localStorage.setItem("user", JSON.stringify(loggedInUser));
+  localStorage.setItem("isLoggedIn", "true");
+
+  // keep component state in sync
+  setUser(loggedInUser);
+  setIsLoggedIn(true);
+  setCartItems([]); // sync with the empty cart we just created
+
+  // go to profile
+  navigate("/profile");
+};
+
 
   return (
     <div className="container-fluid d-flex flex-column flex-md-row min-vh-100">

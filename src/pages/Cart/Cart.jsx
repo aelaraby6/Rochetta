@@ -16,7 +16,7 @@ export default function Cart({
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser) return;
 
-    const orderKey = `orders_${storedUser.username}`;
+  const orderKey = `orders_${storedUser.email}`;
     const existingOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
 
     const newOrder = {
@@ -29,8 +29,6 @@ export default function Cart({
 
     setCartItems([]);
     localStorage.setItem("cart", JSON.stringify([]));
-
-    alert("✅ Your Order Has Been Made");
   };
 
   return (

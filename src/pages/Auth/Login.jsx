@@ -19,8 +19,6 @@ export default function Login({ setIsLoggedIn, setUser }) {
     e.preventDefault();
 
     const storedAdmin = JSON.parse(localStorage.getItem("adminAccount"));
-    const storedUserAccount = JSON.parse(localStorage.getItem("userAccount"));
-
     let role = "";
     let name = "";
     let isValid = false;
@@ -33,15 +31,19 @@ export default function Login({ setIsLoggedIn, setUser }) {
       role = "admin";
       name = "Admin";
       isValid = true;
-    } else if (
-      storedUserAccount &&
-      formData.email === storedUserAccount.email &&
-      formData.password === storedUserAccount.password
-    ) {
-      role = "user";
-      name = storedUserAccount.name;
-      isValid = true;
-    }
+    } else {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const foundUser = users.find(
+    (u) => u.email === formData.email && u.password === formData.password
+  );
+
+  if (foundUser) {
+    role = "user";
+    name = foundUser.name;
+    isValid = true;
+  }
+}
+
 
     if (!isValid) {
       setError("Invalid email or password. Please try again.");
