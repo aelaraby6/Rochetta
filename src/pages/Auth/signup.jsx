@@ -5,14 +5,12 @@ import SignUpImg from "../../assets/Auth/signup.jpg";
 
 export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -29,19 +27,29 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
       setError("Passwords do not match");
     } else {
       setError("");
-      localStorage.setItem("user", JSON.stringify(formData));
+
+      const newUserAccount = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      };
+
+      localStorage.setItem("userAccount", JSON.stringify(newUserAccount));
+      localStorage.setItem("user", JSON.stringify(newUserAccount));
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("cart", JSON.stringify([]));
-      setUser(formData);
+
+      setUser(newUserAccount);
       setIsLoggedIn(true);
       setCartItems([]);
+
       navigate("/profile");
     }
   };
 
   return (
     <div className="container-fluid d-flex flex-column flex-md-row min-vh-100">
-      <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative ">
+      <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative">
         <a
           href="#"
           className="position-absolute top-0 start-0 m-4 fs-4 fw-bold text-success text-decoration-none"
@@ -51,18 +59,16 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
 
         <div className="text-center">
           <h1 className="display-5 fw-bold mb-2">Create An Account</h1>
-          <p className="text-muted mb-4">Start your shooping journey today</p>
+          <p className="text-muted mb-4">Start your shopping journey today</p>
         </div>
 
         <form
-          className="mx-auto p-4 rounded shadow w-100 card "
+          className="mx-auto p-4 rounded shadow w-100 card"
           style={{ maxWidth: "600px" }}
           onSubmit={handleSubmit}
         >
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">
-              Name
-            </label>
+            <label htmlFor="name" className="form-label">Name</label>
             <input
               type="text"
               name="name"
@@ -75,9 +81,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Email
-            </label>
+            <label htmlFor="email" className="form-label">Email</label>
             <input
               type="email"
               name="email"
@@ -90,9 +94,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Password
-            </label>
+            <label htmlFor="password" className="form-label">Password</label>
             <input
               type="password"
               name="password"
@@ -105,9 +107,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirm Password
-            </label>
+            <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -120,9 +120,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
             {error && <div className="form-text text-danger">{error}</div>}
           </div>
 
-          <button type="submit" className="btn btn-success w-100">
-            Create Account
-          </button>
+          <button type="submit" className="btn btn-success w-100">Create Account</button>
         </form>
       </div>
 

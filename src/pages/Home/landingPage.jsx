@@ -12,6 +12,7 @@ import OfferOne from "../../assets/Home/offer_1.webp";
 import OfferTwo from "../../assets/Home/offer_2.png";
 import Abdo from "../../assets/Home/abdo.jpg";
 import Selim from "../../assets/Home/selim.jpeg";
+import Three from "../../assets/Home/three.jpg";
 import Footer from "../../components/Footer/footer";
 import { useState } from "react";
 
@@ -267,7 +268,7 @@ const Landing = ({ handleAdd }) => {
           <div className="col-md-4">
             <div className="card h-100 text-center p-3 shadow-sm">
               <img
-                src="https://via.placeholder.com/80"
+                src={Three}
                 alt="Client 3"
                 className="rounded-circle mx-auto mb-3 client-img"
               />

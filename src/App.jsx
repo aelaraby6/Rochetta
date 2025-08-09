@@ -1,10 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/NavBar/Navbar";
 import Cart from "./pages/Cart/Cart";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import data from "./data";
-import { useEffect } from "react";
 import Login from "./pages/Auth/Login";
 import Profile from "./pages/Profile/Profile";
 import SubNavbar from "./components/SubNavBar/SubNavbar";
@@ -38,6 +37,18 @@ function App() {
     return localStorage.getItem("isLoggedIn") === "true";
   });
 
+  // تحديث بيانات المستخدم عند تسجيل الدخول أو الخروج
+  useEffect(() => {
+    if (isLoggedIn) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } else {
+      setUser(null);
+    }
+  }, [isLoggedIn]);
+
   useEffect(() => {
     const admin = {
       username: "abdelrahman@gmail.com",
@@ -54,24 +65,6 @@ function App() {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
-  const handleAddNewProduct = () => {
-    const newItem = {
-      ...newProduct,
-      id: Date.now(),
-    };
-
-    setProducts((prev) => [...prev, newItem]);
-
-    setNewProduct({
-      name: "",
-      price: "",
-      image: "",
-      desc: "",
-      pieces: "",
-      category: "",
-      stripsPerBox: "",
-    });
-  };
 
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -82,6 +75,23 @@ function App() {
     category: "",
     stripsPerBox: "",
   });
+
+  const handleAddNewProduct = () => {
+    const newItem = {
+      ...newProduct,
+      id: Date.now(),
+    };
+    setProducts((prev) => [...prev, newItem]);
+    setNewProduct({
+      name: "",
+      price: "",
+      image: "",
+      desc: "",
+      pieces: "",
+      category: "",
+      stripsPerBox: "",
+    });
+  };
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -97,6 +107,7 @@ function App() {
     const savedTheme = localStorage.getItem("theme");
     return savedTheme === "dark";
   });
+
   useEffect(() => {
     document.body.className = darkMode ? "dark" : "light";
     localStorage.setItem("theme", darkMode ? "dark" : "light");
@@ -104,7 +115,6 @@ function App() {
 
   const handleClearCart = () => {
     const updatedProducts = [...products];
-
     cartItems.forEach((cartItem) => {
       const productIndex = updatedProducts.findIndex(
         (p) => p.id === cartItem.id
@@ -114,14 +124,11 @@ function App() {
         const totalBoxes = cartItem.isStrip
           ? Math.floor(cartItem.NOI / stripsPerBox)
           : cartItem.NOI;
-
         updatedProducts[productIndex].pieces += totalBoxes;
       }
     });
-
     setCartItems([]);
     localStorage.setItem("cart", JSON.stringify([]));
-
     setProducts(updatedProducts);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
@@ -129,16 +136,13 @@ function App() {
   const handleAdd = (product) => {
     const updatedCart = [...cartItems];
     const updatedProducts = [...products];
-
     const pricePerUnit =
       product.isStrip && product.stripsPerBox
         ? parseFloat((product.price / product.stripsPerBox).toFixed(2))
         : product.price;
-
     const existingItemIndex = updatedCart.findIndex(
       (item) => item.id === product.id && item.isStrip === product.isStrip
     );
-
     if (existingItemIndex !== -1) {
       updatedCart[existingItemIndex].NOI += 1;
     } else {
@@ -149,27 +153,20 @@ function App() {
         originalPieces: product.pieces,
       });
     }
-
     const productIndex = updatedProducts.findIndex((p) => p.id === product.id);
-
     if (productIndex !== -1) {
       const currentCartItem = updatedCart.find(
         (item) => item.id === product.id && item.isStrip === product.isStrip
       );
-
       const noi = currentCartItem?.NOI || 0;
       const stripsPerBox = product.stripsPerBox || 1;
-
       const shouldDecreasePiece = !product.isStrip || noi % stripsPerBox === 0;
-
       if (shouldDecreasePiece) {
         updatedProducts[productIndex].pieces -= 1;
       }
     }
-
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-
     setProducts(updatedProducts);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
@@ -177,24 +174,18 @@ function App() {
   const handleRemove = (product) => {
     const updatedCart = [...cartItems];
     const updatedProducts = [...products];
-
     const existingItemIndex = updatedCart.findIndex(
       (item) => item.id === product.id && item.isStrip === product.isStrip
     );
-
     if (existingItemIndex === -1) return;
-
     const cartItem = updatedCart[existingItemIndex];
     const stripsPerBox = cartItem.stripsPerBox || 1;
-
     if (cartItem.NOI === 1) {
       updatedCart.splice(existingItemIndex, 1);
     } else {
       cartItem.NOI -= 1;
-
       const shouldRestorePiece =
         !cartItem.isStrip || cartItem.NOI % stripsPerBox === 0;
-
       if (shouldRestorePiece) {
         const productIndex = updatedProducts.findIndex(
           (p) => p.id === product.id
@@ -204,10 +195,8 @@ function App() {
         }
       }
     }
-
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-
     setProducts(updatedProducts);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
@@ -216,7 +205,6 @@ function App() {
     const updatedCart = cartItems.filter(
       (item) => !(item.id === cartItem.id && item.isStrip === cartItem.isStrip)
     );
-
     const updatedProducts = [...products];
     const productIndex = updatedProducts.findIndex((p) => p.id === cartItem.id);
     if (productIndex !== -1) {
@@ -224,16 +212,14 @@ function App() {
       const totalBoxes = cartItem.isStrip
         ? Math.floor(cartItem.NOI / stripsPerBox)
         : cartItem.NOI;
-
       updatedProducts[productIndex].pieces += totalBoxes;
     }
-
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-
     setProducts(updatedProducts);
     localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
+
   const handleDeleteProduct = (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
@@ -256,7 +242,7 @@ function App() {
       image: product.image,
       pieces: product.pieces,
       stripsPerBox: product.stripsPerBox,
-      desc:product.desc
+      desc: product.desc,
     });
   };
 
@@ -280,7 +266,7 @@ function App() {
   };
 
   return (
-    <div className=" pt-5">
+    <div className="pt-5">
       <Navbar
         count={cartItems.reduce((a, c) => a + c.NOI, 0)}
         darkMode={darkMode}
@@ -292,7 +278,6 @@ function App() {
         setSearchTerm={setSearchTerm}
       />
       <SubNavbar />
-
       <div className="container-fluid mt-4 p-0">
         <Routes>
           <Route
@@ -336,7 +321,6 @@ function App() {
               />
             }
           />
-
           <Route
             path="/login"
             element={
@@ -439,11 +423,11 @@ function App() {
               />
             }
           />
-
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
   );
 }
+
 export default App;
