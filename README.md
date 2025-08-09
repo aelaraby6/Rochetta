@@ -19,14 +19,20 @@ The app supports **dark mode**, uses **Bootstrap** for responsive UI, and stores
 - **404 Page** – Custom page for invalid routes.
 - **Responsive Design** – Built with Bootstrap for mobile-friendly UI.
 
+<img width="1892" height="782" alt="products" src="https://github.com/user-attachments/assets/6066a332-af17-4d13-8c65-f368428a4284" />
+
+<img width="1842" height="735" alt="signup" src="https://github.com/user-attachments/assets/33d767ce-9e5a-4baa-bfbd-a16aa20a660b" />
+
+<img width="1101" height="611" alt="login" src="https://github.com/user-attachments/assets/580c56ff-c6ca-4899-9c59-e0326c425416" />
+
+
 ---
 
 ## 🛠️ Tech Stack
 
 - **Frontend:** React, React Router DOM
 - **UI Framework:** Bootstrap
-
---- 
+ 
 ---
 
 ## 🔑 Admin Credentials
