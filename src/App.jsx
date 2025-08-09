@@ -45,7 +45,6 @@ function App() {
     return localStorage.getItem("isLoggedIn") === "true";
   });
 
-  // تحديث بيانات المستخدم عند تسجيل الدخول أو الخروج
   useEffect(() => {
     if (isLoggedIn) {
       const storedUser = localStorage.getItem("user");
