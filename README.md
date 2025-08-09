@@ -1,12 +1,64 @@
-# React + Vite
+# PharmaXpress – E-commerce Pharmacy
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PharmaXpress is a **React-based** e-commerce web application for an online pharmacy.  
+It allows users to browse medical products, search by categories, add items to their cart, and manage their profile.  
+The app supports **dark mode**, uses **Bootstrap** for responsive UI, and stores user/cart data locally with **Local Storage**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- **Home Page** – Showcase top products and quick navigation to categories.
+- **Cart Page** – View, update, and remove products from the cart.
+- **Profile Page** – Display user details and manage account.
+- **Categories Page** – Browse products by category.
+- **Authentication** – Sign Up & Login functionality with local storage.
+- **Dark Mode** – Toggle between light and dark themes.
+- **Product Search** – Search for products by name or keyword.
+- **Local Storage** – Persistent user and cart data storage.
+- **404 Page** – Custom page for invalid routes.
+- **Responsive Design** – Built with Bootstrap for mobile-friendly UI.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React, React Router DOM
+- **UI Framework:** Bootstrap
+
+--- 
+---
+
+## 🔑 Admin Credentials
+
+Use the following credentials to log in as an **Admin**:
+
+| Field        | Value                   |
+|--------------|-------------------------|
+| **Email**    | abdelrahman@gmail.com   |
+| **Password** | admin123                |
+
+---
+
+## 👥 Contributors
+
+Thanks goes to these wonderful people in the frontend team:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/aelaraby6">
+        <img src="https://avatars.githubusercontent.com/u/154278999?v=4" width="100px;" alt=""/>
+        <br /><sub><b>Abdelrahman Elaraby</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Abdelrahman-M-Selim">
+        <img src="https://avatars.githubusercontent.com/u/223935419?v=4" width="100px;" alt=""/>
+        <br /><sub><b>Abdelrahman Selim</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+
