@@ -70,14 +70,14 @@ export default function Profile({
   if (!user) return null;
 
   return (
-    <div className="container my-5">
+    <div style={{marginTop:"100px"}} className="container">
       <div className="card shadow-lg border-0 p-4">
         <h2 className="text-center mb-4 text-success fw-bold">
           Welcome, {user.name}
         </h2>
 
         <div className="row g-4 mb-4">
-            <div className="bg-light rounded p-3 h-100">
+            <div className="bg-light rounded p-3 h-100 land">
               <h5 className="text-success mb-3">Contact Info</h5>
               <p><strong>Email:</strong> {user.email}</p>
             </div>
@@ -88,7 +88,7 @@ export default function Profile({
         <h4 className="text-success text-center mb-4">Your Orders</h4>
 
         {orders.length === 0 ? (
-          <p className="text-center text-muted">You have no orders yet.</p>
+          <p className="text-center">You have no orders yet.</p>
         ) : (
           orders.map((order, index) => {
             const total = order.items.reduce(
@@ -111,7 +111,7 @@ export default function Profile({
                     {order.items.map((item, idx) => (
                       <li
                         key={idx}
-                        className="list-group-item d-flex justify-content-between align-items-center"
+                        className="list-group-item d-flex justify-content-between align-items-center land"
                       >
                         <span>{item.name} (x{item.NOI})</span>
                         <span>${item.price.toFixed(2)}</span>

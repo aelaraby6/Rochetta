@@ -181,7 +181,7 @@ const Landing = ({ handleAdd }) => {
         <div className="row g-4">
           {products.map((product) => (
             <div className="col-md-3">
-              <div key={product.id} className="product-card p-3 border rounded">
+              <div key={product.id} className="product-card p-3 border rounded land">
                 <img
                   src={product.image}
                   alt="Product 1"
@@ -231,18 +231,18 @@ const Landing = ({ handleAdd }) => {
 
       {/*clients  */}
 
-      <div className="container my-5">
+      <div className="container my-5 ">
         <h2 className="text-center mb-4">What Our Clients Say</h2>
-        <div className="row g-4">
-          <div className="col-md-4">
-            <div className="card h-100 text-center p-3 shadow-sm">
+        <div className="row g-4 ">
+          <div className="col-md-4 bg-">
+            <div className="card h-100 text-center p-3 shadow-sm land ">
               <img
                 src={Abdo}
                 alt="Client 1"
                 className="rounded-circle mx-auto mb-3 client-img"
               />
               <h5>Abdelrahman Elaraby</h5>
-              <p className="text-muted">
+              <p style={{opacity:".7"}}>
                 "Excellent service! The delivery was fast and the products are
                 top quality."
               </p>
@@ -257,7 +257,7 @@ const Landing = ({ handleAdd }) => {
                 className="rounded-circle mx-auto mb-3 client-img"
               />
               <h5>Abdelrahman Selim</h5>
-              <p className="text-muted">
+              <p style={{opacity:".7"}}>
                 "Very professional staff and great customer support. Highly
                 recommended!"
               </p>
@@ -272,7 +272,7 @@ const Landing = ({ handleAdd }) => {
                 className="rounded-circle mx-auto mb-3 client-img"
               />
               <h5>Omar Khaled</h5>
-              <p className="text-muted">
+              <p style={{opacity:".7"}}>
                 "Affordable prices and authentic products. Will order again for
                 sure."
               </p>
@@ -289,7 +289,7 @@ const Landing = ({ handleAdd }) => {
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className={`faq-item ${activeIndex === index ? "active" : ""}`}
+            className={`faq-item ${activeIndex === index ? "active" : ""} land `}
             onClick={() => toggleFAQ(index)}
           >
             <div className="faq-question">

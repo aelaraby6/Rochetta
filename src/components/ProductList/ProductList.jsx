@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import strip from "./strip.png"
 
 function ProductList({
   products,
@@ -59,9 +60,9 @@ function ProductList({
                     <h3 className="card-title text-truncate mb-3">
                       <Link
                         to={`/product/${product.id}`}
-                        className="text-decoration-none text-dark"
+                        className="text-decoration-none text-dark link"
                       >
-                        {product.name}<h6 style={{color:"red"}}>{product.IsRoshetta? "RoshettaInDeed":""}</h6>
+                        {product.name}<h6 style={{color:"red"}}>{product.IsRoshetta? "Need a Prescription":""}</h6>
                       </Link>
                     </h3>
                   </div>
@@ -80,14 +81,16 @@ function ProductList({
                                 height: "50px",
                                 width: "50px",
                                 borderRadius: "50%",
+                                border:"solid 1px green",
+                                backgroundColor:"green"
                               }}
-                              className="btn btn-sm btn-success scale-btn"
+                              className="btn btn-sm scale-btn"
                               onClick={() =>
                                 handleAdd({ ...product, isStrip: true })
                               }
                               disabled={product.pieces === 0 || product.IsRoshetta==true}
                             >
-                              <i className="bi bi-building-fill-add"></i>
+                              <img src={strip} alt="" style={{ width: "100%", height: "100%", borderRadius:"50%", fontSize:"900px", backgroundColor:"green" }}/>
                             </button>
 
                             <button

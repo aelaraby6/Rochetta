@@ -27,8 +27,10 @@
   margin: 0 auto;
 } */
 /* Light Mode Basics */
+
+
 .scale-btn:active {
-  transform: scale(0.90) !important;
+  transform: scale(0.9) !important;
   transition: transform 0.1s ease-in-out !important;
 }
 
@@ -66,33 +68,35 @@ body.dark .form-control::placeholder {
 
 /* Common transition for body */
 body {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color .3s ease, color .3s ease;
 }
 
-/* Unified light theme elements */
+/* light theme elements */
 .light .card,
-.light .subnavbar,
 .light nav,
 .light .link-box,
 .light .category-badge,
 .light input,
-.light .form-control {
+.light .form-control,
+.light .land
+.dark .link{
   background-color: #ffffff;
-  color: #000000;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #000000 ;
+  transition: all .3s ease !important;
 }
 
-/* Unified dark theme elements */
-.dark .card,
-.dark .subnavbar,
+/* dark theme elements */
+.dark .card, 
 .dark nav,
 .dark .link-box,
 .dark .category-badge,
 .dark input,
-.dark .form-control {
+.dark .form-control ,
+.dark .land,
+.dark .link{
   background-color: #3c3c3c !important;
   color: #ffffff !important;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all .3s ease !important;
 }
 
 /* body.dark override for form-control */
@@ -107,7 +111,7 @@ body.dark .form-control {
 body.light .form-control {
   background-color: #ffffff !important;
   color: #000000 !important;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 
 /* Special Element: shipping box */
@@ -141,7 +145,7 @@ input,
 
 @media (max-width: 770px) {
   .landing-container {
-    margin-top: 99px;
+    margin-top: 120px;
   }
 }
 

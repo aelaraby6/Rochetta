@@ -316,6 +316,7 @@ function App() {
                 handleDelete={handleDelete}
                 handleClearCart={handleClearCart}
                 setCartItems={setCartItems}
+                products={products}
               />
             }
           />

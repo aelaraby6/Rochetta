@@ -1,6 +1,5 @@
 import Footer from "../../components/Footer/footer";
 
-
 export default function Cart({
   cartItems,
   handleAdd,
@@ -31,7 +30,7 @@ export default function Cart({
     setCartItems([]);
     localStorage.setItem("cart", JSON.stringify([]));
 
-    alert("✅ تم إنشاء الطلب بنجاح!");
+    alert("✅ Your Order Has Been Made");
   };
 
   return (
@@ -71,12 +70,14 @@ export default function Cart({
                 <button
                   className="btn btn-sm btn-success me-2"
                   onClick={() => handleAdd(item)}
+                  disabled={item.NOI >= item.pieces || item.pieces === 0}
                 >
                   +
                 </button>
                 <button
                   className="btn btn-sm btn-warning me-2"
                   onClick={() => handleRemove(item)}
+                  disabled={item.NOI <= 1 || item.pieces === 0}
                 >
                   -
                 </button>
@@ -105,7 +106,7 @@ export default function Cart({
           </div>
         </>
       )}
-     { /*<Footer />*/} 
+      {/*<Footer />*/}
     </div>
   );
 }

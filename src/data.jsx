@@ -1,3 +1,8 @@
+import ProductOne from "./assets/Home/product_1.webp";
+import ProductTwo from "./assets/Home/product_2.webp";
+import ProductThree from "./assets/Home/product_3.webp";
+import ProductFour from "./assets/Home/product_4.webp";
+
 const data = [
   {
     id: 101,
@@ -5,13 +10,27 @@ const data = [
     price: 24,
     desc: "Panadol contains Paracetamol, used as a pain reliever and fever reducer for headaches, toothaches, fever, and muscle pain.",
     image: "/Products/panadol.jpeg",
-    isStrip: true,
+    isStrip: false,
     pieces: 24,
-    stripsPerBox: 3,
+    stripsPerBox: 0,
     topProduct: true,
     category: "pain-relief",
     IsRoshetta: false,
   },
+  {
+    id: 1,
+    name: "Solgar ESTER 100 PLUS Kapsul",
+    price: 43,
+    desc: "Vitamin C supplement for immune support.",
+    isStrip: false,
+    pieces: 24,
+    stripsPerBox: 0,
+    topProduct: true,
+    category: "first-aid",
+    IsRoshetta: false,
+    image: ProductOne,
+  },
+
   {
     id: 102,
     name: "Paramol",
@@ -208,6 +227,19 @@ const data = [
     IsRoshetta: false,
   },
   {
+    id: 2,
+    name: "Cetirizine 50ml Coated Creme",
+    price: 43,
+    desc: "Anti-allergy cream for itch relief.",
+    isStrip: false,
+    pieces: 24,
+    stripsPerBox: 0,
+    topProduct: true,
+    category: "first-aid",
+    IsRoshetta: false,
+    image: ProductTwo,
+  },
+  {
     id: 118,
     name: "Cefotax",
     price: 90,
@@ -402,6 +434,19 @@ const data = [
     category: "first-aid",
     IsRoshetta: false,
   },
+   {
+    id: 4,
+    name: "Sunscreen Care 200ml Lotion",
+    price: 43,
+    desc: "Broad-spectrum sunscreen lotion SPF 50+.",
+    isStrip: false,
+    pieces: 24,
+    stripsPerBox: 0,
+    topProduct: true,
+    category: "first-aid",
+    IsRoshetta: false,
+    image: ProductFour,
+  },
   {
     id: 134,
     name: "Norvasc",
@@ -492,6 +537,19 @@ const data = [
     topProduct: false,
     category: "first-aid",
     IsRoshetta: false,
+  },
+    {
+    id: 3,
+    name: "Sunscreen® Stick 250ml 50+",
+    price: 43,
+    desc: "High-protection sunscreen stick for sensitive skin.",
+    isStrip: false,
+    pieces: 24,
+    stripsPerBox: 0,
+    topProduct: true,
+    category: "first-aid",
+    IsRoshetta: false,
+    image: ProductThree,
   },
   {
     id: 141,
@@ -1013,6 +1071,7 @@ const data = [
     category: "pain-relief",
     IsRoshetta: false,
   },
+
   {
     id: 199,
     name: "Rinofed",
