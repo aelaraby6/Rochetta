@@ -17,6 +17,13 @@ import NotFound from "./pages/Errors/NotFound";
 import "./App.css";
 
 function App() {
+  useEffect(() => {
+    if (!localStorage.getItem("firstRunDone")) {
+      localStorage.clear();
+      localStorage.setItem("firstRunDone", "true");
+    }
+  }, []);
+
   const [products, setProducts] = useState(() => {
     const savedProducts = localStorage.getItem("products");
     return savedProducts ? JSON.parse(savedProducts) : data;
