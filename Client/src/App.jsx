@@ -18,12 +18,11 @@ import "./App.css";
 
 function App() {
   useEffect(() => {
-  if (!localStorage.getItem("firstRunDone")) {
-    localStorage.clear();
-    localStorage.setItem("firstRunDone", "true");
-  }
-}, []);
-
+    if (!localStorage.getItem("firstRunDone")) {
+      localStorage.clear();
+      localStorage.setItem("firstRunDone", "true");
+    }
+  }, []);
 
   const [products, setProducts] = useState(() => {
     const savedProducts = localStorage.getItem("products");
