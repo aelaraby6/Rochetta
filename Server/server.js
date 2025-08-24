@@ -1,15 +1,14 @@
-import { config } from 'dotenv';
-import app from './app.js'
-import dbconnect from "./config/dbConnect.js"
+import { config } from "dotenv";
+import app from "./app.js";
+import dbconnect from "./config/dbConnect.js";
 
-config()
+config();
+
 const port = process.env.PORT || 3000;
 dbconnect()
-    .then(() => {
-        app.listen(port, () => console.log("🚀 Server running on port " + port))
-    })
-    .catch((err) => {
-        console.error("❌ Failed to connect DB or start server:", err.message);
-    });
-
-
+  .then(() => {
+    app.listen(port, () => console.log("Server running on port " + port));
+  })
+  .catch((err) => {
+    console.error("Failed to connect DB or start server:", err.message);
+  });
