@@ -1,4 +1,4 @@
-import { UnAuthorizedError } from "../errors/Errors.js";
+import { UnAuthorizedError } from "../Errors/error.js";
 import { User } from "../models/user/user.model.js";
 import { verifyToken } from "../services/jwt.service.js";
 

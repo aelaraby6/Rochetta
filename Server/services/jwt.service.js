@@ -1,5 +1,5 @@
 import Jwt from "jsonwebtoken";
-import { UnAuthorizedError } from "../errors/Errors.js";
+import { UnAuthorizedError } from "../Errors/error.js";
 
 export const generateToken = (name, email, phone, _id) => {
   const secret = process.env.JWT_SECRET;
