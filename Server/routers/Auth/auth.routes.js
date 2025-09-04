@@ -9,6 +9,6 @@ const router = Router();
 
 
 router.post("/signup", signupLimiter, validate(SignUpSchema), SignUpController);
-router.post("/login", validate(LoginSchema), LoginController);
+router.post("/login",signupLimiter, validate(LoginSchema), LoginController);
 
 export { router as AuthRouter };

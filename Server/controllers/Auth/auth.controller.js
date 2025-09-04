@@ -40,7 +40,8 @@ export const SignUpController = async (req, res, next) => {
       await existingUser.save();
       newUser = existingUser;
     } else {
-      newUser = new User({ ...data, email, password: hashedPassword });
+      //is_active حاططها عشان اليوزر الجديد لما يسجل يظهر في بوست مان 
+      newUser = new User({ ...data, email, password: hashedPassword, is_active: true });
       await newUser.save();
     }
 
