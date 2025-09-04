@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     is_active: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
