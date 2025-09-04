@@ -40,12 +40,17 @@ export const SignUpController = async (req, res, next) => {
       await existingUser.save();
       newUser = existingUser;
     } else {
+<<<<<<< HEAD
       newUser = new User({
         ...data,
         email,
         password: hashedPassword,
         is_active: true,
       });
+=======
+      //is_active حاططها عشان اليوزر الجديد لما يسجل يظهر في بوست مان 
+      newUser = new User({ ...data, email, password: hashedPassword, is_active: true });
+>>>>>>> 717b55fefc372739626136ce4b46105509c14e42
       await newUser.save();
     }
 
@@ -96,7 +101,16 @@ export const LoginController = async (req, res, next) => {
       throw new UnAuthorizedError("Invalid credentials");
     }
 
+<<<<<<< HEAD
     const token = generateToken(user.name, user.email, user.phone, user._id);
+=======
+    const token = generateToken(
+      user.name,
+      user.email,
+      user.phone,
+      user._id
+    );
+>>>>>>> 717b55fefc372739626136ce4b46105509c14e42
 
     const userResponse = {
       ...user.toObject(),

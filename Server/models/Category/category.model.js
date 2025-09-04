@@ -1,20 +1,16 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema(
+const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
-    },
-    email: {
-      type: String,
       unique: true,
-      required: true,
+      trim: true,
     },
-    password: {
+    description: {
       type: String,
-      required: true,
+      default: "",
     },
     is_deleted: {
       type: Boolean,
@@ -22,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     is_active: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
@@ -30,5 +26,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+const Category = mongoose.model("Category", categorySchema);
+
+export default Category;
