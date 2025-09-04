@@ -5,6 +5,8 @@ import { corsOptions } from "./config/corsOptions.js";
 import globalErrorHandler from "./middlewares/global_error_handler.middleware.js";
 import { ApiRouter } from "./routers/index.js";
 import { notFoundMiddleware } from "./middlewares/not_found.middleware.js";
+import cartRoutes from "./routers/CartRout/Cart_Rout.js";
+
 
 const app = express();
 
@@ -20,5 +22,9 @@ app.use(notFoundMiddleware);
 
 // Global Error Handler
 app.use(globalErrorHandler);
+
+//Cart Route
+// app.use("/cart", cartRoutes);
+
 
 export default app;
