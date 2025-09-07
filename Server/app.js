@@ -22,8 +22,5 @@ app.use(notFoundMiddleware);
 // Global Error Handler
 app.use(globalErrorHandler);
 
-//Cart Route
-// app.use("/cart", cartRoutes);
-
 
 export default app;

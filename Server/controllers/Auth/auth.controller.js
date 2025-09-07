@@ -45,13 +45,6 @@ export const SignUpController = async (req, res, next) => {
         ...data,
         email,
         password: hashedPassword,
-        is_active: true,
-      });
-      newUser = new User({
-        ...data,
-        email,
-        password: hashedPassword,
-        is_active: true,
       });
       await newUser.save();
     }
