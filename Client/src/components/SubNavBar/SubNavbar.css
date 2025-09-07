@@ -1,15 +1,16 @@
 .subnavbar-nav {
-  background-color: #ebebebff;
-  margin-top: 15px;
-  padding: 10px 20px;
+  background-color: #f5f5f5 !important; 
+  top: 60px; 
+  padding: 15px 15px;
   position: fixed;
   width: 100%;
-  z-index: 3;
+  z-index: 999;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap; 
   gap: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .links-container {
@@ -19,21 +20,22 @@
 }
 
 .link-box {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 5px 10px;
+  background-color: #f5f5f5 !important; 
+  padding: 6px 12px; 
   text-decoration: none;
   color: #000;
-  transition: background-color 0.3s ease;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .link-box:hover {
   background-color: #ddd;
+  transform: translateY(-2px); 
 }
 
 .shipping-box {
-  background-color: #22b422ff;
-  padding: 10px;
+  background-color: #198754 ;
+  padding: 8px 12px;
   border-radius: 8px;
   color: white;
   font-weight: bold;
@@ -44,10 +46,12 @@
   .subnavbar-nav {
     flex-direction: column;
     align-items: flex-start;
+    top: 60px; 
   }
 
   .shipping-box {
     align-self: stretch;
     text-align: center;
+    margin-top: 5px;
   }
 }
