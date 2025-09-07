@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ROLES,DEFAULT_ROLE } from "../../utils/constants.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,6 +14,12 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: [...ROLES],
+      default: DEFAULT_ROLE,
       required: true,
     },
     is_deleted: {
@@ -30,4 +37,5 @@ const userSchema = new mongoose.Schema(
 );
 
 const User = mongoose.model("User", userSchema);
+
 export default User;

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PRODUCT_CATEGORIES } from "../../utils/constants.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -19,7 +20,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Pain Relief", "Cold and Flu", "Diabetes Care", "First Aid"],
+      enum: [...PRODUCT_CATEGORIES],
     },
     image: {
       type: String,
