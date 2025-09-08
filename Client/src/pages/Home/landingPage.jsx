@@ -69,7 +69,7 @@ const Landing = ({ handleAdd }) => {
 
   return (
     <>
-      <div className="landing-container vh-100 d-flex align-items-stretch text-white">
+      <div className="landing-container vh-100 d-flex align-items-stretch text-white pt-5">
         <div className="container-fluid">
           <div className="row h-100">
             <div className="col-md-6 d-flex flex-column justify-content-center">

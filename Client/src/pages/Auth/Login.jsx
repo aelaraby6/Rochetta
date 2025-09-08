@@ -67,8 +67,8 @@ export default function Login({ setIsLoggedIn, setUser }) {
 
   return (
     <div
-      style={{ height: "100vh" }}
-      className="login-container d-flex align-items-center justify-content-center card"
+      style={{ height: "94vh" }}
+      className="login-container d-flex align-items-center justify-content-center card "
     >
       <div className="card shadow p-4 login-card">
         <div className="row g-0 align-items-center">

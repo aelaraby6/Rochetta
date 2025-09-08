@@ -81,7 +81,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
 
 
   return (
-    <div className="container-fluid d-flex flex-column flex-md-row min-vh-100">
+    <div className="container-fluid d-flex flex-column flex-md-row min-vh-95">
       <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative">
         <a
           href="#"

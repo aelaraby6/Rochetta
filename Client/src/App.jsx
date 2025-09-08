@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route ,useLocation} from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "./components/NavBar/Header";
 import Cart from "./pages/Cart/Cart";
@@ -17,6 +17,11 @@ import NotFound from "./pages/Errors/NotFound";
 import "./App.css";
 
 function App() {
+   const location = useLocation();
+     const hideNavbarPaths = ["/login", "/signup"];
+
+  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
+
   useEffect(() => {
     if (!localStorage.getItem("firstRunDone")) {
       localStorage.clear();
@@ -272,18 +277,22 @@ function App() {
   };
 
   return (
-    <div className="pt-5">
-      <Navbar
-        count={cartItems.reduce((a, c) => a + c.NOI, 0)}
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        user={user}
-        setUser={setUser}
-        isLoggedIn={isLoggedIn}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
-      <SubNavbar />
+    <div className={!shouldHideNavbar ? "pt-5" : ""}>
+       {!shouldHideNavbar && (
+        <>
+          <Navbar
+            count={cartItems.reduce((a, c) => a + c.NOI, 0)}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            user={user}
+            setUser={setUser}
+            isLoggedIn={isLoggedIn}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
+          <SubNavbar />
+        </>
+      )}
       <div className="container-fluid mt-4 p-0">
         <Routes>
           <Route

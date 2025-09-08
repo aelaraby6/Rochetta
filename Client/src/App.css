@@ -76,10 +76,11 @@ body {
 .light nav,
 .light .link-box,
 .light .category-badge,
-.light input,
-.light .form-control,
+/* .light input,
+.light .form-control, */
 .light .land
-.dark .link{
+.ligh .link
+.dark .nav-link{
   background-color: #ffffff;
   color: #000000 ;
   transition: all .3s ease !important;
@@ -93,7 +94,8 @@ body {
 .dark input,
 .dark .form-control ,
 .dark .land,
-.dark .link{
+.dark .link
+.dark .nav-link{
   background-color: #3c3c3c !important;
   color: #ffffff !important;
   transition: all .3s ease !important;
@@ -108,11 +110,11 @@ body.dark .form-control {
 }
 
 /* body.light override for form-control */
-body.light .form-control {
+/* body.light .form-control {
   background-color: #ffffff !important;
   color: #000000 !important;
   transition: background-color 0.3s ease, color 0.3s ease !important;
-}
+} */
 
 /* Special Element: shipping box */
 .dark .shipping-box {
