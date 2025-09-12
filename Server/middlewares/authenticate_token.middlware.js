@@ -1,10 +1,16 @@
-import { UnAuthorizedError } from "../Errors/error.js";
 import { verifyToken } from "../services/jwt.service.js";
-import User from "../models/User/user.model.js"
+import User from "../models/User/user.model.js";
+import { UnAuthorizedError } from "../Errors/error.js";
 
 export const authenticateToken = async (req, res, next) => {
   try {
-    const token = req.headers["authorization"];
+    const authHeader = req.headers["authorization"];
+
+    if (!authHeader) {
+      throw new UnAuthorizedError("Token Not provided");
+    }
+
+    const token = authHeader.split(" ")[1];
 
     if (!token) {
       throw new UnAuthorizedError("Token Not provided");
@@ -17,11 +23,10 @@ export const authenticateToken = async (req, res, next) => {
     if (!user) {
       throw new UnAuthorizedError("Invalid or expired Token");
     }
-    req.user = decodedToken;
+
+    req.user = user;
     next();
   } catch (error) {
-    res.status(error.statusCode).json({
-      message: error.message,
-    });
+    next(error);
   }
 };
