@@ -7,7 +7,7 @@ import {
   hashPassword,
 } from "../../services/password.service.js";
 
-// SignUP Controller
+// Signup Controller
 export const SignUpController = async (req, res, next) => {
   try {
     const data = req.body;
@@ -35,6 +35,7 @@ export const SignUpController = async (req, res, next) => {
       existingUser.name = data.name;
       existingUser.password = hashedPassword;
       existingUser.phone = data.phone;
+      existingUser.role = data.role || "user";
       existingUser.is_deleted = false;
       existingUser.is_active = true;
 
@@ -45,6 +46,7 @@ export const SignUpController = async (req, res, next) => {
         ...data,
         email,
         password: hashedPassword,
+        role: data.role || "user",
       });
       await newUser.save();
     }
@@ -53,7 +55,8 @@ export const SignUpController = async (req, res, next) => {
       newUser.name,
       newUser.email,
       newUser.phone,
-      newUser._id
+      newUser._id,
+      newUser.role
     );
 
     const userResponse = {
