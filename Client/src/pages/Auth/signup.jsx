@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
+import axios from "axios";
 import SignUpImg from "../../assets/Auth/signup.jpg";
 
 export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
@@ -20,7 +21,7 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
     }));
   };
 
- const handleSubmit = (e) => {
+ const handleSubmit = async  (e) => {
   e.preventDefault();
 
   // basic validation
@@ -38,50 +39,37 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
     setError("Passwords do not match");
     return;
   }
+ try {
+      // call backend
+      const res = await axios.post("http://localhost:4000/api/auth/signup", {
+        name,
+        email,
+        password,
+      });
 
-  // users array in localStorage
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+      const { data, token } = res.data;
 
-  // prevent duplicate email
-  const exists = users.some((u) => u.email === email);
-  if (exists) {
-    setError("An account with this email already exists");
-    return;
-  }
+      // store in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("isLoggedIn", "true");
 
-  // create new user object (store minimal safe data)
-  const newUserAccount = {
-    name,
-    email,
-    password,
-    role: "user",
-  };
+      // update states
+      setUser(data);
+      setIsLoggedIn(true);
+      setCartItems([]);
 
-  // save to users array
-  users.push(newUserAccount);
-  localStorage.setItem("users", JSON.stringify(users));
-
-  // create user-specific cart key and init it
-  const userCartKey = `cart_${email}`;
-  localStorage.setItem(userCartKey, JSON.stringify([]));
-
-  // set logged-in user (public profile)
-  const loggedInUser = { name, email, role: "user" };
-  localStorage.setItem("user", JSON.stringify(loggedInUser));
-  localStorage.setItem("isLoggedIn", "true");
-
-  // keep component state in sync
-  setUser(loggedInUser);
-  setIsLoggedIn(true);
-  setCartItems([]); // sync with the empty cart we just created
-
-  // go to profile
-  navigate("/profile");
+      // go to profile
+      navigate("/profile");
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Signup failed. Try again.");
+    }
 };
 
 
   return (
-    <div className="container-fluid d-flex flex-column flex-md-row min-vh-95">
+    <div className="container-fluid d-flex flex-column flex-md-row min-vh-100">
       <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative">
         <a
           href="#"

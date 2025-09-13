@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Login.css";
 import LoginImg from "../../assets/Auth/login.jpg";
 
@@ -15,65 +16,47 @@ export default function Login({ setIsLoggedIn, setUser }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    const storedAdmin = JSON.parse(localStorage.getItem("adminAccount"));
-    let role = "";
-    let name = "";
-    let isValid = false;
+    try {
+      const res = await axios.post("http://localhost:4000/api/auth/login", formData);
 
-    if (
-      storedAdmin &&
-      formData.email === storedAdmin.username &&
-      formData.password === storedAdmin.password
-    ) {
-      role = "admin";
-      name = "Admin";
-      isValid = true;
-    } else {
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const foundUser = users.find(
-    (u) => u.email === formData.email && u.password === formData.password
-  );
+      //get data from backend
+      const { data, token } = res.data;
 
-  if (foundUser) {
-    role = "user";
-    name = foundUser.name;
-    isValid = true;
-  }
-}
+      //store token in local storage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("isLoggedIn", "true");
 
+      setUser(data);
+      setIsLoggedIn(true);
 
-    if (!isValid) {
-      setError("Invalid email or password. Please try again.");
-      return;
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.message ||
+          "Invalid email or password. Please try again."
+      );
     }
-
-    const loggedInUser = {
-      name,
-      email: formData.email,
-      role,
-    };
-
-    localStorage.setItem("user", JSON.stringify(loggedInUser));
-    localStorage.setItem("isLoggedIn", "true");
-
-    setUser(loggedInUser);
-    setIsLoggedIn(true);
-
-    navigate("/");
   };
 
   return (
     <div
-      style={{ height: "94vh" }}
+      style={{ height: "100vh" }}
       className="login-container d-flex align-items-center justify-content-center card "
     >
       <div className="card shadow p-4 login-card">
         <div className="row g-0 align-items-center">
           <div className="col-md-6">
-            <img src={LoginImg} alt="Login" className="img-fluid rounded-start" />
+            <img
+              src={LoginImg}
+              alt="Login"
+              className="img-fluid rounded-start"
+            />
           </div>
           <div className="col-md-6">
             <div className="card-body">
@@ -85,7 +68,9 @@ export default function Login({ setIsLoggedIn, setUser }) {
               </h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email address</label>
+                  <label htmlFor="email" className="form-label">
+                    Email address
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -97,7 +82,9 @@ export default function Login({ setIsLoggedIn, setUser }) {
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="password" className="form-label">Password</label>
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
                   <input
                     type="password"
                     name="password"
@@ -108,14 +95,22 @@ export default function Login({ setIsLoggedIn, setUser }) {
                     required
                   />
                 </div>
-                {error && <div className="mb-3 text-danger text-center">{error}</div>}
-                <button type="submit" className="btn w-100 btn-success text-white">
+                {error && (
+                  <div className="mb-3 text-danger text-center">{error}</div>
+                )}
+                <button
+                  type="submit"
+                  className="btn w-100 btn-success text-white"
+                >
                   Login
                 </button>
               </form>
               <p className="mt-3 text-center">
                 Don’t have an account?{" "}
-                <a href="/signup" style={{ color: "green", textDecoration: "underline" }}>
+                <a
+                  href="/signup"
+                  style={{ color: "green", textDecoration: "underline" }}
+                >
                   Sign up
                 </a>
               </p>
