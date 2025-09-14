@@ -19,6 +19,7 @@ const orderSchema = new mongoose.Schema({
     enum: ["pending", "shipped", "delivered", "canceled"],
     default: "pending",
   },
+  address: { type: String, required: true },
   is_deleted: { type: Boolean, default: false },
 });
 
