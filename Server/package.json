@@ -1,7 +1,7 @@
 {
   "name": "flow",
   "version": "1.0.0",
-  "description": "",
+  "description": "Pharmacy e-commerce platform",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,16 +10,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IPSYCHOI/Task-Follow-Up-System.git"
+    "url": "git+https://github.com/aelaraby6/PharmaXpress.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["pharmacy", "e-commerce", "medications", "healthcare"],
+  "author": "Your Name Here",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/IPSYCHOI/Task-Follow-Up-System/issues"
+    "url": "https://github.com/aelaraby6/PharmaXpress/issues"
   },
-  "homepage": "https://github.com/IPSYCHOI/Task-Follow-Up-System#readme",
+  "homepage": "https://github.com/aelaraby6/PharmaXpress#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
