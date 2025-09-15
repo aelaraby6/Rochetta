@@ -1,11 +1,9 @@
 .login-container {
   height: 100vh;
-  background-color: #f8f9fa;
 }
 
 .login-card {
-  max-width: 800px;
-  width: 100%;
+  width: 85%;
   border: none;
   border-radius: 20px;
 }

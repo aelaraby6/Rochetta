@@ -24,11 +24,13 @@ export default function Profile({
   }, [navigate, user, setUser]);
 
   const handleLogout = () => {
-    localStorage.setItem("isLoggedIn", "false");
-    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("isLoggedIn");
     setUser(null);
+    setIsLoggedIn(false);
     setCartItems([]);
-    navigate("/login");
+    navigate("/");
   };
 
   const handleCancelOrder = (index) => {

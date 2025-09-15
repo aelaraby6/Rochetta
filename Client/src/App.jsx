@@ -14,6 +14,7 @@ import FirstAid from "./pages/CategoryLinks/FirstAid";
 import DiabetesCare from "./pages/CategoryLinks/DiabetesCare";
 import Signup from "./pages/Auth/signup";
 import NotFound from "./pages/Errors/NotFound";
+
 import "./App.css";
 
 function App() {
@@ -293,7 +294,7 @@ function App() {
           <SubNavbar />
         </>
       )}
-      <div className="container-fluid mt-4 p-0">
+      <div className={!shouldHideNavbar ? "mt-4 container-fluid p-0" : "container-fluid p-0"}>
         <Routes>
           <Route
             path="/"

@@ -28,6 +28,11 @@
 } */
 /* Light Mode Basics */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 .scale-btn:active {
   transform: scale(0.9) !important;
