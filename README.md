@@ -1,4 +1,4 @@
-# PharmaXpress – E-commerce Pharmacy
+<!-- # PharmaXpress – E-commerce Pharmacy
 
 PharmaXpress is a **React-based** e-commerce web application for an online pharmacy.  
 It allows users to browse medical products, search by categories, add items to their cart, and manage their profile.  
@@ -67,4 +67,4 @@ Thanks goes to these wonderful people in the frontend team:
   </tr>
 </table>
 
-
+ -->
