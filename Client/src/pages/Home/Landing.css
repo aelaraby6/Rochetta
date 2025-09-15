@@ -4,13 +4,26 @@
 }
 
 .doctor-img {
-  height: 90vh;
-  width: auto;
-  object-fit: contain;
-} 
+  max-height: 700px; 
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1.05);
+  }
+  50% {
+    transform: translateY(20px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1.05);
+  }
+}
+
+
 
 .icon-circle {
-  background-color: #faf6f6; 
+  background-color: #faf6f6;
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -34,7 +47,7 @@
 }
 
 .product-card:hover {
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .offer-img {
@@ -43,11 +56,10 @@
 }
 
 .client-img {
-  width: 120px;      
-  height: 120px;     
-  object-fit: cover; 
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
 }
-
 
 .faq-section {
   max-width: 700px;
@@ -56,16 +68,16 @@
 }
 
 .faq-item {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   padding: 15px;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
   border-radius: 8px;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .faq-item.active .faq-question span:first-child {
-  color: green; 
+  color: green;
   font-weight: bold;
 }
 
@@ -91,6 +103,3 @@
   font-size: 20px;
   font-weight: bold;
 }
-
-
-
