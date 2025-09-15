@@ -62,19 +62,28 @@ export default function Profile({
   if (!user) return null;
 
   return (
-    <div style={{ marginTop: "100px" }} className="container">
-      <div className="card shadow-lg border-0 p-4">
-        <h2 className="text-center mb-4 text-success fw-bold">
-          Welcome, {user.name}
-        </h2>
-        <div className="row g-4 mb-4">
-          <div className="bg-light rounded p-3 h-100 land">
-            <h5 className="text-success mb-3">Contact Info</h5>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
+    <>
+      <div style={{ marginTop: "100px" }} className="container">
+        <div className=" border-0 p-4">
+          {/* Welcome Message */}
+          <h2 className="text-center mb-4 text-success fw-bold">
+            Welcome to your profile 
+          </h2>
+
+          {/* Contact Info */}
+          <div className="row g-4 mb-4">
+            <div className="bg-light rounded p-3 h-100 land shadow-sm">
+              <h5 className="text-success mb-3">Contact Info</h5>
+              <p>
+                <strong>Name:</strong> {user.name}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.email}
+              </p>
+            </div>
           </div>
         </div>
+
         <hr />
         <h4 className="text-success text-center mb-4">Your Orders</h4>
         {orders.length === 0 ? (
@@ -124,7 +133,7 @@ export default function Profile({
             );
           })
         )}
-        <div className="d-flex flex-column gap-3 mt-4">
+        <div className="d-flex gap-3 mt-4 justify-content-center">
           <button
             className="btn btn-outline-success"
             onClick={handleResetOrders}
@@ -136,6 +145,6 @@ export default function Profile({
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

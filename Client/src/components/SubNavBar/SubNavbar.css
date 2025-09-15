@@ -1,5 +1,5 @@
 .subnavbar-nav {
-  background-color: #f5f5f5 !important; 
+  background-color: #f9fafb !important; 
   top: 60px; 
   padding: 15px 15px;
   position: fixed;
@@ -20,7 +20,7 @@
 }
 
 .link-box {
-  background-color: #f5f5f5 !important; 
+  background-color: #f9fafb !important; 
   padding: 6px 12px; 
   text-decoration: none;
   color: #000;
