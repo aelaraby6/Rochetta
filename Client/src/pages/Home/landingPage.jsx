@@ -178,7 +178,7 @@ const Landing = ({ handleAdd }) => {
       {/* top products */}
 
       <div className="container my-5">
-        <h3 className="mb-4">Top Selling Products</h3>
+        <h3 className="mb-4 section-title">Top Selling Products</h3>
         <div className="row g-4">
           {products.map((product) => (
             <div className="col-md-3">
@@ -189,7 +189,7 @@ const Landing = ({ handleAdd }) => {
                 <img
                   src={product.image}
                   alt="Product 1"
-                  className="img-fluid mb-3"
+                  className="img-fluid mb-3 product-img"
                 />
                 <div className="text-warning mb-2">★★★★★</div>
                 <h6>Solgar ESTER 100 PLUS Kapsul</h6>

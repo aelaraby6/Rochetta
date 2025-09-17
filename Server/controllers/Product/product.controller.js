@@ -1,19 +1,39 @@
 import Product from "../../models/Product/product.model.js";
-import { BadRequestError } from "../../Errors/error.js";
+import { Category } from "../../models/Category/category.model.js";
+import { BadRequestError, NotFoundError } from "../../Errors/error.js";
 import { validateObjectId } from "../../utils/validateObjectId.js";
+import cloudinary from "../../config/cloudinary.js";
+import streamifier from "streamifier";
 
-// Create Product
 export const createProductController = async (req, res, next) => {
   try {
     const data = req.body;
 
+    if (!req.file) throw new BadRequestError("Product image is required");
+
+    if (!data.category) throw new BadRequestError("Category is required");
+    validateObjectId(data.category, "category id");
+
+    const categoryExists = await Category.findById(data.category);
+    if (!categoryExists) throw new BadRequestError("Category not found");
+
+    const uploadStream = () =>
+      new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "products" },
+          (error, result) => (error ? reject(error) : resolve(result))
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+    const result = await uploadStream();
+
     const newProduct = new Product({
       ...data,
+      image: result.secure_url,
     });
 
     await newProduct.save();
-
-    if (!newProduct) throw new BadRequestError("Product not created");
 
     res.status(201).json({
       message: "Product created successfully",
@@ -24,7 +44,6 @@ export const createProductController = async (req, res, next) => {
   }
 };
 
-// Get All Products
 export const GetAllProductsController = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -33,31 +52,19 @@ export const GetAllProductsController = async (req, res, next) => {
     const sortBy = req.query.sort || "createdAt";
     const sortOrder = req.query.order === "asc" ? 1 : -1;
 
-    // validation
-    if (isNaN(page) || page < 1) {
-      throw new BadRequestError("Invalid page number");
-    }
-
-    if (isNaN(limit) || limit < 1 || limit > 100) {
+    if (isNaN(page) || page < 1) throw new BadRequestError("Invalid page number");
+    if (isNaN(limit) || limit < 1 || limit > 100)
       throw new BadRequestError("Limit must be between 1 and 100");
-    }
 
-    const filters = {};
-
-    filters.is_deleted = false;
-
-    if (req.query.name) {
-      if (typeof req.query.name !== "string") {
-        throw new BadRequestError("Name filter must be a string");
-      }
-      filters.name = { $regex: req.query.name, $options: "i" };
-    }
+    const filters = { is_deleted: false };
+    if (req.query.name) filters.name = { $regex: req.query.name, $options: "i" };
 
     const products = await Product.find(filters)
       .skip(skip)
       .limit(limit)
       .sort({ [sortBy]: sortOrder })
-      .select("-is_deleted -__v");
+      .select("-is_deleted -__v")
+      .populate("category");
 
     const total = await Product.countDocuments(filters);
 
@@ -73,21 +80,16 @@ export const GetAllProductsController = async (req, res, next) => {
   }
 };
 
-// Get One Product
 export const GetOneProductController = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     validateObjectId(id, "product id");
 
-    const product = await Product.findOne({
-      _id: id,
-      is_deleted: false,
-    }).select("-is_deleted -__v");
+    const product = await Product.findOne({ _id: id, is_deleted: false })
+      .select("-is_deleted -__v")
+      .populate("category");
 
-    if (!product) {
-      throw new NotFoundError("Product not found");
-    }
+    if (!product) throw new NotFoundError("Product not found");
 
     res.json({
       message: "Product fetched successfully",
@@ -98,54 +100,43 @@ export const GetOneProductController = async (req, res, next) => {
   }
 };
 
-// Delete Product
 export const DeleteProductController = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     validateObjectId(id, "product id");
 
-    const product = await Product.findByIdAndUpdate(
-      id,
-      { is_deleted: true },
-      { new: true }
-    ).select("-__v");
+    const product = await Product.findByIdAndUpdate(id, { is_deleted: true }, { new: true }).select("-__v");
+    if (!product) throw new NotFoundError("Product not found");
 
-    if (!product) {
-      throw new NotFoundError("Product not found");
-    }
-
-    res.json({
-      message: "Product deleted successfully",
-    });
+    res.json({ message: "Product deleted successfully" });
   } catch (error) {
     next(error);
   }
 };
 
-// Update Product
 export const updateProductController = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     validateObjectId(id, "product id");
 
-    if (!req.body || Object.keys(req.body).length === 0) {
+    if (!req.body || Object.keys(req.body).length === 0)
       throw new BadRequestError("Update data is required");
+
+    if (req.body.category) {
+      validateObjectId(req.body.category, "category id");
+      const categoryExists = await Category.findById(req.body.category);
+      if (!categoryExists) throw new BadRequestError("Category not found");
     }
 
     const product = await Product.findOneAndUpdate(
       { _id: id, is_deleted: false },
       { $set: req.body },
-      {
-        new: true,
-        runValidators: true,
-      }
-    ).select("-is_deleted -__v");
+      { new: true, runValidators: true }
+    )
+      .select("-is_deleted -__v")
+      .populate("category");
 
-    if (!product) {
-      throw new NotFoundError("Product not found");
-    }
+    if (!product) throw new NotFoundError("Product not found");
 
     res.json({
       message: "Product updated successfully",

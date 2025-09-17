@@ -24,25 +24,15 @@ export const CreateProductSchema = Joi.object({
     "any.required": "Price is required",
   }),
 
-  category: Joi.string()
-    .valid(...PRODUCT_CATEGORIES)
-    .required()
-    .messages({
-      "any.only":
-        "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
-      "any.required": "Category is required",
-    }),
-
-  image: Joi.string()
-    .uri()
-    .pattern(/\.[a-zA-Z0-9]+$/)
-    .required()
-    .messages({
-      "string.empty": "Image is required",
-      "string.uri": "Image must be a valid URL",
-      "string.pattern.base": "Image must have a valid file extension",
-      "any.required": "Image is required",
-    }),
+  // category: Joi.string()
+  //   .valid(...PRODUCT_CATEGORIES)
+  //   .required()
+  //   .messages({
+  //     "any.only":
+  //       "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
+  //     "any.required": "Category is required",
+  //   }),
+  category: Joi.string().hex().length(24).required(),
 
   stock: Joi.number().min(0).required().messages({
     "number.base": "Stock must be a number",
@@ -84,21 +74,14 @@ export const UpdateProductSchema = Joi.object({
     "number.min": "Price cannot be negative",
   }),
 
-  category: Joi.string()
-    .valid(...PRODUCT_CATEGORIES)
-    .messages({
-      "any.only":
-        "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
-    }),
+  // category: Joi.string()
+  //   .valid(...PRODUCT_CATEGORIES)
+  //   .messages({
+  //     "any.only":
+  //       "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
+  //   }),
 
-  image: Joi.string()
-    .uri()
-    .pattern(/\.[a-zA-Z0-9]+$/)
-    .messages({
-      "string.empty": "Image cannot be empty",
-      "string.uri": "Image must be a valid URL",
-      "string.pattern.base": "Image must have a valid file extension",
-    }),
+  category: Joi.string().hex().length(24).required(),
 
   stock: Joi.number().min(0).messages({
     "number.base": "Stock must be a number",

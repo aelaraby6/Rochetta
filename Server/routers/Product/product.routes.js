@@ -2,6 +2,7 @@ import { Router } from "express";
 import { validate } from "../../middlewares/validate.middleware.js";
 import { checkRole } from "../../middlewares/check_roles.middleware.js";
 import { authenticateToken } from "../../middlewares/authenticate_token.middlware.js";
+import upload from "../../middlewares/upload.middleware.js";
 import {
   CreateProductSchema,
   UpdateProductSchema,
@@ -21,9 +22,11 @@ router.post(
   "/",
   authenticateToken,
   checkRole(["admin"]),
+  upload.single("image"),
   validate(CreateProductSchema),
   createProductController
 );
+
 router.delete(
   "/:id",
   authenticateToken,
