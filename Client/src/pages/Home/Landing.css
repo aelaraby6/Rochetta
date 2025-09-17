@@ -4,9 +4,11 @@
 }
 
 .doctor-img {
-  max-height: 700px; 
+  max-height: 700px;
   animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
 }
+
 
 @keyframes float {
   0% {
@@ -19,8 +21,6 @@
     transform: translateY(0) scale(1.05);
   }
 }
-
-
 
 .icon-circle {
   background-color: #faf6f6;
@@ -39,11 +39,17 @@
   height: auto;
   border-radius: 15px;
   object-fit: cover;
+  
 }
 
 .product-card {
   transition: 0.3s;
   background-color: #fff;
+}
+
+.product-card img {
+  border-radius: 8px;
+  border: 2px solid #eee; 
 }
 
 .product-card:hover {
@@ -103,3 +109,4 @@
   font-size: 20px;
   font-weight: bold;
 }
+

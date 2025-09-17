@@ -8,6 +8,7 @@ export default function Login({ setIsLoggedIn, setUser }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); 
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -19,14 +20,16 @@ export default function Login({ setIsLoggedIn, setUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true); 
 
     try {
-      const res = await axios.post("http://localhost:4000/api/auth/login", formData);
+      const res = await axios.post(
+        "http://localhost:4000/api/auth/login",
+        formData
+      );
 
-      //get data from backend
       const { data, token } = res.data;
 
-      //store token in local storage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data));
       localStorage.setItem("isLoggedIn", "true");
@@ -41,15 +44,17 @@ export default function Login({ setIsLoggedIn, setUser }) {
         err.response?.data?.message ||
           "Invalid email or password. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div
       style={{ height: "100vh" }}
-      className="login-container d-flex align-items-center justify-content-center "
+      className="login-container d-flex align-items-center justify-content-center"
     >
-      <div className=" shadow p-4 login-card">
+      <div className="shadow p-4 login-card">
         <div className="row g-0 align-items-center">
           <div className="col-md-6">
             <img
@@ -100,9 +105,19 @@ export default function Login({ setIsLoggedIn, setUser }) {
                 )}
                 <button
                   type="submit"
-                  className="btn w-100 btn-success text-white"
+                  className="btn w-100 btn-success text-white d-flex justify-content-center align-items-center"
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? (
+                    <div
+                      className="spinner-border spinner-border-sm text-light"
+                      role="status"
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
               <p className="mt-3 text-center">
