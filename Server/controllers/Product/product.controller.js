@@ -39,6 +39,8 @@ export const createProductController = async (req, res, next) => {
       message: "Product created successfully",
       data: newProduct,
     });
+    
+
   } catch (error) {
     next(error);
   }

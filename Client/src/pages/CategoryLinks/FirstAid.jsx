@@ -1,5 +1,5 @@
 import ProductList from "../../components/ProductList/ProductList";
-
+import "./productStyle.css"
 function FirstAid({
   products,
   handleAdd,
@@ -15,13 +15,45 @@ function FirstAid({
   setNewProduct,
   handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "first-aid");
+  const filtered = products.filter((p) => p.category === "First Aid");
 
-  return (
+   return (
+    <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+   <div
+  className="productStyle"
+       onMouseEnter={(e) => {
+      
+        e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
+      }}
+      onMouseLeave={(e) => {
+
+        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+      }}
+>
+  {/* ===== Description Section ===== */}
+  <div style={{ marginBottom: "25px", marginLeft:"20px"}}>
+    <h3
+      style={{
+        fontWeight: "700",
+        marginBottom: "12px",
+        borderLeft: "4px solid #28a745",
+        paddingLeft: "10px",
+        color: "#333",
+      }}
+    >
+      First Aid
+    </h3>
+    <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
+      First aid products include bandages, antiseptics, and wound care essentials
+    that provide quick treatment for minor injuries and help prevent infections.
+
+    </p>
+  </div>
+
     <ProductList
+      searchTerm={searchTerm}
       products={filtered}
       user={user}
-      searchTerm={searchTerm}
       handleAdd={handleAdd}
       handleEdit={handleEdit}
       handleDeleteProduct={handleDeleteProduct}
@@ -33,6 +65,11 @@ function FirstAid({
       setNewProduct={setNewProduct}
       handleAddNewProduct={handleAddNewProduct}
     />
+    </div> 
+    </div>
   );
 }
 export default FirstAid;
+ 
+
+  
