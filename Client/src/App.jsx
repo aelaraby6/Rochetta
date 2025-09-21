@@ -1,4 +1,4 @@
-import { Routes, Route ,useLocation} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "./components/NavBar/Header";
 import Cart from "./pages/Cart/Cart";
@@ -16,29 +16,95 @@ import Signup from "./pages/Auth/signup";
 import NotFound from "./pages/Errors/NotFound";
 
 import "./App.css";
+import api from "./api"; // <-- added
 
 function App() {
-   const location = useLocation();
-     const hideNavbarPaths = ["/login", "/signup"];
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
 
-  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
+  // ---------- cart local state (we'll migrate to API next) ----------
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  const fetchCart = async () => {
+    try {
+      const res = await api.get("/cart/get-user-cart");
+      console.log("🛒 Cart from server:", res.data);
+      setCartItems(res.data.data.items || []);
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+    }
+  };
 
   useEffect(() => {
+    if (isLoggedIn) fetchCart();
+  }, [isLoggedIn]);
+
+  const location = useLocation();
+  const hideNavbarPaths = ["/login", "/signup"];
+  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
+
+  // ---------- firstRun: DON'T clear token/user; only clear cached products/cart ----------
+  useEffect(() => {
     if (!localStorage.getItem("firstRunDone")) {
-      localStorage.clear();
+      localStorage.removeItem("products");
+      localStorage.removeItem("cart");
       localStorage.setItem("firstRunDone", "true");
     }
   }, []);
 
+  // ---------- helper to map backend product -> frontend shape ----------
+  const mapProduct = (p) => ({
+    _id: p._id || p.id,
+    name: p.name,
+    desc: p.description || p.desc || "",
+    price: p.price,
+    image: p.image || "",
+    pieces: typeof p.stock !== "undefined" ? p.stock : p.pieces || 0,
+    IsRoshetta: !!(p.requires_prescription || p.IsRoshetta),
+    stripsPerBox: p.strip_count ?? p.stripsPerBox ?? 0,
+    category: p.category,
+    raw: p,
+  });
+
+  // ---------- products: initialize from cache or fallback data ----------
   const [products, setProducts] = useState(() => {
     const savedProducts = localStorage.getItem("products");
     return savedProducts ? JSON.parse(savedProducts) : data;
   });
 
+  // keep cached products in localStorage (useful offline / fast reload)
   useEffect(() => {
     localStorage.setItem("products", JSON.stringify(products));
   }, [products]);
 
+  // ---------- fetch products from API on mount ----------
+  useEffect(() => {
+    let mounted = true;
+    const fetchProducts = async () => {
+      try {
+        const res = await api.get("/products?limit=100");
+        const items = (res.data?.data || []).map(mapProduct);
+        if (!mounted) return;
+        // replace local products with server products
+        setProducts(items.length ? items : data);
+        localStorage.setItem("products", JSON.stringify(items));
+      } catch (err) {
+        console.error("Failed to fetch products from API:", err);
+        // keep fallback products (data or cached) if request fails
+      }
+    };
+    fetchProducts();
+    return () => {
+      mounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once
+
+  // ---------- user state (keep as you had) ----------
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -46,16 +112,13 @@ function App() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
-  });
-
   useEffect(() => {
     if (isLoggedIn) {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         setUser(JSON.parse(storedUser));
       }
+      // optional: fetch user's cart from API here later
     } else {
       setUser(null);
     }
@@ -73,11 +136,6 @@ function App() {
     }
   }, []);
 
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -88,32 +146,52 @@ function App() {
     stripsPerBox: "",
   });
 
-  const handleAddNewProduct = () => {
-    const newItem = {
-      ...newProduct,
-      id: Date.now(),
-    };
-    setProducts((prev) => [...prev, newItem]);
-    setNewProduct({
-      name: "",
-      price: "",
-      image: "",
-      desc: "",
-      pieces: "",
-      category: "",
-      stripsPerBox: "",
-    });
-  };
+  const handleAddNewProduct = async () => {
+    try {
+      const payload = {
+        name: newProduct.name,
+        description: newProduct.desc,
+        price: Number(newProduct.price),
+        category:
+          newProduct.category === "pain-relief"
+            ? "Pain Relief"
+            : newProduct.category === "cold-and-flu"
+            ? "Cold and Flu"
+            : newProduct.category === "first-aid"
+            ? "First Aid"
+            : newProduct.category === "diabetes-care"
+            ? "Diabetes Care"
+            : "",
+        image: newProduct.image,
+        stock: Number(newProduct.pieces),
+        has_strips: newProduct.stripsPerBox > 0,
+        strip_count: Number(newProduct.stripsPerBox),
+      };
+      console.log("🚀 Sending product:", newProduct);
+      const res = await api.post("/products", payload);
+      console.log("📥 Response from server:", res.data);
+      console.log("🛠️ Before update:", products);
 
-  useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-    if (currentUser) {
-      localStorage.setItem(
-        `cartItems_${currentUser.username}`,
-        JSON.stringify(cartItems)
-      );
+      setProducts((prev) => {
+        const updated = [...prev, mapProduct(res.data.data)];
+        console.log("✨ After update:", updated);
+        return updated;
+      });
+
+      setNewProduct({
+        name: "",
+        price: "",
+        image: "",
+        desc: "",
+        pieces: "",
+        category: "",
+        stripsPerBox: "",
+      });
+    } catch (err) {
+      console.error("Error adding product:", err);
+      alert("Failed to add product. Check console.");
     }
-  }, [cartItems]);
+  };
 
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -125,121 +203,107 @@ function App() {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
-  const handleClearCart = () => {
-    const updatedProducts = [...products];
-    cartItems.forEach((cartItem) => {
-      const productIndex = updatedProducts.findIndex(
-        (p) => p.id === cartItem.id
-      );
-      if (productIndex !== -1) {
-        const stripsPerBox = cartItem.stripsPerBox || 1;
-        const totalBoxes = cartItem.isStrip
-          ? Math.floor(cartItem.NOI / stripsPerBox)
-          : cartItem.NOI;
-        updatedProducts[productIndex].pieces += totalBoxes;
-      }
-    });
-    setCartItems([]);
-    localStorage.setItem("cart", JSON.stringify([]));
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-  };
+// helper: normalize id whether item is product (from list) or cart-item
+const getItemId = (item) => {
+  if (!item) return null;
+  // if passed a product object (from product list)
+  if (item._id && !item.product) return item._id;
+  // if passed a cart item (with product object inside)
+  if (item.product && (item.product._id || item.product.id)) return item.product._id || item.product.id;
+  return null;
+};
 
-  const handleAdd = (product) => {
-    const updatedCart = [...cartItems];
-    const updatedProducts = [...products];
-    const pricePerUnit =
-      product.isStrip && product.stripsPerBox
-        ? parseFloat((product.price / product.stripsPerBox).toFixed(2))
-        : product.price;
-    const existingItemIndex = updatedCart.findIndex(
-      (item) => item.id === product.id && item.isStrip === product.isStrip
-    );
-    if (existingItemIndex !== -1) {
-      updatedCart[existingItemIndex].NOI += 1;
-    } else {
-      updatedCart.push({
-        ...product,
-        NOI: 1,
-        price: pricePerUnit,
-        originalPieces: product.pieces,
-      });
-    }
-    const productIndex = updatedProducts.findIndex((p) => p.id === product.id);
-    if (productIndex !== -1) {
-      const currentCartItem = updatedCart.find(
-        (item) => item.id === product.id && item.isStrip === product.isStrip
-      );
-      const noi = currentCartItem?.NOI || 0;
-      const stripsPerBox = product.stripsPerBox || 1;
-      const shouldDecreasePiece = !product.isStrip || noi % stripsPerBox === 0;
-      if (shouldDecreasePiece) {
-        updatedProducts[productIndex].pieces -= 1;
-      }
-    }
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-  };
+// Add (works from product list (product) or from cart (cart-item))
+const handleAdd = async (item) => {
+  const id = getItemId(item);
+  if (!id) return console.error("No product id to add:", item);
 
-  const handleRemove = (product) => {
-    const updatedCart = [...cartItems];
-    const updatedProducts = [...products];
-    const existingItemIndex = updatedCart.findIndex(
-      (item) => item.id === product.id && item.isStrip === product.isStrip
-    );
-    if (existingItemIndex === -1) return;
-    const cartItem = updatedCart[existingItemIndex];
-    const stripsPerBox = cartItem.stripsPerBox || 1;
-    if (cartItem.NOI === 1) {
-      updatedCart.splice(existingItemIndex, 1);
-    } else {
-      cartItem.NOI -= 1;
-      const shouldRestorePiece =
-        !cartItem.isStrip || cartItem.NOI % stripsPerBox === 0;
-      if (shouldRestorePiece) {
-        const productIndex = updatedProducts.findIndex(
-          (p) => p.id === product.id
-        );
-        if (productIndex !== -1) {
-          updatedProducts[productIndex].pieces += 1;
-        }
-      }
-    }
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-  };
+  try {
+    const res = await api.post("/cart/add-to-cart", { productId: id, quantity: 1 });
+    const updatedCartItems = res.data.data.items || [];
+    setCartItems(updatedCartItems);
 
-  const handleDelete = (cartItem) => {
-    const updatedCart = cartItems.filter(
-      (item) => !(item.id === cartItem.id && item.isStrip === cartItem.isStrip)
+    // optimistic UI update: update 'pieces' locally (mapProduct maps stock -> pieces)
+    setProducts((prev) =>
+      prev.map((p) =>
+        p._id === id ? { ...p, pieces: Math.max(0, (p.pieces ?? p.stock ?? 0) - 1) } : p
+      )
     );
-    const updatedProducts = [...products];
-    const productIndex = updatedProducts.findIndex((p) => p.id === cartItem.id);
-    if (productIndex !== -1) {
-      const stripsPerBox = cartItem.stripsPerBox || 1;
-      const totalBoxes = cartItem.isStrip
-        ? Math.floor(cartItem.NOI / stripsPerBox)
-        : cartItem.NOI;
-      updatedProducts[productIndex].pieces += totalBoxes;
-    }
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-  };
+  } catch (err) {
+    console.error("Error adding to cart:", err);
+  }
+};
 
-  const handleDeleteProduct = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
+// Remove one unit (decrease quantity by 1)
+const handleRemove = async (item) => {
+  const id = getItemId(item);
+  if (!id) return console.error("No product id to remove:", item);
+
+  const currentQty = item?.quantity ?? item?.NOI ?? 1;
+  const newQty = Math.max(1, currentQty - 1);
+
+  try {
+    const res = await api.patch(`/cart/${id}`, { quantity: newQty });
+    const updatedCartItems = res.data.data.items || [];
+    setCartItems(updatedCartItems);
+
+    // optimistic: increase pieces back by 1
+    setProducts((prev) =>
+      prev.map((p) => (p._id === id ? { ...p, pieces: (p.pieces ?? p.stock ?? 0) + 1 } : p))
     );
-    if (confirmDelete) {
-      const updated = products.filter((p) => p.id !== id);
-      setProducts(updated);
-      localStorage.setItem("products", JSON.stringify(updated));
+  } catch (err) {
+    console.error("Error removing from cart:", err);
+  }
+};
+
+// Delete full item from cart
+const handleDelete = async (item) => {
+  const id = getItemId(item);
+  if (!id) return console.error("No product id to delete:", item);
+  const returnQty = item?.quantity ?? item?.NOI ?? 0;
+
+  try {
+    const res = await api.delete(`/cart/${id}`);
+    const updatedCartItems = res.data.data.items || [];
+    setCartItems(updatedCartItems);
+
+    // optimistic: add back the removed quantity
+    setProducts((prev) =>
+      prev.map((p) => (p._id === id ? { ...p, pieces: (p.pieces ?? p.stock ?? 0) + returnQty } : p))
+    );
+  } catch (err) {
+    console.error("Error deleting cart item:", err);
+  }
+};
+
+// Clear cart
+const handleClearCart = async () => {
+  try {
+    const res = await api.delete("/cart/clear-cart");
+    setCartItems(res.data.data.items || []); // should be []
+    // safe approach: re-fetch products from server to sync stocks
+    try {
+      const prodRes = await api.get("/products?limit=100");
+      const items = (prodRes.data?.data || []).map(mapProduct);
+      setProducts(items.length ? items : products);
+      localStorage.setItem("products", JSON.stringify(items));
+    } catch (err) {
+      console.warn("Failed to refresh products after clearing cart:", err);
+    }
+  } catch (err) {
+    console.error("Error clearing cart:", err);
+  }
+};
+
+
+
+  const handleDeleteProduct = async (id) => {
+    try {
+      await api.delete(`/products/${id}`);
+      setProducts((prev) => prev.filter((p) => p._id !== id));
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product. Check console.");
     }
   };
 
@@ -247,7 +311,7 @@ function App() {
   const [editedProduct, setEditedProduct] = useState({ name: "", price: "" });
 
   const handleEdit = (product) => {
-    setEditingProductId(product.id);
+    setEditingProductId(product._id);
     setEditedProduct({
       name: product.name,
       price: product.price,
@@ -258,31 +322,35 @@ function App() {
     });
   };
 
-  const handleUpdate = (e, id) => {
-    e.preventDefault();
-    const updatedProducts = products.map((product) =>
-      product.id === id
-        ? {
-            ...product,
-            name: editedProduct.name,
-            price: +editedProduct.price,
-            image: editedProduct.image,
-            pieces: +editedProduct.pieces,
-            stripsPerBox: +editedProduct.stripsPerBox,
-          }
-        : product
-    );
-    setProducts(updatedProducts);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    setEditingProductId(null);
+  const handleUpdate = async (id, updatedProduct) => {
+    try {
+      const payload = {
+        name: updatedProduct.name,
+        description: updatedProduct.desc,
+        price: Number(updatedProduct.price),
+        category: updatedProduct.category,
+        image: updatedProduct.image,
+        stock: Number(updatedProduct.pieces),
+        has_strips: updatedProduct.stripsPerBox > 0,
+        strip_count: Number(updatedProduct.stripsPerBox),
+      };
+
+      const res = await api.patch(`/products/${id}`, payload);
+      setProducts((prev) =>
+        prev.map((p) => (p._id === id ? mapProduct(res.data.data) : p))
+      );
+    } catch (err) {
+      console.error("Error updating product:", err);
+      alert("Failed to update product. Check console.");
+    }
   };
 
   return (
     <div className={!shouldHideNavbar ? "pt-5" : ""}>
-       {!shouldHideNavbar && (
+      {!shouldHideNavbar && (
         <>
           <Navbar
-            count={cartItems.reduce((a, c) => a + c.NOI, 0)}
+            count={cartItems.reduce((a, c) => a + (c.quantity ?? c.NOI ?? 0), 0)}
             darkMode={darkMode}
             setDarkMode={setDarkMode}
             user={user}
@@ -294,7 +362,11 @@ function App() {
           <SubNavbar />
         </>
       )}
-      <div className={!shouldHideNavbar ? "mt-4 container-fluid p-0" : "container-fluid p-0"}>
+      <div
+        className={
+          !shouldHideNavbar ? "mt-4 container-fluid p-0" : "container-fluid p-0"
+        }
+      >
         <Routes>
           <Route
             path="/"

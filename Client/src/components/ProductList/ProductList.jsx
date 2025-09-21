@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import strip from "./strip.png"
+import strip from "./strip.png";
 
 function ProductList({
   products,
@@ -21,244 +21,284 @@ function ProductList({
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.desc.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   return (
-    <>
-      <div className="row p-5 justify-content-center">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ width: "100%" }} className="row justify-content-center  ">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
-              key={product.id}
-              className="col-lg-3 col-md-4 col-sm-6 col-12 m-5"
+              key={product._id}
+              className=" col-lg-3 col-md-4 col-sm-6 g-4 mb-4"
             >
               <div
-                className={`card h-100 shadow-sm border-1 d-flex flex-column justify-content-between ${
+                className={` p-3 h-100 shadow-sm border-1 d-flex flex-column justify-content-between ${
                   product.IsRoshetta
                     ? "border-danger border-3 shadow-danger"
                     : ""
                 }`}
               >
-                <div className="p-2">
-                  <Link to={`/product/${product.id}`}>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className=" w-100 "
-                      style={{
-                        maxHeight: "230px",
-                        objectFit: "contain",
-                        opacity: 0.9,
-                        marginBottom: "8px",
-                      }}
-                    />
-                  </Link>
-                </div>
-
-                <div className="card-body d-flex flex-column justify-content-between pt-0">
-                  <div>
-                    <p className="mb-0 small">{product.pieces} pieces</p>
-
-                    <h3 className="card-title text-truncate mb-3">
-                      <Link
-                        to={`/product/${product.id}`}
-                        className="text-decoration-none text-dark link"
-                      >
-                        {product.name}<h6 style={{color:"red"}}>{product.IsRoshetta? "Need a Prescription":""}</h6>
-                      </Link>
-                    </h3>
+                <div className=" d-flex flex-column justify-content-between ">
+                  <div className=" h-100">
+                    <Link to={`/product/${product._id}`}>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className=" w-100 "
+                        style={{
+                          height: "190px",
+                          objectFit: "contain",
+                          borderRadius: "8px",
+                          marginBottom: "30px",
+                          padding: "10px",
+                          boxShadow: "0 0px 3px rgba(172, 172, 172, 0.8)",
+                        }}
+                      />
+                    </Link>
                   </div>
 
-                  <div className="d-flex justify-content-between align-items-center mt-auto">
+                  <div className="card-body d-flex flex-column justify-content-center ">
                     <div>
-                      <p className="mb-1 fs-4 fw-bold">${product.price}</p>
+                      <div>
+                        <p className="mb-1  small">{product.pieces} pieces</p>
+
+                        <h4 className="card-title text-truncate mb-3">
+                          <Link
+                            to={`/product/${product._id}`}
+                            className="text-decoration-none text-dark link"
+                          >
+                            {product.name}
+                            <h6 style={{ color: "red" }}>
+                              {product.IsRoshetta ? "Need a Prescription" : ""}
+                            </h6>
+                          </Link>
+                        </h4>
+                      </div>
                     </div>
 
-                    {user?.role !== "admin" && (
-                      <div className="d-flex gap-2">
-                        {product.stripsPerBox > 0 ? (
-                          <>
-                            <button
-                              style={{
-                                height: "50px",
-                                width: "50px",
-                                borderRadius: "50%",
-                                border:"solid 1px green",
-                                backgroundColor:"green"
-                              }}
-                              className="btn btn-sm scale-btn"
-                              onClick={() =>
-                                handleAdd({ ...product, isStrip: true })
-                              }
-                              disabled={product.pieces === 0 || product.IsRoshetta==true}
-                            >
-                              <img src={strip} alt="" style={{ width: "100%", height: "100%", borderRadius:"50%", fontSize:"900px", backgroundColor:"green" }}/>
-                            </button>
+                    <div className="d-flex justify-content-between align-items-center mt-auto">
+                      <div className=" d-flex">
+                        <p className="mb-1 fs-4 fw-bold">${product.price}</p>
+                      </div>
 
+                      {user?.role !== "admin" && (
+                        <div className="d-flex gap-2">
+                          {product.stripsPerBox > 0 ? (
+                            <>
+                              <button
+                                style={{
+                                  height: "50px",
+                                  width: "50px",
+                                  borderRadius: "50%",
+                                  border: "solid 1px green",
+                                  backgroundColor: "green",
+                                }}
+                                className="btn btn-sm scale-btn"
+                                onClick={() =>
+                                  handleAdd({ ...product, isStrip: true })
+                                }
+                                disabled={
+                                  product.pieces === 0 ||
+                                  product.IsRoshetta == true
+                                }
+                              >
+                                <img
+                                  src={strip}
+                                  alt=""
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    borderRadius: "50%",
+                                    fontSize: "900px",
+                                    backgroundColor: "green",
+                                  }}
+                                />
+                              </button>
+
+                              <button
+                                style={{
+                                  height: "50px",
+                                  width: "50px",
+                                  borderRadius: "50%",
+                                  fontSize: "25px",
+                                }}
+                                className="btn btn-sm btn-outline-success scale-btn"
+                                onClick={() =>
+                                  handleAdd({
+                                    ...product,
+                                    isStrip: false,
+                                    NOI: product.stripsPerBox,
+                                  })
+                                }
+                                disabled={
+                                  product.pieces === 0 ||
+                                  product.IsRoshetta == true
+                                }
+                              >
+                                <i className="bi bi-cart-plus"></i>
+                              </button>
+                            </>
+                          ) : (
                             <button
                               style={{
                                 height: "50px",
                                 width: "50px",
                                 borderRadius: "50%",
+                                fontSize: "25px",
                               }}
-                              className="btn btn-sm btn-outline-success scale-btn"
-                              onClick={() =>
-                                handleAdd({
-                                  ...product,
-                                  isStrip: false,
-                                  NOI: product.stripsPerBox,
-                                })
+                              className="btn btn-sm btn-success scale-btn"
+                              onClick={() => handleAdd(product)}
+                              disabled={
+                                product.pieces === 0 ||
+                                product.IsRoshetta == true
                               }
-                              disabled={product.pieces === 0 || product.IsRoshetta==true}
                             >
                               <i className="bi bi-cart-plus"></i>
                             </button>
-                          </>
-                        ) : (
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {user?.role === "admin" && (
+                      <div className="mt-2 d-flex flex-column gap-2">
+                        <div className="d-flex gap-2">
                           <button
-                            style={{
-                              height: "50px",
-                              width: "50px",
-                              borderRadius: "50%",
-                            }}
-                            className="btn btn-sm btn-success scale-btn"
-                            onClick={() => handleAdd(product)}
-                            disabled={product.pieces === 0 || product.IsRoshetta==true}
+                            className="btn btn-sm btn-warning "
+                            onClick={() => handleEdit(product)}
                           >
-                            <i className="bi bi-cart-plus"></i>
+                            Edit
                           </button>
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => handleDeleteProduct(product._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+
+                        {editingProductId === product._id && (
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              handleUpdate(product._id, editedProduct);
+                            }}
+                            className="mt-2 d-flex flex-column gap-2"
+                          >
+                            <input
+                              type="text"
+                              value={editedProduct.name}
+                              onChange={(e) =>
+                                setEditedProduct({
+                                  ...editedProduct,
+                                  name: e.target.value,
+                                })
+                              }
+                              placeholder="Edit Name"
+                              className="form-control"
+                            />
+
+                            <input
+                              type="number"
+                              value={editedProduct.price}
+                              onChange={(e) =>
+                                setEditedProduct({
+                                  ...editedProduct,
+                                  price: +e.target.value,
+                                })
+                              }
+                              placeholder="Edit Price"
+                              className="form-control"
+                            />
+
+                            <input
+                              type="text"
+                              value={editedProduct.image}
+                              onChange={(e) =>
+                                setEditedProduct({
+                                  ...editedProduct,
+                                  image: e.target.value,
+                                })
+                              }
+                              placeholder="Edit Image URL"
+                              className="form-control"
+                            />
+
+                            <input
+                              type="number"
+                              value={editedProduct.pieces}
+                              onChange={(e) =>
+                                setEditedProduct({
+                                  ...editedProduct,
+                                  pieces: +e.target.value,
+                                })
+                              }
+                              placeholder="Edit Pieces Available"
+                              className="form-control"
+                            />
+
+                            <input
+                              type="number"
+                              value={editedProduct.stripsPerBox}
+                              onChange={(e) =>
+                                setEditedProduct({
+                                  ...editedProduct,
+                                  stripsPerBox: +e.target.value,
+                                })
+                              }
+                              placeholder="Strips per Box"
+                              className="form-control"
+                            />
+
+                            <textarea
+                              value={editedProduct.desc}
+                              onChange={(e) =>
+                                setEditedProduct({
+                                  ...editedProduct,
+                                  desc: e.target.value,
+                                })
+                              }
+                              placeholder="Edit Description"
+                              className="form-control"
+                            />
+
+                            <div className="form-check">
+                              <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id={`isStrip-${product._id}`}
+                                checked={editedProduct.isStrip || false}
+                                onChange={(e) =>
+                                  setEditedProduct({
+                                    ...editedProduct,
+                                    isStrip: e.target.checked,
+                                  })
+                                }
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor={`isStrip-${product._id}`}
+                              >
+                                Has Strips
+                              </label>
+                            </div>
+
+                            <button
+                              type="submit"
+                              className="btn btn-success btn-sm"
+                            >
+                              Save
+                            </button>
+                          </form>
                         )}
                       </div>
                     )}
                   </div>
-                  {user?.role === "admin" && (
-                    <div className="mt-2 d-flex flex-column gap-2">
-                      <div className="d-flex gap-2">
-                        <button
-                          className="btn btn-sm btn-warning "
-                          onClick={() => handleEdit(product)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDeleteProduct(product.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-
-                      {editingProductId === product.id && (
-                        <form
-                          onSubmit={(e) => handleUpdate(e, product.id)}
-                          className="mt-2 d-flex flex-column gap-2"
-                        >
-                          <input
-                            type="text"
-                            value={editedProduct.name}
-                            onChange={(e) =>
-                              setEditedProduct({
-                                ...editedProduct,
-                                name: e.target.value,
-                              })
-                            }
-                            placeholder="Edit Name"
-                            className="form-control"
-                          />
-
-                          <input
-                            type="number"
-                            value={editedProduct.price}
-                            onChange={(e) =>
-                              setEditedProduct({
-                                ...editedProduct,
-                                price: +e.target.value,
-                              })
-                            }
-                            placeholder="Edit Price"
-                            className="form-control"
-                          />
-
-                          <input
-                            type="text"
-                            value={editedProduct.image}
-                            onChange={(e) =>
-                              setEditedProduct({
-                                ...editedProduct,
-                                image: e.target.value,
-                              })
-                            }
-                            placeholder="Edit Image URL"
-                            className="form-control"
-                          />
-
-                          <input
-                            type="number"
-                            value={editedProduct.pieces}
-                            onChange={(e) =>
-                              setEditedProduct({
-                                ...editedProduct,
-                                pieces: +e.target.value,
-                              })
-                            }
-                            placeholder="Edit Pieces Available"
-                            className="form-control"
-                          />
-
-                          <input
-                            type="number"
-                            value={editedProduct.stripsPerBox}
-                            onChange={(e) =>
-                              setEditedProduct({
-                                ...editedProduct,
-                                stripsPerBox: +e.target.value,
-                              })
-                            }
-                            placeholder="Strips per Box"
-                            className="form-control"
-                          />
-
-                          <textarea
-                            value={editedProduct.desc}
-                            onChange={(e) =>
-                              setEditedProduct({
-                                ...editedProduct,
-                                desc: e.target.value,
-                              })
-                            }
-                            placeholder="Edit Description"
-                            className="form-control"
-                          />
-
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              id={`isStrip-${product.id}`}
-                              checked={editedProduct.isStrip || false}
-                              onChange={(e) =>
-                                setEditedProduct({
-                                  ...editedProduct,
-                                  isStrip: e.target.checked,
-                                })
-                              }
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`isStrip-${product.id}`}
-                            >
-                              Has Strips
-                            </label>
-                          </div>
-
-                          <button
-                            type="submit"
-                            className="btn btn-success btn-sm"
-                          >
-                            Save
-                          </button>
-                        </form>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -291,7 +331,7 @@ function ProductList({
             <input
               type="number"
               className="form-control mb-2"
-              placeholder="Available-Peices"
+              placeholder="Available-pieces"
               value={newProduct.pieces}
               onChange={(e) =>
                 setNewProduct({ ...newProduct, pieces: +e.target.value })
@@ -347,7 +387,7 @@ function ProductList({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

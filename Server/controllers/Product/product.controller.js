@@ -5,6 +5,7 @@ import { validateObjectId } from "../../utils/validateObjectId.js";
 // Create Product
 export const createProductController = async (req, res, next) => {
   try {
+    console.log("📩 Incoming body:", req.body);
     const data = req.body;
 
     const newProduct = new Product({
@@ -15,10 +16,13 @@ export const createProductController = async (req, res, next) => {
 
     if (!newProduct) throw new BadRequestError("Product not created");
 
+     console.log("✅ Product saved:", newProduct); 
     res.status(201).json({
       message: "Product created successfully",
       data: newProduct,
     });
+    
+
   } catch (error) {
     next(error);
   }
