@@ -105,3 +105,29 @@
  *       401:
  *         description: Unauthorized
  */
+
+/**
+ * @swagger
+ * /api/order/{id}/cancel:
+ *   patch:
+ *     summary: Cancel an existing order
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The order ID to cancel
+ *     responses:
+ *       200:
+ *         description: Order canceled successfully
+ *       400:
+ *         description: Bad request (e.g. already canceled or not allowed)
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Order not found
+ */

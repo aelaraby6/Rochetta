@@ -39,6 +39,9 @@
  *         image:
  *           type: string
  *           format: binary
+ *         top_selling :
+ *           type: boolean
+ *           example: false
  *         rating:
  *           type: number
  *           example: 4

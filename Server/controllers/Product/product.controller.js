@@ -39,8 +39,6 @@ export const createProductController = async (req, res, next) => {
       message: "Product created successfully",
       data: newProduct,
     });
-    
-
   } catch (error) {
     next(error);
   }
@@ -54,12 +52,22 @@ export const GetAllProductsController = async (req, res, next) => {
     const sortBy = req.query.sort || "createdAt";
     const sortOrder = req.query.order === "asc" ? 1 : -1;
 
-    if (isNaN(page) || page < 1) throw new BadRequestError("Invalid page number");
+    if (isNaN(page) || page < 1)
+      throw new BadRequestError("Invalid page number");
     if (isNaN(limit) || limit < 1 || limit > 100)
       throw new BadRequestError("Limit must be between 1 and 100");
 
     const filters = { is_deleted: false };
-    if (req.query.name) filters.name = { $regex: req.query.name, $options: "i" };
+
+    // Filter by name if provided
+    if (req.query.name) {
+      filters.name = { $regex: req.query.name, $options: "i" };
+    }
+
+    // Filter by top_selling if provided
+    if (req.query.top_selling !== undefined) {
+      filters.top_selling = req.query.top_selling === "true";
+    }
 
     const products = await Product.find(filters)
       .skip(skip)
@@ -107,7 +115,11 @@ export const DeleteProductController = async (req, res, next) => {
     const { id } = req.params;
     validateObjectId(id, "product id");
 
-    const product = await Product.findByIdAndUpdate(id, { is_deleted: true }, { new: true }).select("-__v");
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { is_deleted: true },
+      { new: true }
+    ).select("-__v");
     if (!product) throw new NotFoundError("Product not found");
 
     res.json({ message: "Product deleted successfully" });
