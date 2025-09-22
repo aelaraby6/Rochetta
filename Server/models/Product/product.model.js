@@ -49,6 +49,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    top_selling: { type: Boolean, default: false },
     is_deleted: {
       type: Boolean,
       default: false,

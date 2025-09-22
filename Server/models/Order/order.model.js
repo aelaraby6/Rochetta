@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-  const orderSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema(
+  {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     items: [
       {
@@ -21,8 +22,10 @@ import mongoose from "mongoose";
     },
     address: { type: String, required: true },
     is_deleted: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+  },
+  {
+    timestamps: true,
+  }
+);
 
-  });
-
-export const Order = mongoose.model("order", orderSchema);  
+export const Order = mongoose.model("order", orderSchema);

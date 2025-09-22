@@ -70,13 +70,13 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
 
   return (
     <div className="container-fluid d-flex flex-column flex-md-row min-vh-100">
-      <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-4 py-5 position-relative">
-        <a
+      <div className="col-12 col-md-6 d-flex flex-column justify-content-center px-3 py-4 position-relative">
+        {/* <a
           href="#"
           className="position-absolute top-0 start-0 m-4 fs-4 fw-bold text-success text-decoration-none"
         >
           PharmaXpress
-        </a>
+        </a> */}
 
         <div className="text-center">
           <h1 className="display-5 fw-bold mb-2">Create An Account</h1>
