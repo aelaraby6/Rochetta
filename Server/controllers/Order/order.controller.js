@@ -1,7 +1,6 @@
 import { BadRequestError, NotFoundError } from "../../Errors/error.js";
 import { Cart } from "../../models/Cart/cart.model.js";
 import { Order } from "../../models/Order/order.model.js";
-import Product from "../../models/Product/product.model.js";
 import User from "../../models/User/user.model.js";
 
 export const CreateOrderController = async (req, res, next) => {

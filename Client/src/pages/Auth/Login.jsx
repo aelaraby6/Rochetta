@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
-import LoginImg from "../../assets/Auth/login.jpg";
+import LoginImg from "../../assets/Auth/login.png";
 
 export default function Login({ setIsLoggedIn, setUser }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -20,7 +20,7 @@ export default function Login({ setIsLoggedIn, setUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true); 
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -50,21 +50,23 @@ export default function Login({ setIsLoggedIn, setUser }) {
   };
 
   return (
-    <div
-      style={{ height: "100vh" }}
-      className="login-container d-flex align-items-center justify-content-center"
-    >
+    <div className="login-container d-flex align-items-center justify-content-center">
       <div className="shadow p-4 login-card">
         <div className="row g-0 align-items-center">
-          <div className="col-md-6">
+          <div className="col-md-6 d-flex justify-content-center">
             <img
               src={LoginImg}
               alt="Login"
-              className="img-fluid rounded-start"
+              className="img-fluid"
+              style={{
+                maxWidth: "85%",
+                borderRadius: "20px",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+              }}
             />
           </div>
           <div className="col-md-6">
-            <div className="card-body">
+            <div className="card-body p-3">
               <h2
                 className="card-title text-center mb-4"
                 style={{ color: "green" }}
