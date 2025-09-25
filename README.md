@@ -17,6 +17,12 @@ PharmaXpress is a MERN-Stack web application that provides a seamless experience
 - Add new products with images, prices, and details.
 - Edit or delete existing products.
 
+<img width="1901" height="888" alt="home" src="https://github.com/user-attachments/assets/e36f327f-0616-420b-ae31-deef09c93ed4" />
+
+<img width="1810" height="857" alt="signup" src="https://github.com/user-attachments/assets/a3c671c8-46fa-481f-9c28-2fe752f858e2" />
+
+<img width="1851" height="861" alt="login" src="https://github.com/user-attachments/assets/96340a29-4ada-4845-818c-fbc9b6034331" />
+
 ---
 
 ## 🖥️ Tech Stack
@@ -67,24 +73,27 @@ PharmaXpress is a MERN-Stack web application that provides a seamless experience
 
 ### 🎯 Use Cases
 
+<img width="894" height="197" alt="Admin" src="https://github.com/user-attachments/assets/2396b164-c8d4-419a-a0f5-1b05cb55821f" />
 
+<img width="366" height="191" alt="Auth" src="https://github.com/user-attachments/assets/0e49cbd5-6eff-4c61-bdf0-9214f22e628a" />
 
-
+<img width="735" height="878" alt="User" src="https://github.com/user-attachments/assets/73dba00f-512c-43eb-a95b-4df6e3e4fae0" />
 
 ---
 
 ### 🗂️ ERD 
 Below is the **ERD** representation of the system:  
 
-
+<img width="1279" height="1236" alt="erd" src="https://github.com/user-attachments/assets/9c884abb-57b5-49ea-a170-a93e05090fb3" />
 
 ---
 
 ## 📸 API Endpoints – Screenshots
 Here are sample screenshots from **Swagger UI** showing the API endpoints:
 
+<img width="650" height="557" alt="first" src="https://github.com/user-attachments/assets/8e7b37e4-4437-466b-97c4-6bae8c5a2304" />
 
-
+<img width="642" height="820" alt="second" src="https://github.com/user-attachments/assets/f4df8277-ceee-4a8d-9137-fa854252b430" />
 
 ---
 
