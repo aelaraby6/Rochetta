@@ -1,48 +1,90 @@
-<!-- # PharmaXpress – E-commerce Pharmacy
+# 💊 PharmaXpress – Online Pharmacy Platform
 
-PharmaXpress is a **React-based** e-commerce web application for an online pharmacy.  
-It allows users to browse medical products, search by categories, add items to their cart, and manage their profile.  
-The app supports **dark mode**, uses **Bootstrap** for responsive UI, and stores user/cart data locally with **Local Storage**.
+PharmaXpress is a MERN-Stack web application that provides a seamless experience for users to purchase medicines online and for admins to manage pharmacy operations.
 
 ---
 
 ## 🚀 Features
 
+### 👤 User Features
+- Browse medicines by categories.
+- Choose between purchasing a **strip** or a **full box**, just like a real pharmacy.
+- Add medicines to the Cart and manage quantities.
+- Place an Order.
+- Secure **Login/Register** with JWT authentication.
+
+### 🛠️ Admin Features
+- Add new products with images, prices, and details.
+- Edit or delete existing products.
+
+---
+
+## 🖥️ Tech Stack
+
+### **Frontend**
+- React.js 
+- React Router DOM
+- TailwindCSS 
+- Axios
+
+### **Backend**
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- JWT Authentication & Bcrypt for password hashing
+- **Cloudinary** for product image uploads
+- **Rate Limiting** for security
+- **Validation with Joi** for request validation
+- **Swagger** for API documentation
+
+---
+
+## 🎨 Frontend – Features
 - **Home Page** – Showcase top products and quick navigation to categories.
 - **Cart Page** – View, update, and remove products from the cart.
 - **Profile Page** – Display user details and manage account.
 - **Categories Page** – Browse products by category.
-- **Authentication** – Sign Up & Login functionality with local storage.
+- **Authentication** – Sign Up & Login functionality with **JWT stored in Local Storage**.
 - **Dark Mode** – Toggle between light and dark themes.
 - **Product Search** – Search for products by name or keyword.
-- **Local Storage** – Persistent user and cart data storage.
 - **404 Page** – Custom page for invalid routes.
 - **Responsive Design** – Built with Bootstrap for mobile-friendly UI.
 
-<img width="1892" height="782" alt="products" src="https://github.com/user-attachments/assets/6066a332-af17-4d13-8c65-f368428a4284" />
+---
 
-<img width="1842" height="735" alt="signup" src="https://github.com/user-attachments/assets/33d767ce-9e5a-4baa-bfbd-a16aa20a660b" />
-
-<img width="1101" height="611" alt="login" src="https://github.com/user-attachments/assets/580c56ff-c6ca-4899-9c59-e0326c425416" />
+## ⚙️ Backend – Features
+- **Authentication & Authorization** – Secure login/register using JWT & bcrypt with role-based access (User/Admin).
+- **Product Management** – Admin can add, edit, and delete products with images uploaded to **Cloudinary**.
+- **Order Management** – Create, update, and manage orders with different statuses.
+- **Cart Management** – Add, update, and remove items in the cart.
+- **Validation** – Request validation with **Joi** for products, users, and orders.
+- **Security** – Implemented **Rate Limiting** and password hashing to prevent brute-force attacks.
+- **API Documentation** – Integrated **Swagger UI** for interactive API exploration and testing.
+- **Database** – Built with MongoDB & Mongoose for schema modeling and data relationships.
 
 
 ---
 
-## 🛠️ Tech Stack
+### 🎯 Use Cases
 
-- **Frontend:** React, React Router DOM
-- **UI Framework:** Bootstrap
- 
+
+
+
+
 ---
 
-## 🔑 Admin Credentials
+### 🗂️ ERD 
+Below is the **ERD** representation of the system:  
 
-Use the following credentials to log in as an **Admin**:
 
-| Field        | Value                   |
-|--------------|-------------------------|
-| **Email**    | abdelrahman@gmail.com   |
-| **Password** | admin123                |
+
+---
+
+## 📸 API Endpoints – Screenshots
+Here are sample screenshots from **Swagger UI** showing the API endpoints:
+
+
+
 
 ---
 
@@ -67,4 +109,3 @@ Thanks goes to these wonderful people in the frontend team:
   </tr>
 </table>
 
- -->
