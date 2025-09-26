@@ -30,15 +30,16 @@ function ProductList({
         alignItems: "center",
       }}
     >
-      <div style={{ width: "100%" }} className="row justify-content-center  ">
+      <div style={{ width: "100%" }} className="row shadow-2-m  justify-content-center   ">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
               key={product._id}
-              className=" col-lg-3 col-md-4 col-sm-6 g-4 mb-4"
+              className=" col-lg-3 col-md-4 col-sm-6 g-4 mb-4 "
             >
               <div
-                className={` p-3 h-100 shadow-sm border-1 d-flex flex-column justify-content-between ${
+              style={{borderRadius:"8px",boxShadow:"0 0 3px rgba(172, 172, 172, 0.8)"}}
+                className={` p-3 h-100 d-flex flex-column justify-content-between ${
                   product.IsRoshetta
                     ? "border-danger border-3 shadow-danger"
                     : ""
@@ -74,7 +75,7 @@ function ProductList({
                             className="text-decoration-none text-dark link"
                           >
                             {product.name}
-                            <h6 style={{ color: "red" }}>
+                            <h6 className=" bg-red">
                               {product.IsRoshetta ? "Need a Prescription" : ""}
                             </h6>
                           </Link>
@@ -97,9 +98,9 @@ function ProductList({
                                   width: "50px",
                                   borderRadius: "50%",
                                   border: "solid 1px green",
-                                  backgroundColor: "green",
+                                  
                                 }}
-                                className="btn btn-sm scale-btn"
+                                className="btn btn-sm scale-btn bg-success"
                                 onClick={() =>
                                   handleAdd({ ...product, isStrip: true })
                                 }
@@ -116,8 +117,9 @@ function ProductList({
                                     height: "100%",
                                     borderRadius: "50%",
                                     fontSize: "900px",
-                                    backgroundColor: "green",
+                                    
                                   }}
+                                  className="bg-success"
                                 />
                               </button>
 
@@ -151,8 +153,9 @@ function ProductList({
                                 width: "50px",
                                 borderRadius: "50%",
                                 fontSize: "25px",
+                                color:"white"
                               }}
-                              className="btn btn-sm btn-success scale-btn"
+                              className="btn btn-sm bg-success scale-btn"
                               onClick={() => handleAdd(product)}
                               disabled={
                                 product.pieces === 0 ||

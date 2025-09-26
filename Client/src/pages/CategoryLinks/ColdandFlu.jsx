@@ -15,10 +15,11 @@ function ColdandFlu({
   setNewProduct,
   handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "Cold and Flu");
-
+ const filtered = products.filter(
+  (p) => (p.category && p.category.name === "Cold and Flu") || p.category === "Cold and Flu"
+);
   return (
-    <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+    <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}x>
    <div className=" productStyle"
   
    onMouseEnter={(e) => {
@@ -31,19 +32,13 @@ function ColdandFlu({
       }}
 >
   {/* ===== Description Section ===== */}
-  <div style={{ marginBottom: "25px", marginLeft:"20px"}}>
+  <div  className="desc-section">
     <h3
-      style={{
-        fontWeight: "700",
-        marginBottom: "12px",
-        borderLeft: "4px solid #28a745",
-        paddingLeft: "10px",
-        color: "#333",
-      }}
+     className="desc-title"
     >
      Cold and Flu
     </h3>
-    <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
+    <p className="desc-text">
        Cold and Flu products help relieve common symptoms such as nasal congestion,
     cough, fever, and headache. For best results, combine medication with rest
     and adequate hydration.

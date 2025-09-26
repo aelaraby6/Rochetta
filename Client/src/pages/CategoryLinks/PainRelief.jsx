@@ -15,8 +15,9 @@ function PainRelief({
   setNewProduct,
   handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "Pain Relief");
-
+  const filtered = products.filter(
+  (p) => (p.category && p.category.name === "Pain Relief") || p.category === "Pain Relief"
+);
   return (
     <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
    <div className="productStyle"
@@ -28,19 +29,13 @@ function PainRelief({
       }}
 >
   {/* ===== Description Section ===== */}
-  <div style={{ marginBottom: "25px", marginLeft:"20px"}}>
+  <div className="desc-section">
     <h3
-      style={{
-        fontWeight: "700",
-        marginBottom: "12px",
-        borderLeft: "4px solid #28a745",
-        paddingLeft: "10px",
-        color: "#333",
-      }}
+      className="desc-title"
     >
       Pain Relief
     </h3>
-    <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
+    <p className="desc-text">
       Pain relief products help reduce mild to moderate pain such as headaches,
       muscle aches, and joint pain. Always follow the recommended dosage and
       consult your doctor if symptoms persist.

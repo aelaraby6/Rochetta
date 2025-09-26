@@ -15,7 +15,10 @@ function FirstAid({
   setNewProduct,
   handleAddNewProduct
 }) {
-  const filtered = products.filter((p) => p.category === "First Aid");
+ // فى FirstAid component
+const filtered = products.filter(
+  (p) => (p.category && p.category.name === "First Aid") || p.category === "First Aid"
+);
 
    return (
     <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
@@ -31,19 +34,13 @@ function FirstAid({
       }}
 >
   {/* ===== Description Section ===== */}
-  <div style={{ marginBottom: "25px", marginLeft:"20px"}}>
+  <div className="desc-section">
     <h3
-      style={{
-        fontWeight: "700",
-        marginBottom: "12px",
-        borderLeft: "4px solid #28a745",
-        paddingLeft: "10px",
-        color: "#333",
-      }}
+     className="desc-title"
     >
       First Aid
     </h3>
-    <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
+    <p className="desc-text">
       First aid products include bandages, antiseptics, and wound care essentials
     that provide quick treatment for minor injuries and help prevent infections.
 

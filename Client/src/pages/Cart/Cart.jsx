@@ -45,12 +45,13 @@ export default function Cart({
   return (
     <>
       <div
-        style={{
-          backgroundColor: "#f9fafb",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        // style={{
+        //   backgroundColor: "#f9fafb",
+        //   minHeight: "100vh",
+        //   display: "flex",
+        //   flexDirection: "column",
+        // }}
+        className=" cart-item p-3 d-flex flex-column"
       >
         {/* Page Content */}
         <div
@@ -80,7 +81,7 @@ export default function Cart({
                   return (
                     <div
                       key={`${id}-${index}`}
-                      className="d-flex justify-content-between align-items-center"
+                      className="cart-item d-flex justify-content-between align-items-center"
                       style={{
                         backgroundColor: "#fff",
                         padding: 20,

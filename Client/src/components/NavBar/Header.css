@@ -5,6 +5,17 @@
   letter-spacing: 1px;
 }
 
+/* Logo in Light Mode */
+body.light .navbar-brand {
+  color: #ffffff !important; 
+}
+
+/* Logo in Dark Mode */
+body.dark .navbar-brand {
+  color: #fefefe !important; 
+}
+
+
 @media (max-width: 768px) {
   .navbar form {
     width: 100%;
@@ -26,5 +37,6 @@ background-color:#f5f5f5 !important;
    font-family: "Cairo", sans-serif;
   font-weight: 600 !important;
   font-size: large !important;
+  color: rgb(0, 128, 0);
 }
 

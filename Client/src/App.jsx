@@ -16,7 +16,7 @@ import Signup from "./pages/Auth/signup";
 import NotFound from "./pages/Errors/NotFound";
 
 import "./App.css";
-import api from "./api"; // <-- added
+import api from "./api"; 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {

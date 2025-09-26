@@ -11,12 +11,11 @@ export default function Header({
 }) {
   return (
     <nav
-      style={{ backgroundColor: "#ffffff" }}
       className="navbar navbar-expand-lg navbar-light px-4 fixed-top shadow-sm"
     >
       <div className="container-fluid">
         {/* Logo */}
-        <Link className="navbar-brand rochetta-font fs-3 text-success" to="/">
+        <Link  className="navbar-brand rochetta-font fs-3 " to="/">
           PharmaXpress
         </Link>
 
@@ -62,7 +61,7 @@ export default function Header({
 
             <li className="nav-item">
               <button
-                className="btn btn-sm btn-outline-secondary w-100 w-lg-auto me-lg-3 mt-2 mt-lg-0"
+                className="btn btn-toggle-mode btn-sm btn-outline-secondary w-100 w-lg-auto me-lg-3 mt-2 mt-lg-0"
                 onClick={() => setDarkMode((prev) => !prev)}
               >
                 {darkMode ? "Light Mode" : "Dark Mode"}
