@@ -14,6 +14,9 @@ function DiabetesCare({
   newProduct,
   setNewProduct,
   handleAddNewProduct,
+  categories,
+  setEditingProductId,
+  handleCancelEdit,
 }) {
   const filtered = products.filter(
     (p) =>
@@ -28,9 +31,10 @@ function DiabetesCare({
         <div className="desc-section">
           <h3 className="desc-title">Diabetes Care</h3>
           <p className="desc-text">
-            Diabetes care products support blood sugar monitoring and management.
-            They include glucose meters, test strips, and supplements that help
-            maintain a healthy lifestyle for diabetic patients.
+            Diabetes care products support blood sugar monitoring and
+            management. They include glucose meters, test strips, and
+            supplements that help maintain a healthy lifestyle for diabetic
+            patients.
           </p>
         </div>
 
@@ -45,9 +49,12 @@ function DiabetesCare({
           editingProductId={editingProductId}
           editedProduct={editedProduct}
           setEditedProduct={setEditedProduct}
+          setEditingProductId={setEditingProductId}
+          handleCancelEdit={handleCancelEdit}
           newProduct={newProduct}
           setNewProduct={setNewProduct}
           handleAddNewProduct={handleAddNewProduct}
+          categories={categories}
         />
       </div>
     </div>
@@ -56,8 +63,7 @@ function DiabetesCare({
 
 export default DiabetesCare;
 
-
-  // <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
-  //      Diabetes care products support blood sugar monitoring and management. They
-  //   include glucose meters, test strips, and supplements that help maintain a
-  //  healt
+// <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
+//      Diabetes care products support blood sugar monitoring and management. They
+//   include glucose meters, test strips, and supplements that help maintain a
+//  healt

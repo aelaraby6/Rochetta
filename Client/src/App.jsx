@@ -16,9 +16,24 @@ import Signup from "./pages/Auth/signup";
 import NotFound from "./pages/Errors/NotFound";
 
 import "./App.css";
-import api from "./api"; 
+import api from "./api";
 
 function App() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/category");
+        const list = res.data?.data || [];
+        setCategories(list);
+      } catch (err) {
+        console.warn("Could not fetch categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
   });
@@ -139,6 +154,7 @@ function App() {
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
+    imageFile: null,
     image: "",
     desc: "",
     pieces: "",
@@ -146,50 +162,61 @@ function App() {
     stripsPerBox: "",
   });
 
+  // inside App.jsx (replace your current handleAddNewProduct)
+  // داخل App.jsx -> handleAddNewProduct (استبدل نسختك بهذه النسخة)
   const handleAddNewProduct = async () => {
     try {
-      const payload = {
-        name: newProduct.name,
-        description: newProduct.desc,
-        price: Number(newProduct.price),
-        category:
-          newProduct.category === "pain-relief"
-            ? "Pain Relief"
-            : newProduct.category === "cold-and-flu"
-            ? "Cold and Flu"
-            : newProduct.category === "first-aid"
-            ? "First Aid"
-            : newProduct.category === "diabetes-care"
-            ? "Diabetes Care"
-            : "",
-        image: newProduct.image,
-        stock: Number(newProduct.pieces),
-        has_strips: newProduct.stripsPerBox > 0,
-        strip_count: Number(newProduct.stripsPerBox),
-      };
-      console.log("🚀 Sending product:", newProduct);
-      const res = await api.post("/products", payload);
-      console.log("📥 Response from server:", res.data);
-      console.log("🛠️ Before update:", products);
+      if (!newProduct.name || !newProduct.price || !newProduct.category) {
+        alert("Please provide name, price and category");
+        return;
+      }
 
-      setProducts((prev) => {
-        const updated = [...prev, mapProduct(res.data.data)];
-        console.log("✨ After update:", updated);
-        return updated;
-      });
+      const form = new FormData();
+      form.append("name", newProduct.name);
+      form.append("description", newProduct.desc || "");
+      form.append("price", String(newProduct.price));
+      form.append("category", newProduct.category); // must be ObjectId
+      form.append("stock", String(newProduct.pieces || 0));
+      form.append("has_strips", String(!!newProduct.stripsPerBox));
+      form.append("strip_count", String(newProduct.stripsPerBox || 0));
+      form.append(
+        "requires_prescription",
+        String(!!newProduct.requires_prescription)
+      );
 
+      if (newProduct.imageFile) {
+        form.append("image", newProduct.imageFile);
+      }
+
+      const res = await api.post("/products", form); // axios sets multipart automatically
+
+      // map response -> frontend shape
+      let created = mapProduct(res.data.data);
+
+      // ====== important: if backend returned category as id (string),
+      // replace with the category object from categories[] so category pages pick it up ======
+      if (created && created.category && typeof created.category === "string") {
+        const catObj = categories.find((c) => c._id === created.category);
+        if (catObj) created.category = catObj;
+      }
+
+      setProducts((prev) => [...prev, created]);
+
+      // reset form
       setNewProduct({
         name: "",
         price: "",
         image: "",
+        imageFile: null,
         desc: "",
         pieces: "",
         category: "",
         stripsPerBox: "",
+        requires_prescription: false,
       });
     } catch (err) {
       console.error("Error adding product:", err);
-      alert("Failed to add product. Check console.");
+      alert(err.response?.data?.message || "Failed to add product");
     }
   };
 
@@ -203,99 +230,109 @@ function App() {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
-// helper: normalize id whether item is product (from list) or cart-item
-const getItemId = (item) => {
-  if (!item) return null;
-  // if passed a product object (from product list)
-  if (item._id && !item.product) return item._id;
-  // if passed a cart item (with product object inside)
-  if (item.product && (item.product._id || item.product.id)) return item.product._id || item.product.id;
-  return null;
-};
+  // helper: normalize id whether item is product (from list) or cart-item
+  const getItemId = (item) => {
+    if (!item) return null;
+    // if passed a product object (from product list)
+    if (item._id && !item.product) return item._id;
+    // if passed a cart item (with product object inside)
+    if (item.product && (item.product._id || item.product.id))
+      return item.product._id || item.product.id;
+    return null;
+  };
 
-// Add (works from product list (product) or from cart (cart-item))
-const handleAdd = async (item) => {
-  const id = getItemId(item);
-  if (!id) return console.error("No product id to add:", item);
+  // Add (works from product list (product) or from cart (cart-item))
+  const handleAdd = async (item) => {
+    const id = getItemId(item);
+    if (!id) return console.error("No product id to add:", item);
 
-  try {
-    const res = await api.post("/cart/add-to-cart", { productId: id, quantity: 1 });
-    const updatedCartItems = res.data.data.items || [];
-    setCartItems(updatedCartItems);
-
-    // optimistic UI update: update 'pieces' locally (mapProduct maps stock -> pieces)
-    setProducts((prev) =>
-      prev.map((p) =>
-        p._id === id ? { ...p, pieces: Math.max(0, (p.pieces ?? p.stock ?? 0) - 1) } : p
-      )
-    );
-  } catch (err) {
-    console.error("Error adding to cart:", err);
-  }
-};
-
-// Remove one unit (decrease quantity by 1)
-const handleRemove = async (item) => {
-  const id = getItemId(item);
-  if (!id) return console.error("No product id to remove:", item);
-
-  const currentQty = item?.quantity ?? item?.NOI ?? 1;
-  const newQty = Math.max(1, currentQty - 1);
-
-  try {
-    const res = await api.patch(`/cart/${id}`, { quantity: newQty });
-    const updatedCartItems = res.data.data.items || [];
-    setCartItems(updatedCartItems);
-
-    // optimistic: increase pieces back by 1
-    setProducts((prev) =>
-      prev.map((p) => (p._id === id ? { ...p, pieces: (p.pieces ?? p.stock ?? 0) + 1 } : p))
-    );
-  } catch (err) {
-    console.error("Error removing from cart:", err);
-  }
-};
-
-// Delete full item from cart
-const handleDelete = async (item) => {
-  const id = getItemId(item);
-  if (!id) return console.error("No product id to delete:", item);
-  const returnQty = item?.quantity ?? item?.NOI ?? 0;
-
-  try {
-    const res = await api.delete(`/cart/${id}`);
-    const updatedCartItems = res.data.data.items || [];
-    setCartItems(updatedCartItems);
-
-    // optimistic: add back the removed quantity
-    setProducts((prev) =>
-      prev.map((p) => (p._id === id ? { ...p, pieces: (p.pieces ?? p.stock ?? 0) + returnQty } : p))
-    );
-  } catch (err) {
-    console.error("Error deleting cart item:", err);
-  }
-};
-
-// Clear cart
-const handleClearCart = async () => {
-  try {
-    const res = await api.delete("/cart/clear-cart");
-    setCartItems(res.data.data.items || []); // should be []
-    // safe approach: re-fetch products from server to sync stocks
     try {
-      const prodRes = await api.get("/products?limit=100");
-      const items = (prodRes.data?.data || []).map(mapProduct);
-      setProducts(items.length ? items : products);
-      localStorage.setItem("products", JSON.stringify(items));
+      const res = await api.post("/cart/add-to-cart", {
+        productId: id,
+        quantity: 1,
+      });
+      const updatedCartItems = res.data.data.items || [];
+      setCartItems(updatedCartItems);
+
+      // optimistic UI update: update 'pieces' locally (mapProduct maps stock -> pieces)
+      setProducts((prev) =>
+        prev.map((p) =>
+          p._id === id
+            ? { ...p, pieces: Math.max(0, (p.pieces ?? p.stock ?? 0) - 1) }
+            : p
+        )
+      );
     } catch (err) {
-      console.warn("Failed to refresh products after clearing cart:", err);
+      console.error("Error adding to cart:", err);
     }
-  } catch (err) {
-    console.error("Error clearing cart:", err);
-  }
-};
+  };
 
+  // Remove one unit (decrease quantity by 1)
+  const handleRemove = async (item) => {
+    const id = getItemId(item);
+    if (!id) return console.error("No product id to remove:", item);
 
+    const currentQty = item?.quantity ?? item?.NOI ?? 1;
+    const newQty = Math.max(1, currentQty - 1);
+
+    try {
+      const res = await api.patch(`/cart/${id}`, { quantity: newQty });
+      const updatedCartItems = res.data.data.items || [];
+      setCartItems(updatedCartItems);
+
+      // optimistic: increase pieces back by 1
+      setProducts((prev) =>
+        prev.map((p) =>
+          p._id === id ? { ...p, pieces: (p.pieces ?? p.stock ?? 0) + 1 } : p
+        )
+      );
+    } catch (err) {
+      console.error("Error removing from cart:", err);
+    }
+  };
+
+  // Delete full item from cart
+  const handleDelete = async (item) => {
+    const id = getItemId(item);
+    if (!id) return console.error("No product id to delete:", item);
+    const returnQty = item?.quantity ?? item?.NOI ?? 0;
+
+    try {
+      const res = await api.delete(`/cart/${id}`);
+      const updatedCartItems = res.data.data.items || [];
+      setCartItems(updatedCartItems);
+
+      // optimistic: add back the removed quantity
+      setProducts((prev) =>
+        prev.map((p) =>
+          p._id === id
+            ? { ...p, pieces: (p.pieces ?? p.stock ?? 0) + returnQty }
+            : p
+        )
+      );
+    } catch (err) {
+      console.error("Error deleting cart item:", err);
+    }
+  };
+
+  // Clear cart
+  const handleClearCart = async () => {
+    try {
+      const res = await api.delete("/cart/clear-cart");
+      setCartItems(res.data.data.items || []); // should be []
+      // safe approach: re-fetch products from server to sync stocks
+      try {
+        const prodRes = await api.get("/products?limit=100");
+        const items = (prodRes.data?.data || []).map(mapProduct);
+        setProducts(items.length ? items : products);
+        localStorage.setItem("products", JSON.stringify(items));
+      } catch (err) {
+        console.warn("Failed to refresh products after clearing cart:", err);
+      }
+    } catch (err) {
+      console.error("Error clearing cart:", err);
+    }
+  };
 
   const handleDeleteProduct = async (id) => {
     try {
@@ -307,50 +344,94 @@ const handleClearCart = async () => {
     }
   };
 
-  const [editingProductId, setEditingProductId] = useState(null);
   const [editedProduct, setEditedProduct] = useState({ name: "", price: "" });
+  const [editingProductId, setEditingProductId] = useState(null);
 
   const handleEdit = (product) => {
-    setEditingProductId(product._id);
-    setEditedProduct({
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      pieces: product.pieces,
-      stripsPerBox: product.stripsPerBox,
-      desc: product.desc,
-    });
+  setEditingProductId(product._id);
+  setEditedProduct({
+    name: product.name,
+    price: product.price,
+    image: product.image,
+    imageFile: null,           
+    pieces: product.pieces,
+    stripsPerBox: product.stripsPerBox,
+    desc: product.desc,
+    category: product.category && product.category._id ? product.category._id : product.category || ""
+  });
+};
+
+
+
+  // handleCancelEdit
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+    setEditedProduct({ name: "", price: "" });
   };
 
   const handleUpdate = async (id, updatedProduct) => {
-    try {
-      const payload = {
-        name: updatedProduct.name,
-        description: updatedProduct.desc,
-        price: Number(updatedProduct.price),
-        category: updatedProduct.category,
-        image: updatedProduct.image,
-        stock: Number(updatedProduct.pieces),
-        has_strips: updatedProduct.stripsPerBox > 0,
-        strip_count: Number(updatedProduct.stripsPerBox),
-      };
+  try {
+    // build allowed data object (same logic)
+    const allowed = {
+      name: updatedProduct.name,
+      description: updatedProduct.desc,
+      price: typeof updatedProduct.price !== "undefined" ? Number(updatedProduct.price) : undefined,
+      category: updatedProduct.category, // category id
+      stock: typeof updatedProduct.pieces !== "undefined" ? Number(updatedProduct.pieces) : undefined,
+      has_strips: typeof updatedProduct.stripsPerBox !== "undefined" ? Boolean(updatedProduct.stripsPerBox > 0) : undefined,
+      strip_count: typeof updatedProduct.stripsPerBox !== "undefined" ? Number(updatedProduct.stripsPerBox) : undefined,
+      requires_prescription: typeof updatedProduct.requires_prescription !== "undefined" ? Boolean(updatedProduct.requires_prescription) : undefined,
+      // don't include image here for JSON path
+    };
 
-      const res = await api.patch(`/products/${id}`, payload);
-      setProducts((prev) =>
-        prev.map((p) => (p._id === id ? mapProduct(res.data.data) : p))
-      );
-    } catch (err) {
-      console.error("Error updating product:", err);
-      alert("Failed to update product. Check console.");
+    const payloadObj = Object.fromEntries(
+      Object.entries(allowed).filter(([_, v]) => typeof v !== "undefined")
+    );
+
+    let res;
+    if (updatedProduct.imageFile) {
+      // send as multipart/form-data with file
+      const form = new FormData();
+      // append all payload keys as strings
+      Object.entries(payloadObj).forEach(([k, v]) => form.append(k, String(v)));
+      // append file
+      form.append("image", updatedProduct.imageFile);
+      // axios will set proper headers for FormData
+      res = await api.patch(`/products/${id}`, form);
+    } else {
+      // JSON path
+      if (Object.keys(payloadObj).length === 0) {
+        alert("No changes to update");
+        return;
+      }
+      res = await api.patch(`/products/${id}`, payloadObj);
     }
-  };
+
+    // update local state
+    setProducts((prev) =>
+      prev.map((p) => (p._id === id ? mapProduct(res.data.data) : p))
+    );
+
+    // close editor
+    setEditingProductId(null);
+    setEditedProduct({ name: "", price: "" });
+  } catch (err) {
+    console.error("Error updating product:", err);
+    alert(err.response?.data?.message || "Failed to update product. Check console.");
+  }
+};
+
+
 
   return (
     <div className={!shouldHideNavbar ? "pt-5" : ""}>
       {!shouldHideNavbar && (
         <>
           <Navbar
-            count={cartItems.reduce((a, c) => a + (c.quantity ?? c.NOI ?? 0), 0)}
+            count={cartItems.reduce(
+              (a, c) => a + (c.quantity ?? c.NOI ?? 0),
+              0
+            )}
             darkMode={darkMode}
             setDarkMode={setDarkMode}
             user={user}
@@ -445,9 +526,12 @@ const handleClearCart = async () => {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                setEditingProductId={setEditingProductId}
+                handleCancelEdit={handleCancelEdit}
                 newProduct={newProduct}
                 setNewProduct={setNewProduct}
                 handleAddNewProduct={handleAddNewProduct}
+                categories={categories}
               />
             }
           />
@@ -465,9 +549,12 @@ const handleClearCart = async () => {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                setEditingProductId={setEditingProductId}
+                handleCancelEdit={handleCancelEdit}
                 newProduct={newProduct}
                 setNewProduct={setNewProduct}
                 handleAddNewProduct={handleAddNewProduct}
+                categories={categories}
               />
             }
           />
@@ -485,9 +572,12 @@ const handleClearCart = async () => {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                setEditingProductId={setEditingProductId}
+                handleCancelEdit={handleCancelEdit}
                 newProduct={newProduct}
                 setNewProduct={setNewProduct}
                 handleAddNewProduct={handleAddNewProduct}
+                categories={categories}
               />
             }
           />
@@ -505,9 +595,12 @@ const handleClearCart = async () => {
                 editingProductId={editingProductId}
                 editedProduct={editedProduct}
                 setEditedProduct={setEditedProduct}
+                setEditingProductId={setEditingProductId}
+                handleCancelEdit={handleCancelEdit}
                 newProduct={newProduct}
                 setNewProduct={setNewProduct}
                 handleAddNewProduct={handleAddNewProduct}
+                categories={categories}
               />
             }
           />

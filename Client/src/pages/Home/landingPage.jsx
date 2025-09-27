@@ -174,32 +174,28 @@ const Landing = ({ handleAdd }) => {
           </div>
         </div>
       </div>
-
-      {/* top products */}
-
+     {/* top products */}
       <div className="container my-5">
         <h3 className="mb-4 section-title">Top Selling Products</h3>
         <div className="row g-4">
           {products.map((product) => (
-            <div className="col-md-3">
-              <div
-                key={product.id}
-                className="product-card p-3 border rounded land"
-              >
+            <div key={product.id} className="col-md-3">
+              <div className="product-card p-3 border rounded land">
                 <img
                   src={product.image}
-                  alt="Product 1"
+                  alt={product.name}
                   className="img-fluid mb-3 product-img"
                 />
                 <div className="text-warning mb-2">★★★★★</div>
-                <h6>Solgar ESTER 100 PLUS Kapsul</h6>
-                <p className="fw-bold">$43.00</p>
+                <h6>{product.name}</h6>
+                <p className="fw-bold">${product.price}.00</p>
+
                 <button
                   onClick={() =>
                     handleAdd({
                       ...product,
-                      isStrip: false,
-                      NOI: product.stripsPerBox,
+                      isStrip: product.isStrip || false,
+                      NOI: product.stripsPerBox || 1,
                     })
                   }
                   className="btn btn-success w-100"
@@ -311,7 +307,6 @@ const Landing = ({ handleAdd }) => {
         ))}
       </div>
 
-   
       <Footer />
     </>
   );

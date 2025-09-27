@@ -15,6 +15,9 @@ function ProductList({
   newProduct,
   setNewProduct,
   handleAddNewProduct,
+  categories,
+  setEditingProductId,
+  handleCancelEdit,
 }) {
   const filteredProducts = products.filter(
     (product) =>
@@ -30,7 +33,10 @@ function ProductList({
         alignItems: "center",
       }}
     >
-      <div style={{ width: "100%" }} className="row shadow-2-m  justify-content-center   ">
+      <div
+        style={{ width: "100%" }}
+        className="row shadow-2-m  justify-content-center   "
+      >
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
@@ -38,7 +44,10 @@ function ProductList({
               className=" col-lg-3 col-md-4 col-sm-6 g-4 mb-4 "
             >
               <div
-              style={{borderRadius:"8px",boxShadow:"0 0 3px rgba(172, 172, 172, 0.8)"}}
+                style={{
+                  borderRadius: "8px",
+                  boxShadow: "0 0 3px rgba(172, 172, 172, 0.8)",
+                }}
                 className={` p-3 h-100 d-flex flex-column justify-content-between ${
                   product.IsRoshetta
                     ? "border-danger border-3 shadow-danger"
@@ -98,7 +107,6 @@ function ProductList({
                                   width: "50px",
                                   borderRadius: "50%",
                                   border: "solid 1px green",
-                                  
                                 }}
                                 className="btn btn-sm scale-btn bg-success"
                                 onClick={() =>
@@ -117,7 +125,6 @@ function ProductList({
                                     height: "100%",
                                     borderRadius: "50%",
                                     fontSize: "900px",
-                                    
                                   }}
                                   className="bg-success"
                                 />
@@ -153,7 +160,7 @@ function ProductList({
                                 width: "50px",
                                 borderRadius: "50%",
                                 fontSize: "25px",
-                                color:"white"
+                                color: "white",
                               }}
                               className="btn btn-sm bg-success scale-btn"
                               onClick={() => handleAdd(product)}
@@ -220,16 +227,15 @@ function ProductList({
                             />
 
                             <input
-                              type="text"
-                              value={editedProduct.image}
+                              type="file"
+                              accept="image/*"
+                              className="form-control mb-2"
                               onChange={(e) =>
                                 setEditedProduct({
                                   ...editedProduct,
-                                  image: e.target.value,
+                                  imageFile: e.target.files?.[0] ?? null,
                                 })
                               }
-                              placeholder="Edit Image URL"
-                              className="form-control"
                             />
 
                             <input
@@ -291,12 +297,27 @@ function ProductList({
                               </label>
                             </div>
 
-                            <button
-                              type="submit"
-                              className="btn btn-success btn-sm"
-                            >
-                              Save
-                            </button>
+                            <div className="d-flex gap-2">
+                              <button
+                                type="submit"
+                                className="btn btn-success btn-sm"
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-secondary btn-sm"
+                                onClick={() => {
+                                  if (typeof handleCancelEdit === "function")
+                                    handleCancelEdit();
+                                  else
+                                    setEditingProductId &&
+                                      setEditingProductId(null);
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </form>
                         )}
                       </div>
@@ -352,12 +373,11 @@ function ProductList({
             />
 
             <input
-              type="text"
+              type="file"
+              accept="image/*"
               className="form-control mb-2"
-              placeholder="Image-URL"
-              value={newProduct.image}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, image: e.target.value })
+                setNewProduct({ ...newProduct, imageFile: e.target.files[0] })
               }
             />
 
@@ -369,10 +389,11 @@ function ProductList({
               }
             >
               <option value="">Select Category</option>
-              <option value="pain-relief">Pain Relief</option>
-              <option value="cold-and-flu">Cold and Flu</option>
-              <option value="first-aid">First Aid</option>
-              <option value="diabetes-care">Diabetes Care</option>
+              {categories.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
             </select>
 
             <textarea
