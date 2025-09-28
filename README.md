@@ -1,6 +1,6 @@
-# 💊 PharmaXpress – Online Pharmacy Platform
+# 💊 Rochetta – Online Pharmacy Platform
 
-PharmaXpress is a MERN-Stack web application that provides a seamless experience for users to purchase medicines online and for admins to manage pharmacy operations.
+Rochetta is a MERN-Stack web application that provides a seamless experience for users to purchase medicines online and for admins to manage pharmacy operations.
 
 ---
 
