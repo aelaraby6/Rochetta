@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import strip from "./strip.png";
-
 function ProductList({
   products,
   handleAdd,
@@ -25,9 +24,7 @@ function ProductList({
       product.desc.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const formatPieces = (value) => {
-    // لو العدد صحيح 100% رجّعه كـ int
     if (Number.isInteger(value)) return value;
-    // لو فيه كسور رجّعه بدقتين عشريتين
     return Number(value).toFixed(2);
   };
 
@@ -52,13 +49,14 @@ function ProductList({
               <div
                 style={{
                   borderRadius: "8px",
-                  boxShadow: "0 0 3px rgba(172, 172, 172, 0.8)",
+                  boxShadow: product.IsRoshetta
+                    ? "0 0 6px rgba(220, 53, 69, 0.8)"
+                    : "0 0 3px rgba(172, 172, 172, 0.8)",
+                  border: product.IsRoshetta
+                    ? "2px solid #dc3545"
+                    : "1px solid transparent",
                 }}
-                className={` p-3 h-100 d-flex flex-column justify-content-between ${
-                  product.IsRoshetta
-                    ? "border-danger border-3 shadow-danger"
-                    : ""
-                }`}
+                className="p-3 h-100 d-flex flex-column justify-content-between"
               >
                 <div className=" d-flex flex-column justify-content-between ">
                   <div className=" h-100">
@@ -118,9 +116,9 @@ function ProductList({
                                   height: "50px",
                                   width: "50px",
                                   borderRadius: "50%",
-                                  border: "solid 1px green",
+                                  border: "solid px green",
                                 }}
-                                className="btn btn-sm scale-btn bg-success"
+                                className="btn btn-sm scale-btn bg-success "
                                 onClick={() =>
                                   handleAdd(product, 1, { unit: "strip" })
                                 }

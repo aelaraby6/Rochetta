@@ -65,16 +65,17 @@ export default function Cart({
                 Continue Shopping
               </Link>
             </div>
-          ) : (
-            <div className="row gx-4">
-              {/* Left: items */}
-              <div className="col-lg-8">
+                    ) : (
+            <div className="row d-flex justify-content-center align-items-center gx-4">
+              {/* Single column: items then summary stacked under them */}
+              <div className="col-8">
+                {/* Items card */}
                 <div className="card items-card p-3 mb-4 shadow-sm">
                   {cartItems.map((item, idx) => {
                     const id =
                       item?._id || item?.product?._id || `local-${idx}`;
                     const product = item.product || item;
-                    const qty = item.quantity ?? item.NOI ?? 1; // for strips: number of strips. for boxes: number of boxes
+                    const qty = item.quantity ?? item.NOI ?? 1;
                     const stripsPerBox = Number(
                       product.stripsPerBox || product.strip_count || 0
                     );
@@ -90,7 +91,7 @@ export default function Cart({
                     const qtyDisplay = isStripItem
                       ? (() => {
                           const boxes = Math.floor(qty / stripsPerBox);
-                          const strips = Math.round(qty % stripsPerBox); // نعمل round بدل الباقي raw
+                          const strips = Math.round(qty % stripsPerBox);
                           if (boxes > 0 && strips > 0)
                             return `${boxes} box + ${strips} strip`;
                           if (boxes > 0)
@@ -98,13 +99,12 @@ export default function Cart({
                           return `${strips} strip${strips > 1 ? "s" : ""}`;
                         })()
                       : (() => {
-                          const num = Math.round(qty * 100) / 100; // تقريب لـ 2 decimal
+                          const num = Math.round(qty * 100) / 100;
                           return Number.isInteger(num)
                             ? `${num} box${num > 1 ? "s" : ""}`
                             : `${num.toFixed(2)} box`;
                         })();
 
-                    // pieces (available) shown as fractional
                     const pieces = product.pieces ?? product.stock ?? 0;
 
                     return (
@@ -199,6 +199,7 @@ export default function Cart({
                   })}
                 </div>
 
+                {/* controls under the list */}
                 <div className="d-flex justify-content-between mb-4">
                   <button
                     className="btn btn-outline-danger"
@@ -216,11 +217,9 @@ export default function Cart({
                     Continue Shopping
                   </Link>
                 </div>
-              </div>
 
-              {/* Right: summary */}
-              <div className="col-lg-4">
-                <div className="card summary-card p-3 shadow-sm">
+                {/* Summary CARD now placed below the items */}
+                <div className="card summary-card p-3 shadow-sm ">
                   <h5 className="mb-3">Order Summary</h5>
                   <div className="d-flex justify-content-between mb-2">
                     <div className="text-muted">Items</div>
@@ -236,14 +235,6 @@ export default function Cart({
                     <div className="text-muted">Subtotal</div>
                     <div>${totalPrice.toFixed(2)}</div>
                   </div>
-
-                  {/* placeholder for promo/discount
-                  <div className="promo-box my-3">
-                    <input className="form-control form-control-sm" placeholder="Promo code (optional)" />
-                    <button className="btn btn-sm btn-outline-primary mt-2 w-100" disabled>
-                      Apply
-                    </button>
-                  </div> */}
 
                   <div className="d-grid">
                     <button
@@ -263,6 +254,7 @@ export default function Cart({
               </div>
             </div>
           )}
+
         </div>
       </div>
 

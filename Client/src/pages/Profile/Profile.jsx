@@ -7,6 +7,25 @@ export default function Profile({ setCartItems, user, setUser, setIsLoggedIn, se
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
 
+  // ---- helpers to format numbers (fix floating point noise) ----
+  const round2 = (n) => {
+    const num = Number(n || 0);
+    // round to 2 decimals reliably
+    return Math.round(num * 100) / 100;
+  };
+
+  const formatQty = (n) => {
+    const v = round2(Number(n || 0));
+    return Number.isInteger(v) ? String(v) : v.toFixed(2);
+  };
+
+  const formatPrice = (n) => {
+    const v = round2(Number(n || 0));
+    // always show 2 decimals for prices
+    return v.toFixed(2);
+  };
+  // --------------------------------------------------------------
+
   useEffect(() => {
     const currentUser = user || JSON.parse(localStorage.getItem("user"));
     if (!currentUser) {
@@ -149,15 +168,18 @@ export default function Profile({ setCartItems, user, setUser, setIsLoggedIn, se
                   <strong>Date:</strong> {new Date(order.createdAt || order.date).toLocaleString("en-GB")}
                 </p>
                 <ul className="list-group mb-3">
-                  {(order.items || []).map((item, i) => (
-                    <li key={i} className="list-group-item d-flex justify-content-between align-items-center land">
-                      <span>{item.product?.name || item.name || "Unknown"} (x{item.quantity ?? item.NOI ?? 0})</span>
-                      <span>${(item.price ?? 0).toFixed(2)}</span>
-                    </li>
-                  ))}
+                  {(order.items || []).map((item, i) => {
+                    const qtyRaw = item.quantity ?? item.NOI ?? 0;
+                    return (
+                      <li key={i} className="list-group-item d-flex justify-content-between align-items-center land">
+                        <span>{item.product?.name || item.name || "Unknown"} (x{formatQty(qtyRaw)})</span>
+                        <span>${formatPrice(item.price ?? 0)}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
                 <div className="d-flex justify-content-between align-items-center">
-                  <strong className="text-success">Total: ${total.toFixed(2)}</strong>
+                  <strong className="text-success">Total: ${formatPrice(total)}</strong>
                   {order.status !== "canceled" && order._id && (
                     <button
                       className="btn btn-outline-success btn-sm"
