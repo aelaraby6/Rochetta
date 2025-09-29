@@ -1,0 +1,256 @@
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Light Mode Navbar */
+body.light nav {
+  background-color: #198754; 
+  color: #ffffff;
+}
+
+/* Dark Mode Navbar */
+body.dark nav {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* Light Mode Button */
+body.light .btn-toggle-mode {
+  background-color: #ffffff;
+  color: #018f4c;
+  border: 1px solid #018f4c;
+}
+
+body.light .btn-toggle-mode:hover {
+  background-color: #018f4c;
+  color: #ffffff;
+}
+
+/* Dark Mode Button */
+body.dark .btn-toggle-mode {
+  background-color: #2c2c2c;
+  color: #66bb6a;
+  border: 1px solid #66bb6a;
+}
+
+body.dark .btn-toggle-mode:hover {
+  background-color: #66bb6a;
+  color: #121212;
+}
+
+
+
+/* Inputs in light/dark mode */
+body.light .form-control {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #ccc;
+}
+
+body.dark .form-control {
+  background-color: #2c2c2c; 
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+body.dark .form-control:focus {
+  background-color: #333; 
+  color: #fff;
+  border-color: #66bb6a;  
+  box-shadow: 0 0 0 0.2rem rgba(102, 187, 106, 0.25);
+}
+
+
+/* Light Theme */
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.light .cart-page,
+body.light .cart-item {
+  background-color: #f9fafb;
+  color: #000;
+}
+
+/* Dark Theme */
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark .cart-page,
+body.dark .cart-item {
+  background-color: #2c2c2c;
+  color: #f1f1f1;
+}
+
+
+
+.scale-btn:active {
+  transform: scale(0.9) !important;
+  transition: transform 0.1s ease-in-out !important;
+}
+
+
+.card:hover{
+  box-shadow: 0px 0px 18px rgba(0,0,0,0.3) !important;
+}
+.card {
+  transition: all 0.3s ease !important;
+}
+
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+ .form-control::placeholder {
+  color: #000000 !important;
+}
+
+/* Dark Mode Basics */
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark .form-control::placeholder {
+  color: #999 !important;
+}
+
+/* Common transition for body */
+body {
+  transition: background-color .3s ease, color .3s ease;
+}
+
+/* light theme elements */
+.light .card,
+.light nav,
+.light .link-box,
+.light .category-badge,
+.light input,
+.light .form-control,
+.light .land,
+.light .link,
+.dark .nav-link{
+  background-color: #ffffff;
+  color: #000000 ;
+  transition: all .3s ease !important;
+}
+
+/* dark theme elements */
+.dark .card, 
+.dark nav,
+.dark .link-box,
+.dark .category-badge,
+.dark input,
+.dark .form-control ,
+.dark .land,
+.dark .link,
+.dark .nav-link{
+  background-color: #3c3c3c !important;
+  color: #ffffff !important;
+  transition: all .3s ease !important;
+}
+
+/* body.dark override for form-control */
+body.dark .form-control {
+  background-color: #2c2c2c !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+
+/* Special Element: shipping box */
+.dark .shipping-box {
+  background-color: #155d15;
+  color: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Always apply transition to key elements */
+.card,
+.subnavbar,
+nav,
+.link-box,
+.category-badge,
+.shipping-box,
+input,
+.form-control {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.landing-container{
+  margin-top: 0px;
+}
+
+
+@media (max-width: 770px) {
+  .landing-container {
+    margin-top: 120px;
+  }
+}
+.row > .col-lg-3 .p-3.h-100,
+.row > .col-md-4 .p-3.h-100,
+.row > .col-sm-6 .p-3.h-100 {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+/* Light Theme */
+body.light .productStyle {
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body.light .productStyle:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+body.light .desc-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #333;
+  border-left: 4px solid #28a745;
+  padding-left: 10px;
+}
+
+
+body.light .desc-text {
+  color: #555;
+  line-height: 1.7;
+  font-size: 19px;
+}
+
+/* Dark Theme */
+body.dark .productStyle {
+  background-color: #2c2c2c;
+  color: #f1f1f1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .productStyle:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+
+body.dark .desc-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #f1f1f1;
+  border-left: 4px solid #28a745;
+  padding-left: 10px;
+}
+
+body.dark .desc-text {
+  color: #f1f1f1;
+  line-height: 1.7;
+  font-size: 19px;
+}

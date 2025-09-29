@@ -1,0 +1,112 @@
+.landing-container {
+  background: linear-gradient(to left, #2c6e49, #0a3c2f);
+  overflow: hidden;
+}
+
+.doctor-img {
+  max-height: 700px;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7));
+}
+
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1.05);
+  }
+  50% {
+    transform: translateY(20px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1.05);
+  }
+}
+
+.icon-circle {
+  background-color: #faf6f6;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  font-size: 28px;
+}
+
+.promo-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  
+}
+
+.product-card {
+  transition: 0.3s;
+  background-color: #fff;
+}
+
+.product-card img {
+  border-radius: 8px;
+  border: 2px solid #eee; 
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.offer-img {
+  object-fit: cover;
+  height: 100%;
+}
+
+.client-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.faq-section {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+.faq-item {
+  background-color: #f0f0f0;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.faq-item.active .faq-question span:first-child {
+  color: green;
+  font-weight: bold;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.faq-icon {
+  font-size: 20px;
+  font-weight: bold;
+}
+
