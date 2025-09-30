@@ -50,6 +50,7 @@
 .product-card img {
   border-radius: 8px;
   border: 2px solid #eee; 
+  opacity: .9;
 }
 
 .product-card:hover {

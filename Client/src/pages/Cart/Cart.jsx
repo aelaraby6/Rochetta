@@ -61,7 +61,7 @@ export default function Cart({
               <p className="text-muted mb-4">
                 Browse products and add them to your cart.
               </p>
-              <Link to="/category/pain-relief" className="btn btn-success px-4">
+              <Link to="/category/pain-relief" className="btn text px-4">
                 Continue Shopping
               </Link>
             </div>

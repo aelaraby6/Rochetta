@@ -1,0 +1,115 @@
+/* ProductList.css (أو ضعه في App.css) */
+
+.product {
+  border-radius: 8px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  transform-origin: center;
+  box-shadow: 0 0 3px rgba(172,172,172,0.8);
+  position: relative;
+  overflow: hidden;
+  background: white;
+}
+
+/* optional style when product requires prescription */
+.product.rosette {
+  box-shadow: 0 6px 18px rgba(220,53,69,0.12);
+  border: 2px solid #dc3545;
+}
+
+/* lift & scale on hover/focus */
+.product:hover,
+.product:focus-within {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  z-index: 5;
+}
+
+/* image transition */
+.product img {
+  transition: transform 220ms ease, filter 220ms ease, opacity 220ms ease;
+  will-change: transform;
+}
+
+/* slight zoom-in on image when hovering the card */
+.product:hover img {
+  transform: scale(1.03);
+  opacity: 0.98;
+}
+
+/* actions (buttons) container: hidden by default, visible on hover */
+.product .card-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none; /* avoid accidental clicks when hidden */
+}
+
+/* reveal actions on hover/focus */
+.product:hover .card-actions,
+.product:focus-within .card-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* style individual buttons */
+.product .strip-btn,
+.product .box-btn,
+.product .box-only-btn {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+/* strip image inside */
+.product .strip-btn img {
+  width: 86%;
+  height: 86%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* hover on buttons */
+.product .strip-btn:hover,
+.product .box-btn:hover,
+.product .box-only-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* visual variants */
+.product .strip-btn {
+  background: #198754; /* bootstrap success */
+  border: none;
+  color: white;
+}
+
+.product .box-btn {
+  background: transparent;
+  border: 1px solid #198754;
+  color: #198754;
+}
+
+.product .box-only-btn {
+  background: #198754;
+  border: none;
+  color: white;
+}
+
+/* ensure small screens keep buttons visible (optional) */
+@media (max-width: 768px) {
+  .product .card-actions {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}

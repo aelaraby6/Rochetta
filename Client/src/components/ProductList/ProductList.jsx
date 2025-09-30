@@ -72,6 +72,7 @@ function ProductList({
                           marginBottom: "30px",
                           padding: "10px",
                           boxShadow: "0 0px 3px rgba(172, 172, 172, 0.8)",
+                          opacity:0.9,
                         }}
                       />
                     </Link>
@@ -94,7 +95,7 @@ function ProductList({
                             className="text-decoration-none text-dark link"
                           >
                             {product.name}
-                            <h6 className=" bg-red">
+                            <h6 className=" bg-red text-danger">
                               {product.IsRoshetta ? "Need a Prescription" : ""}
                             </h6>
                           </Link>
