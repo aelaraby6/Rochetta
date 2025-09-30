@@ -17,7 +17,6 @@ Rochetta is a MERN-Stack web application that provides a seamless experience for
 - Add new products with images, prices, and details.
 - Edit or delete existing products.
 
-<img width="1901" height="888" alt="home" src="https://github.com/user-attachments/assets/e36f327f-0616-420b-ae31-deef09c93ed4" />
 
 <img width="1810" height="857" alt="signup" src="https://github.com/user-attachments/assets/a3c671c8-46fa-481f-9c28-2fe752f858e2" />
 
@@ -30,7 +29,7 @@ Rochetta is a MERN-Stack web application that provides a seamless experience for
 ### **Frontend**
 - React.js 
 - React Router DOM
-- TailwindCSS 
+- Bootstrap 
 - Axios
 
 ### **Backend**
@@ -99,7 +98,7 @@ Here are sample screenshots from **Swagger UI** showing the API endpoints:
 
 ## 👥 Contributors
 
-Thanks goes to these wonderful people in the frontend team:
+Thanks goes to these wonderful people in the Fullstack team:
 
 <table>
   <tr>

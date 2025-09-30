@@ -1,3 +1,4 @@
+// Landing.jsx
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Landing.css";
 import landingImage from "../../assets/Home/doctor.png";
@@ -16,34 +17,32 @@ import Three from "../../assets/Home/three.jpg";
 import Footer from "../../components/Footer/footer";
 import { useState } from "react";
 
-const Landing = ({ handleAdd }) => {
-  const products = [
-    {
-      id: 1,
-      name: "Solgar ESTER 100 PLUS Kapsul",
-      price: 43,
-      image: ProductOne,
-    },
-    {
-      id: 2,
-      name: "Cetirizine 50ml Coated Creme",
-      price: 43,
-      image: ProductTwo,
-    },
-    {
-      id: 3,
-      name: "Sunscreen® Stick 250ml 50+",
-      price: 43,
-      image: ProductThree,
-    },
-    {
-      id: 4,
-      name: "Sunscreen Care 200ml Lotion",
-      price: 43,
-      image: ProductFour,
-    },
-  ];
+const Landing = ({ handleAdd, products: propProducts = [] ,featuredProducts = [] }) => {
   const [activeIndex, setActiveIndex] = useState(null);
+
+  // fallback local products لو propProducts فاضية (للتطوير محلياً)
+  const localFallback = [
+    { id: "1", name: "Solgar ESTER 100 PLUS Kapsul", price: 43, image: ProductOne },
+    { id: "2", name: "Cetirizine 50ml Coated Creme", price: 43, image: ProductTwo },
+    { id: "3", name: "Sunscreen® Stick 250ml 50+", price: 43, image: ProductThree },
+    { id: "4", name: "Sunscreen Care 200ml Lotion", price: 43, image: ProductFour },
+  ];
+
+const featured = featuredProducts.length
+    ? featuredProducts
+    : (propProducts || []).filter(p => !!p.top_selling);
+
+  const productsToShow = (featured.length ? featured : localFallback)
+    .slice(0, 4)
+    .map(p => ({
+      ...p,
+      _id: p._id ?? (p.id ? String(p.id) : undefined),
+      image: p.image ?? p.img ?? "",
+      price: p.price ?? 0,
+      name: p.name ?? "Unnamed product",
+      stripsPerBox: p.stripsPerBox ?? p.strip_count ?? 1,
+    }));
+
 
   const faqs = [
     {
@@ -93,8 +92,7 @@ const Landing = ({ handleAdd }) => {
         </div>
       </div>
 
-      {/*icons section */}
-
+      {/* icons section */}
       <div className="container py-5">
         <div className="row text-center">
           <div className="col-md-3 mb-4">
@@ -140,66 +138,52 @@ const Landing = ({ handleAdd }) => {
       </div>
 
       {/* photos cards */}
-
       <div className="container my-5">
         <div className="row g-4">
           <div className="col-md-4">
             <div className="promo-card">
-              <img
-                src={FirstImg}
-                alt="Anti-age Skin Serum"
-                className="img-fluid rounded"
-              />
+              <img src={FirstImg} alt="Anti-age Skin Serum" className="img-fluid rounded" />
             </div>
           </div>
 
           <div className="col-md-4">
             <div className="promo-card">
-              <img
-                src={SecondImg}
-                alt="Natural Wealth Beta karoten"
-                className="img-fluid rounded"
-              />
+              <img src={SecondImg} alt="Natural Wealth Beta karoten" className="img-fluid rounded" />
             </div>
           </div>
 
           <div className="col-md-4">
             <div className="promo-card">
-              <img
-                src={ThirdImg}
-                alt="Eucerin Skin Care"
-                className="img-fluid rounded"
-              />
+              <img src={ThirdImg} alt="Eucerin Skin Care" className="img-fluid rounded" />
             </div>
           </div>
         </div>
       </div>
 
       {/* top products */}
-
       <div className="container my-5">
         <h3 className="mb-4 section-title">Top Selling Products</h3>
         <div className="row g-4">
-          {products.map((product) => (
-            <div className="col-md-3">
-              <div
-                key={product.id}
-                className="product-card p-3 border rounded land"
-              >
+          {productsToShow.map((product) => (
+            <div key={product._id ?? product.id} className="col-md-3">
+              <div className="product-card p-3 border rounded land">
                 <img
                   src={product.image}
-                  alt="Product 1"
+                  alt={product.name}
                   className="img-fluid mb-3 product-img"
                 />
                 <div className="text-warning mb-2">★★★★★</div>
-                <h6>Solgar ESTER 100 PLUS Kapsul</h6>
-                <p className="fw-bold">$43.00</p>
+                <h6>{product.name}</h6>
+                <p className="fw-bold">${product.price}.00</p>
+
                 <button
                   onClick={() =>
                     handleAdd({
                       ...product,
-                      isStrip: false,
-                      NOI: product.stripsPerBox,
+                      _id: product._id ?? product.id,
+                      isStrip: product.isStrip || false,
+                      NOI: product.stripsPerBox || 1,
+                      quantity: 1,
                     })
                   }
                   className="btn btn-success w-100"
@@ -212,73 +196,48 @@ const Landing = ({ handleAdd }) => {
         </div>
       </div>
 
-      {/* Offers photos */}
-
+      {/* Offers */}
       <div className="container my-5">
         <div className="row g-3">
           <div className="col-md-6">
-            <img
-              src={OfferOne}
-              alt="Image 1"
-              className="w-100 h-100 rounded offer-img"
-            />
+            <img src={OfferOne} alt="Image 1" className="w-100 h-100 rounded offer-img" />
           </div>
           <div className="col-md-6">
-            <img
-              src={OfferTwo}
-              alt="Image 2"
-              className="w-100 h-100 rounded offer-img"
-            />
+            <img src={OfferTwo} alt="Image 2" className="w-100 h-100 rounded offer-img" />
           </div>
         </div>
       </div>
 
-      {/*clients  */}
-
+      {/* clients */}
       <div className="container my-5 ">
         <h2 className="text-center mb-4">What Our Clients Say</h2>
         <div className="row g-4 ">
           <div className="col-md-4 bg-">
             <div className="card h-100 text-center p-3 shadow-sm land ">
-              <img
-                src={Abdo}
-                alt="Client 1"
-                className="rounded-circle mx-auto mb-3 client-img"
-              />
+              <img src={Abdo} alt="Client 1" className="rounded-circle mx-auto mb-3 client-img" />
               <h5>Abdelrahman Elaraby</h5>
               <p style={{ opacity: ".7" }}>
-                "Excellent service! The delivery was fast and the products are
-                top quality."
+                "Excellent service! The delivery was fast and the products are top quality."
               </p>
               <div className="text-warning">★★★★★</div>
             </div>
           </div>
           <div className="col-md-4">
             <div className="card h-100 text-center p-3 shadow-sm">
-              <img
-                src={Selim}
-                alt="Client 2"
-                className="rounded-circle mx-auto mb-3 client-img"
-              />
+              <img src={Selim} alt="Client 2" className="rounded-circle mx-auto mb-3 client-img" />
               <h5>Abdelrahman Selim</h5>
               <p style={{ opacity: ".7" }}>
-                "Very professional staff and great customer support. Highly
-                recommended!"
+                "Very professional staff and great customer support. Highly recommended!"
               </p>
               <div className="text-warning">★★★★★</div>
             </div>
           </div>
           <div className="col-md-4">
             <div className="card h-100 text-center p-3 shadow-sm">
-              <img
-                src={Three}
-                alt="Client 3"
-                className="rounded-circle mx-auto mb-3 client-img"
-              />
+              <img src={Three} alt="Client 3" className="rounded-circle mx-auto mb-3 client-img" />
               <h5>Omar Khaled</h5>
               <p style={{ opacity: ".7" }}>
-                "Affordable prices and authentic products. Will order again for
-                sure."
+                "Affordable prices and authentic products. Will order again for sure."
               </p>
               <div className="text-warning">★★★★☆</div>
             </div>
@@ -286,32 +245,24 @@ const Landing = ({ handleAdd }) => {
         </div>
       </div>
 
-      {/* questions */}
-
+      {/* FAQ */}
       <div className="faq-section">
         <h2 className="my-5">Frequently Asked Questions</h2>
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className={`faq-item ${
-              activeIndex === index ? "active" : ""
-            } land `}
+            className={`faq-item ${activeIndex === index ? "active" : ""} land `}
             onClick={() => toggleFAQ(index)}
           >
             <div className="faq-question">
               <span>{faq.question}</span>
-              <span className="faq-icon">
-                {activeIndex === index ? "-" : "+"}
-              </span>
+              <span className="faq-icon">{activeIndex === index ? "-" : "+"}</span>
             </div>
-            {activeIndex === index && (
-              <div className="faq-answer">{faq.answer}</div>
-            )}
+            {activeIndex === index && <div className="faq-answer">{faq.answer}</div>}
           </div>
         ))}
       </div>
 
-   
       <Footer />
     </>
   );

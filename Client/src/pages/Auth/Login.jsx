@@ -57,7 +57,7 @@ export default function Login({ setIsLoggedIn, setUser }) {
             <img
               src={LoginImg}
               alt="Login"
-              className="img-fluid"
+              className="img-fluid login-image"
               style={{
                 maxWidth: "85%",
                 borderRadius: "20px",
@@ -67,10 +67,7 @@ export default function Login({ setIsLoggedIn, setUser }) {
           </div>
           <div className="col-md-6">
             <div className="card-body p-3">
-              <h2
-                className="card-title text-center mb-4"
-                style={{ color: "green" }}
-              >
+              <h2 className="card-title text-center mb-4 login-title">
                 Welcome Back!
               </h2>
               <form onSubmit={handleSubmit}>
@@ -124,10 +121,7 @@ export default function Login({ setIsLoggedIn, setUser }) {
               </form>
               <p className="mt-3 text-center">
                 Don’t have an account?{" "}
-                <a
-                  href="/signup"
-                  style={{ color: "green", textDecoration: "underline" }}
-                >
+                <a href="/signup" className="signup-link">
                   Sign up
                 </a>
               </p>
@@ -138,3 +132,8 @@ export default function Login({ setIsLoggedIn, setUser }) {
     </div>
   );
 }
+
+
+
+//image
+

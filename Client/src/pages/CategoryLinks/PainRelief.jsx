@@ -1,5 +1,5 @@
 import ProductList from "../../components/ProductList/ProductList";
-import "./productStyle.css"
+import "./productStyle.css";
 function PainRelief({
   products,
   handleAdd,
@@ -13,56 +13,62 @@ function PainRelief({
   searchTerm,
   newProduct,
   setNewProduct,
-  handleAddNewProduct
+  handleAddNewProduct,
+  setEditingProductId,
+  handleCancelEdit,
+  categories,
 }) {
-  const filtered = products.filter((p) => p.category === "Pain Relief");
-
+  const filtered = products.filter(
+    (p) =>
+      (p.category && p.category.name === "Pain Relief") ||
+      p.category === "Pain Relief"
+  );
   return (
-    <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-   <div className="productStyle"
-   onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-      }}
->
-  {/* ===== Description Section ===== */}
-  <div style={{ marginBottom: "25px", marginLeft:"20px"}}>
-    <h3
+    <div
       style={{
-        fontWeight: "700",
-        marginBottom: "12px",
-        borderLeft: "4px solid #28a745",
-        paddingLeft: "10px",
-        color: "#333",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      Pain Relief
-    </h3>
-    <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
-      Pain relief products help reduce mild to moderate pain such as headaches,
-      muscle aches, and joint pain. Always follow the recommended dosage and
-      consult your doctor if symptoms persist.
-    </p>
-  </div>
+      <div
+        className="productStyle"
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+        }}
+      >
+        {/* ===== Description Section ===== */}
+        <div className="desc-section">
+          <h3 className="desc-title">Pain Relief</h3>
+          <p className="desc-text">
+            Pain relief products help reduce mild to moderate pain such as
+            headaches, muscle aches, and joint pain. Always follow the
+            recommended dosage and consult your doctor if symptoms persist.
+          </p>
+        </div>
 
-    <ProductList
-      searchTerm={searchTerm}
-      products={filtered}
-      user={user}
-      handleAdd={handleAdd}
-      handleEdit={handleEdit}
-      handleDeleteProduct={handleDeleteProduct}
-      handleUpdate={handleUpdate}
-      editingProductId={editingProductId}
-      editedProduct={editedProduct}
-      setEditedProduct={setEditedProduct}
-        newProduct={newProduct}
-      setNewProduct={setNewProduct}
-      handleAddNewProduct={handleAddNewProduct}
-    />
-    </div> 
+        <ProductList
+          searchTerm={searchTerm}
+          products={filtered}
+          user={user}
+          handleAdd={handleAdd}
+          handleEdit={handleEdit}
+          handleDeleteProduct={handleDeleteProduct}
+          handleUpdate={handleUpdate}
+          editingProductId={editingProductId}
+          editedProduct={editedProduct}
+          setEditedProduct={setEditedProduct}
+          setEditingProductId={setEditingProductId}
+          handleCancelEdit={handleCancelEdit}
+          newProduct={newProduct}
+          setNewProduct={setNewProduct}
+          handleAddNewProduct={handleAddNewProduct}
+          categories={categories}
+        />
+      </div>
     </div>
   );
 }

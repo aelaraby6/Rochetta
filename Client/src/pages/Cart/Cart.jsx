@@ -1,6 +1,9 @@
+// src/pages/Cart/Cart.jsx
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/footer";
-import { useNavigate } from "react-router-dom";
 import api from "../../api";
+import "./Cart.css";
 
 export default function Cart({
   cartItems,
@@ -8,159 +11,254 @@ export default function Cart({
   handleRemove,
   handleDelete,
   handleClearCart,
-  setCartItems
+  setCartItems,
 }) {
   const navigate = useNavigate();
 
-  // ---------- FIXED Total calculation ----------
   const totalPrice = cartItems.reduce((acc, item) => {
-    const price = Number(item.price ?? item.product?.price ?? 0);
-    const qty = Number(item.quantity ?? item.NOI ?? 1);
-    return acc + price * qty;
+    const product = item.product ?? item;
+    const qty = Number(item.quantity ?? item.NOI ?? 1); // quantity in boxes (possibly fractional)
+    const unitPrice = Number(item.price ?? product.price ?? 0); // price per box
+    return acc + unitPrice * qty;
   }, 0);
 
   const handleCreateOrder = async () => {
-  try {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (!storedUser) {
-      alert("Please login to place an order.");
-      return;
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser) {
+        alert("Please login to place an order.");
+        return;
+      }
+
+      const address = "Default Address";
+
+      await api.post("/order/create-order", { address });
+
+      setCartItems([]);
+      localStorage.setItem("cart", JSON.stringify([]));
+
+      navigate("/profile");
+    } catch (err) {
+      console.error("Error creating order:", err);
+      alert(
+        err.response?.data?.message || err.message || "Failed to create order"
+      );
     }
-
-    const address = "Default Address"; 
-
-    await api.post("/order/create-order", { address });
-
-    setCartItems([]);
-    localStorage.setItem("cart", JSON.stringify([]));
-
-    navigate("/profile");
-  } catch (err) {
-    console.error("Error creating order:", err);
-    alert(err.response?.data?.message || err.message || "Failed to create order");
-  }
-};
-
+  };
 
   return (
     <>
-      <div
-        style={{
-          backgroundColor: "#f9fafb",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        {/* Page Content */}
+      <div className="cart-page">
         <div
           className="container"
-          style={{
-            marginTop: "80px",
-            maxWidth: "900px",
-            padding: "30px",
-            flex: 1,
-          }}
+          style={{ paddingTop: 80, paddingBottom: 40 }}
         >
-          <h2 className="mb-4 fw-bold text-center">🛒 Your Shopping Cart</h2>
+          <h2 className="cart-title text-center mb-4"> Your Shopping Cart</h2>
 
           {cartItems.length === 0 ? (
-            <div className="text-center py-5 bg-white rounded shadow-sm">
-              <p className="fs-5 text-muted">Your cart is empty.</p>
+            <div className="empty-cart card text-center p-5 mx-auto shadow-sm">
+              <h4 className="mb-3">Your cart is empty</h4>
+              <p className="text-muted mb-4">
+                Browse products and add them to your cart.
+              </p>
+              <Link to="/category/pain-relief" className="btn btn-success px-4">
+                Continue Shopping
+              </Link>
             </div>
-          ) : (
-            <>
-              <div className="d-flex flex-column gap-3">
-                {cartItems.map((item, index) => {
-                  const id = item?._id || item?.product?._id || index;
-                  const product = item.product || item;
-                  const qty = item.quantity ?? item.NOI ?? 1;
-                  const pieces = product.pieces ?? product.stock ?? 0;
+                    ) : (
+            <div className="row d-flex justify-content-center align-items-center gx-4">
+              {/* Single column: items then summary stacked under them */}
+              <div className="col-8">
+                {/* Items card */}
+                <div className="card items-card p-3 mb-4 shadow-sm">
+                  {cartItems.map((item, idx) => {
+                    const id =
+                      item?._id || item?.product?._id || `local-${idx}`;
+                    const product = item.product || item;
+                    const qty = item.quantity ?? item.NOI ?? 1;
+                    const stripsPerBox = Number(
+                      product.stripsPerBox || product.strip_count || 0
+                    );
+                    const isStripItem =
+                      item.unit === "strip" && stripsPerBox > 0;
 
-                  return (
-                    <div
-                      key={`${id}-${index}`}
-                      className="d-flex justify-content-between align-items-center"
-                      style={{
-                        backgroundColor: "#fff",
-                        padding: 20,
-                        borderRadius: 10,
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-                      }}
-                    >
-                      <div>
-                        <h5 className="mb-2">
-                          {product.name}{" "}
-                          <span className="text-muted fs-6">({pieces} available)</span>
-                        </h5>
-                        <p className="mb-0 text-secondary">
-                          {product.stripsPerBox > 0 ? (
-                            <>
-                              {qty} strip(s)
-                              {qty % product.stripsPerBox === 0 && ` = ${qty / product.stripsPerBox} box(es)`}
-                              <br />
-                              <span className="fw-bold text-dark">
-                                ${item.price ?? product.price} × {qty} = ${( (Number(item.price ?? product.price)) * Number(qty) ).toFixed(2)}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="fw-bold text-dark">
-                              ${item.price ?? product.price} × {qty} = ${( (Number(item.price ?? product.price)) * Number(qty) ).toFixed(2)}
-                            </span>
-                          )}
-                        </p>
+                    const unitPrice = isStripItem
+                      ? Number(product.price ?? item.price ?? 0)
+                      : Number(item.price ?? product.price ?? 0);
+
+                    const subtotal = (unitPrice * qty).toFixed(2);
+
+                    const qtyDisplay = isStripItem
+                      ? (() => {
+                          const boxes = Math.floor(qty / stripsPerBox);
+                          const strips = Math.round(qty % stripsPerBox);
+                          if (boxes > 0 && strips > 0)
+                            return `${boxes} box + ${strips} strip`;
+                          if (boxes > 0)
+                            return `${boxes} box${boxes > 1 ? "s" : ""}`;
+                          return `${strips} strip${strips > 1 ? "s" : ""}`;
+                        })()
+                      : (() => {
+                          const num = Math.round(qty * 100) / 100;
+                          return Number.isInteger(num)
+                            ? `${num} box${num > 1 ? "s" : ""}`
+                            : `${num.toFixed(2)} box`;
+                        })();
+
+                    const pieces = product.pieces ?? product.stock ?? 0;
+
+                    return (
+                      <div
+                        key={id}
+                        className="cart-row d-flex align-items-center"
+                      >
+                        <div className="thumb me-3">
+                          <Link
+                            to={`/product/${product._id ?? product.id ?? ""}`}
+                          >
+                            <img
+                              src={product.image || "/placeholder.png"}
+                              alt={product.name}
+                              className="img-fluid"
+                            />
+                          </Link>
+                        </div>
+
+                        <div className="flex-grow-1">
+                          <Link
+                            to={`/product/${product._id ?? product.id ?? ""}`}
+                            className="item-name"
+                          >
+                            {product.name}
+                          </Link>
+                          <div className="text-muted small">
+                            {product.desc && product.desc.substring(0, 80)}
+                          </div>
+
+                          <div className="d-flex align-items-center mt-2 gap-3">
+                            <div className="qty-control d-flex align-items-center">
+                              <button
+                                className="btn btn-sm btn-outline-success"
+                                onClick={() =>
+                                  handleAdd(item, 1, {
+                                    unit: isStripItem ? "strip" : "box",
+                                  })
+                                }
+                                disabled={
+                                  (item.unit === "box" &&
+                                    (item.product?.pieces ??
+                                      item.product?.stock ??
+                                      0) <= (item.quantity ?? 0)) ||
+                                  false
+                                }
+                                aria-label={`increase ${product.name}`}
+                              >
+                                <i className="bi bi-plus-lg"></i>
+                              </button>
+                              <div className="qty-badge mx-2">{qtyDisplay}</div>
+                              <button
+                                className="btn btn-sm btn-outline-warning"
+                                onClick={() => handleRemove(item)}
+                                disabled={(item.quantity ?? 1) <= 1}
+                                aria-label={`decrease ${product.name}`}
+                              >
+                                <i className="bi bi-dash-lg"></i>
+                              </button>
+                            </div>
+
+                            <div className="price-info">
+                              <strong>${unitPrice.toFixed(2)}</strong>{" "}
+                              <span className="text-muted">each</span>
+                            </div>
+
+                            <div className="ms-auto text-end">
+                              <div className="subtotal fw-bold">
+                                ${subtotal}
+                              </div>
+                              <div className="text-muted small">
+                                {Number((pieces ?? 0).toFixed(2))} pieces
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 actions">
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => {
+                              if (window.confirm("Remove this item from cart?"))
+                                handleDelete(item);
+                            }}
+                            title="Remove"
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </div>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <button
-                          className="btn btn-sm btn-outline-success me-2"
-                          onClick={() => handleAdd(item)}
-                          disabled={qty >= pieces || pieces === 0}
-                        >
-                          +
-                        </button>
-                        <button
-                          className="btn btn-sm btn-outline-warning me-2"
-                          onClick={() => handleRemove(item)}
-                          disabled={qty <= 1 || pieces === 0}
-                        >
-                          -
-                        </button>
-                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(item)}>
-                          🗑
-                        </button>
-                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* controls under the list */}
+                <div className="d-flex justify-content-between mb-4">
+                  <button
+                    className="btn btn-outline-danger"
+                    onClick={() => {
+                      if (window.confirm("Clear cart?")) handleClearCart();
+                    }}
+                  >
+                    Clear Cart
+                  </button>
+
+                  <Link
+                    to="/category/pain-relief"
+                    className="btn btn-outline-secondary"
+                  >
+                    Continue Shopping
+                  </Link>
+                </div>
+
+                {/* Summary CARD now placed below the items */}
+                <div className="card summary-card p-3 shadow-sm ">
+                  <h5 className="mb-3">Order Summary</h5>
+                  <div className="d-flex justify-content-between mb-2">
+                    <div className="text-muted">Items</div>
+                    <div>
+                      {cartItems.reduce(
+                        (a, c) => a + Number(c.quantity ?? c.NOI ?? 1),
+                        0
+                      )}
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
 
-              <div
-                className="card mt-4 border-0"
-                style={{
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.08)",
-                }}
-              >
-                <div className="card-body text-end">
-                  <h5 className="fw-bold">Total: ${totalPrice.toFixed(2)}</h5>
-                  <div className="d-flex justify-content-end gap-2 mt-3">
-                    <button className="btn btn-outline-danger px-4" onClick={handleClearCart}>
-                      Clear Cart
+                  <div className="d-flex justify-content-between mb-2">
+                    <div className="text-muted">Subtotal</div>
+                    <div>${totalPrice.toFixed(2)}</div>
+                  </div>
+
+                  <div className="d-grid">
+                    <button
+                      className="btn btn-success btn-lg"
+                      onClick={handleCreateOrder}
+                    >
+                      Order — ${totalPrice.toFixed(2)}
                     </button>
-                    {cartItems.length > 0 && (
-                      <button className="btn btn-success px-4" onClick={handleCreateOrder}>
-                        Create Order
-                      </button>
-                    )}
+                  </div>
+
+                  <div className="mt-3 text-center">
+                    <small className="text-muted">
+                      Secure checkout • 2-days return
+                    </small>
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
-        </div>
 
-        <Footer />
+        </div>
       </div>
+
+      <Footer />
     </>
   );
 }

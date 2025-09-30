@@ -6,6 +6,7 @@ const cartSchema = new mongoose.Schema(
       {
         product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
         quantity: { type: Number, required: true },
+        unit: { type: String, enum: ["box", "strip"], default: "box" },//new
         price: { type: Number, required: true },
       },
     ],

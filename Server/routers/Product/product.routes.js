@@ -37,6 +37,7 @@ router.patch(
   "/:id",
   authenticateToken,
   checkRole(["admin"]),
+  upload.single("image"), //new
   validate(UpdateProductSchema),
   updateProductController
 );

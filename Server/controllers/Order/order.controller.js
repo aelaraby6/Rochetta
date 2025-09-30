@@ -2,6 +2,7 @@ import { BadRequestError, NotFoundError } from "../../Errors/error.js";
 import { Cart } from "../../models/Cart/cart.model.js";
 import { Order } from "../../models/Order/order.model.js";
 import User from "../../models/User/user.model.js";
+import Product from "../../models/Product/product.model.js";
 
 export const CreateOrderController = async (req, res, next) => {
   try {
@@ -82,7 +83,6 @@ export const GetUserOrdersController = async (req, res, next) => {
     next(error);
   }
 };
-
 // Cancel Order
 export const CancelOrderController = async (req, res, next) => {
   try {
@@ -100,11 +100,30 @@ export const CancelOrderController = async (req, res, next) => {
       return res.status(400).json({ message: "Order already canceled" });
     }
 
+    // 1) Restore stock for each item in the order
+    for (const it of order.items) {
+      const prodId = it.product?._id ? it.product._id : it.product;
+      if (!prodId) continue;
+      const prod = await Product.findById(prodId);
+      if (!prod) continue;
+      prod.stock = (prod.stock || 0) + (it.quantity || 0);
+      await prod.save();
+    }
+
+    // 2) mark order canceled
     order.status = "canceled";
+
+    // 3) optionally mark as deleted so GetUserOrdersController (which filters is_deleted:false) won't return it
+    order.is_deleted = true;
+
     await order.save();
 
-    res.status(200).json({ message: "Order canceled successfully", order });
+    // 4) populate item products for response so frontend can update UI easily
+    await order.populate("items.product", "name price stock stripsPerBox");
+
+    return res.status(200).json({ message: "Order canceled and removed", order });
   } catch (error) {
     next(error);
   }
 };
+
