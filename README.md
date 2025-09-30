@@ -11,7 +11,8 @@ Rochetta is a MERN-Stack web application that provides a seamless experience for
 - Choose between purchasing a **strip** or a **full box**, just like a real pharmacy.
 - Add medicines to the Cart and manage quantities.
 - Place an Order.
-- Secure **Login/Register** with JWT authentication.
+- Some medicines **require a prescription** (cannot be purchased without a prescription).
+
 
 ### 🛠️ Admin Features
 - Add new products with images, prices, and details.

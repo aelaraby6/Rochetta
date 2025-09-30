@@ -20,7 +20,7 @@ import { useState } from "react";
 const Landing = ({ handleAdd, products: propProducts = [] ,featuredProducts = [] }) => {
   const [activeIndex, setActiveIndex] = useState(null);
 
-  // fallback local products لو propProducts فاضية (للتطوير محلياً)
+  // fallback local products لو propProducts 
   const localFallback = [
     { id: "1", name: "Solgar ESTER 100 PLUS Kapsul", price: 43, image: ProductOne },
     { id: "2", name: "Cetirizine 50ml Coated Creme", price: 43, image: ProductTwo },
@@ -72,10 +72,9 @@ const featured = featuredProducts.length
         <div className="container-fluid">
           <div className="row h-100">
             <div className="col-md-6 d-flex flex-column justify-content-center">
-              <p className="display-4 fw-bold">Welcome to PharmaXpress</p>
+              <p className="display-4 fw-bold">Welcome to Rochetta</p>
               <p className="lead">
-                Bringing healthcare to your home — your trusted source for
-                authentic Egyptian prescriptions and services.
+                Your online pharmacy — delivering trusted medicines and care, anytime, anywhere
               </p>
               <div className="mt-4">
                 <button className="btn btn-success me-3">Get Started</button>

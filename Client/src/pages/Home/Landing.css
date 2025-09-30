@@ -88,7 +88,7 @@
 
 /* light mode specific */
 body.light .faq-item {
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   color: #1f2937; /* dark gray text */
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
   border-color: rgba(15, 23, 42, 0.04);
