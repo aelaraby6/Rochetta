@@ -2,6 +2,11 @@
 
 Rochetta is a MERN-Stack web application that provides a seamless experience for users to purchase medicines online and for admins to manage pharmacy operations.
 
+
+
+https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
+
+
 ---
 
 ## 🚀 Features
@@ -22,6 +27,9 @@ Rochetta is a MERN-Stack web application that provides a seamless experience for
 <img width="1810" height="857" alt="signup" src="https://github.com/user-attachments/assets/a3c671c8-46fa-481f-9c28-2fe752f858e2" />
 
 <img width="1851" height="861" alt="login" src="https://github.com/user-attachments/assets/96340a29-4ada-4845-818c-fbc9b6034331" />
+
+<img width="1232" height="717" alt="cart" src="https://github.com/user-attachments/assets/46792721-5840-4be1-9c6c-9cce164097ca" />
+
 
 ---
 
