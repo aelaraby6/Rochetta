@@ -17,8 +17,8 @@ export default function Cart({
 
   const totalPrice = cartItems.reduce((acc, item) => {
     const product = item.product ?? item;
-    const qty = Number(item.quantity ?? item.NOI ?? 1); // quantity in boxes (possibly fractional)
-    const unitPrice = Number(item.price ?? product.price ?? 0); // price per box
+    const qty = Number(item.quantity ?? item.NOI ?? 1); 
+    const unitPrice = Number(item.price ?? product.price ?? 0); 
     return acc + unitPrice * qty;
   }, 0);
 
@@ -67,9 +67,7 @@ export default function Cart({
             </div>
                     ) : (
             <div className="row d-flex justify-content-center align-items-center gx-4">
-              {/* Single column: items then summary stacked under them */}
               <div className="col-8">
-                {/* Items card */}
                 <div className="card items-card p-3 mb-4 shadow-sm">
                   {cartItems.map((item, idx) => {
                     const id =

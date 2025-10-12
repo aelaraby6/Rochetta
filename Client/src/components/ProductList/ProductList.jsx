@@ -94,7 +94,7 @@ function ProductList({
                             className="text-decoration-none text-dark link"
                           >
                             {product.name}
-                            <h6 className=" bg-red">
+                            <h6 className=" text-danger">
                               {product.IsRoshetta ? "Need a Prescription" : ""}
                             </h6>
                           </Link>

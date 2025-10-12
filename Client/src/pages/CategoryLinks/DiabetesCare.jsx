@@ -63,7 +63,3 @@ function DiabetesCare({
 
 export default DiabetesCare;
 
-// <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
-//      Diabetes care products support blood sugar monitoring and management. They
-//   include glucose meters, test strips, and supplements that help maintain a
-//  healt

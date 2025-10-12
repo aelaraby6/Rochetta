@@ -1,4 +1,3 @@
-// src/pages/Profile/Profile.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api";
@@ -7,7 +6,7 @@ export default function Profile({ setCartItems, user, setUser, setIsLoggedIn, se
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
 
-  // ---- helpers to format numbers (fix floating point noise) ----
+  // helpers to format numbers (fix floating point noise) ----
   const round2 = (n) => {
     const num = Number(n || 0);
     // round to 2 decimals reliably
@@ -130,7 +129,7 @@ export default function Profile({ setCartItems, user, setUser, setIsLoggedIn, se
         console.warn("Could not clean localStorage orders:", e);
       }
     } catch (err) {
-      console.error("❌ Error cancelling order:", err);
+      console.error(" Error cancelling order:", err);
       alert(err.response?.data?.message || "Failed to cancel order");
     }
   };

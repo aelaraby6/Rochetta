@@ -1,7 +1,3 @@
-/* src/pages/Cart/Cart.css */
-/* -----------------------
-   Cart UI — light & dark
-   ----------------------- */
 
 :root{
   --bg: #f7f9fb;
@@ -226,15 +222,7 @@ body.dark {
   outline-offset: 2px;
 }
 
-/* small visual tweak for numbers to avoid ugly floats shown in UI */
-.small-number {
-  /* you can apply this class to piece displays that you want formatted */
-}
 
-/* End Cart CSS */
-
-/* === Overwrite text colors in cart to follow theme vars === */
-/* Put at end of Cart.css to give it priority */
 
 .cart-page .cart-title,
 .items-card .item-name,
@@ -242,7 +230,7 @@ body.dark {
 .items-card .card-title,
 .summary-card h5,
 .summary-card .subtotal {
-  color: var(--text) !important; /* عنوان/مبالغ أساسية تكون نفس لون النص العام */
+  color: var(--text) !important; 
 }
 
 /* muted/text hints */

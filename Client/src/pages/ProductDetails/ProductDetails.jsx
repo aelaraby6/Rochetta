@@ -1,17 +1,15 @@
-// src/pages/ProductDetails/ProductDetails.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import api from "../../api"; // تأكد المسار صح
+import api from "../../api"; 
 
 export default function ProductDetails({ handleAdd, products }) {
-  const { id } = useParams(); // ده ال _id من الرابط
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // helper محلي يحول شكل المنتج من الـ API لشكل المشروع
   const mapProductFromApi = (p) => ({
     _id: p._id || p.id,
     name: p.name,
@@ -28,9 +26,9 @@ export default function ProductDetails({ handleAdd, products }) {
   useEffect(() => {
     let mounted = true;
 
-    // حاول نلاقي المنتج محلياً أول
+    
     const local = products.find(
-      (item) => item._id === id || item.id === id // شمولية لو عندك id أو _id
+      (item) => item._id === id || item.id === id 
     );
     if (local) {
       setProduct(local);
@@ -38,7 +36,6 @@ export default function ProductDetails({ handleAdd, products }) {
       return;
     }
 
-    // لو مش موجود محليًا، نجيب من الـ API
     const fetchProduct = async () => {
       try {
         setLoading(true);
