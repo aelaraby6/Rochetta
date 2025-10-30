@@ -1,33 +1,49 @@
+// src/pages/CategoryLinks/DiabetesCare.jsx
+import React, { useContext, useMemo } from "react";
 import ProductList from "../../components/ProductList/ProductList";
-
-function DiabetesCare({
-  products,
-  handleAdd,
-  user,
-  handleEdit,
-  handleDeleteProduct,
-  handleUpdate,
-  editedProduct,
-  editingProductId,
-  setEditedProduct,
-  searchTerm,
-  newProduct,
-  setNewProduct,
-  handleAddNewProduct,
-  categories,
-  setEditingProductId,
-  handleCancelEdit,
-}) {
-  const filtered = products.filter(
-    (p) =>
-      (p.category && p.category.name === "Diabetes Care") ||
-      p.category === "Diabetes Care"
-  );
-
+import {
+  AuthContext,
+  CartContext,
+  ProductContext,
+} from "../../context/ContextObjects";
+function DiabetesCare({ searchTerm }) {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    products,
+    categories,
+    handleAddNewProduct,
+    handleDeleteProduct,
+    handleUpdate,
+    newProduct,
+    setNewProduct,
+    editedProduct,
+    setEditedProduct,
+    editingProductId,
+    setEditingProductId,
+    handleEdit,
+    handleCancelEdit,
+  } = useContext(ProductContext);
+  const { handleAdd } = useContext(CartContext);
+  const categorySlug = "Diabetes Care";
+  const filteredProducts = useMemo(() => {
+    const categoryFilter = products.filter((p) => {
+      const categoryMatch =
+        (p.category && p.category.name === categorySlug) ||
+        p.category === categorySlug;
+      return categoryMatch;
+    });
+    if (!searchTerm) return categoryFilter;
+    const term = searchTerm.toLowerCase();
+    return categoryFilter.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        (product.desc && product.desc.toLowerCase().includes(term))
+    );
+  }, [products, searchTerm]);
+  const isAdmin = authState.user && authState.user.role === "admin";
   return (
     <div className="d-flex justify-content-center align-items-center">
       <div className="productStyle">
-        {/* ===== Description Section ===== */}
         <div className="desc-section">
           <h3 className="desc-title">Diabetes Care</h3>
           <p className="desc-text">
@@ -37,11 +53,10 @@ function DiabetesCare({
             patients.
           </p>
         </div>
-
         <ProductList
           searchTerm={searchTerm}
-          products={filtered}
-          user={user}
+          products={filteredProducts}
+          user={isAdmin ? authState.user : null}
           handleAdd={handleAdd}
           handleEdit={handleEdit}
           handleDeleteProduct={handleDeleteProduct}
@@ -60,6 +75,4 @@ function DiabetesCare({
     </div>
   );
 }
-
 export default DiabetesCare;
-

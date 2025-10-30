@@ -1,28 +1,47 @@
+// src/pages/CategoryLinks/ColdandFlu.jsx
+import React, { useContext, useMemo } from "react";
 import ProductList from "../../components/ProductList/ProductList";
 import "./productStyle.css";
-function ColdandFlu({
-  products,
-  handleAdd,
-  user,
-  handleEdit,
-  handleDeleteProduct,
-  handleUpdate,
-  editedProduct,
-  editingProductId,
-  setEditedProduct,
-  searchTerm,
-  newProduct,
-  setNewProduct,
-  handleAddNewProduct,
-  categories,
-  setEditingProductId,
-  handleCancelEdit,
-}) {
-  const filtered = products.filter(
-    (p) =>
-      (p.category && p.category.name === "Cold and Flu") ||
-      p.category === "Cold and Flu"
-  );
+import {
+  AuthContext,
+  CartContext,
+  ProductContext,
+} from "../../context/ContextObjects";
+function ColdandFlu({ searchTerm }) {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    products,
+    categories,
+    handleAddNewProduct,
+    handleDeleteProduct,
+    handleUpdate,
+    newProduct,
+    setNewProduct,
+    editedProduct,
+    setEditedProduct,
+    editingProductId,
+    setEditingProductId,
+    handleEdit,
+    handleCancelEdit,
+  } = useContext(ProductContext);
+  const { handleAdd } = useContext(CartContext);
+  const categorySlug = "Cold and Flu";
+  const filteredProducts = useMemo(() => {
+    const categoryFilter = products.filter((p) => {
+      const categoryMatch =
+        (p.category && p.category.name === categorySlug) ||
+        p.category === categorySlug;
+      return categoryMatch;
+    });
+    if (!searchTerm) return categoryFilter;
+    const term = searchTerm.toLowerCase();
+    return categoryFilter.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        (product.desc && product.desc.toLowerCase().includes(term))
+    );
+  }, [products, searchTerm]);
+  const isAdmin = authState.user && authState.user.role === "admin";
   return (
     <div
       style={{
@@ -30,10 +49,9 @@ function ColdandFlu({
         justifyContent: "center",
         alignItems: "center",
       }}
-      x
     >
       <div
-        className=" productStyle"
+        className="productStyle"
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
         }}
@@ -41,7 +59,6 @@ function ColdandFlu({
           e.currentTarget.style.boxShadow = "8px 8px 12px rgba(0,0,0,0.08)";
         }}
       >
-        {/* ===== Description Section ===== */}
         <div className="desc-section">
           <h3 className="desc-title">Cold and Flu</h3>
           <p className="desc-text">
@@ -50,11 +67,10 @@ function ColdandFlu({
             medication with rest and adequate hydration.
           </p>
         </div>
-
         <ProductList
           searchTerm={searchTerm}
-          products={filtered}
-          user={user}
+          products={filteredProducts}
+          user={isAdmin ? authState.user : null}
           handleAdd={handleAdd}
           handleEdit={handleEdit}
           handleDeleteProduct={handleDeleteProduct}

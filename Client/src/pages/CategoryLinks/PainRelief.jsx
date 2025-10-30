@@ -1,28 +1,47 @@
+// src/pages/CategoryLinks/PainRelief.jsx
+import React, { useContext, useMemo } from "react";
 import ProductList from "../../components/ProductList/ProductList";
 import "./productStyle.css";
-function PainRelief({
-  products,
-  handleAdd,
-  user,
-  handleEdit,
-  handleDeleteProduct,
-  handleUpdate,
-  editedProduct,
-  editingProductId,
-  setEditedProduct,
-  searchTerm,
-  newProduct,
-  setNewProduct,
-  handleAddNewProduct,
-  setEditingProductId,
-  handleCancelEdit,
-  categories,
-}) {
-  const filtered = products.filter(
-    (p) =>
-      (p.category && p.category.name === "Pain Relief") ||
-      p.category === "Pain Relief"
-  );
+import {
+  AuthContext,
+  CartContext,
+  ProductContext,
+} from "../../context/ContextObjects";
+function PainRelief({ searchTerm }) {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    products,
+    categories,
+    handleAddNewProduct,
+    handleDeleteProduct,
+    handleUpdate,
+    newProduct,
+    setNewProduct,
+    editedProduct,
+    setEditedProduct,
+    editingProductId,
+    setEditingProductId,
+    handleEdit,
+    handleCancelEdit,
+  } = useContext(ProductContext);
+  const { handleAdd } = useContext(CartContext);
+  const categorySlug = "Pain Relief";
+  const filteredProducts = useMemo(() => {
+    const categoryFilter = products.filter((p) => {
+      const categoryMatch =
+        (p.category && p.category.name === categorySlug) ||
+        p.category === categorySlug;
+      return categoryMatch;
+    });
+    if (!searchTerm) return categoryFilter;
+    const term = searchTerm.toLowerCase();
+    return categoryFilter.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        (product.desc && product.desc.toLowerCase().includes(term))
+    );
+  }, [products, searchTerm]);
+  const isAdmin = authState.user && authState.user.role === "admin";
   return (
     <div
       style={{
@@ -40,7 +59,6 @@ function PainRelief({
           e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
         }}
       >
-        {/* ===== Description Section ===== */}
         <div className="desc-section">
           <h3 className="desc-title">Pain Relief</h3>
           <p className="desc-text">
@@ -49,11 +67,10 @@ function PainRelief({
             recommended dosage and consult your doctor if symptoms persist.
           </p>
         </div>
-
         <ProductList
           searchTerm={searchTerm}
-          products={filtered}
-          user={user}
+          products={filteredProducts}
+          user={isAdmin ? authState.user : null}
           handleAdd={handleAdd}
           handleEdit={handleEdit}
           handleDeleteProduct={handleDeleteProduct}
@@ -72,5 +89,4 @@ function PainRelief({
     </div>
   );
 }
-
 export default PainRelief;

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+// src/pages/Auth/Signup.jsx
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
-import axios from "axios";
+import { AuthContext } from "../../context/ContextObjects";
 import SignUpImg from "../../assets/Auth/signup.png";
 
-export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
+export default function Signup() {
   const navigate = useNavigate();
+  const { signup, state: authState } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,7 +15,6 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -24,11 +25,8 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const name = formData.name.trim();
-    const email = formData.email.trim().toLowerCase();
-    const password = formData.password;
-    const confirmPassword = formData.confirmPassword;
+    setError("");
+    const { name, email, password, confirmPassword } = formData;
 
     if (!name || !email || !password || !confirmPassword) {
       setError("Please fill all fields");
@@ -40,38 +38,22 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
       return;
     }
 
-    try {
-      setLoading(true);
-
-      const res = await axios.post("http://localhost:4000/api/auth/signup", {
-        name,
-        email,
-        password,
-      });
-
-      const { data, token } = res.data;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(data));
-      localStorage.setItem("isLoggedIn", "true");
-
-      setUser(data);
-      setIsLoggedIn(true);
-      setCartItems([]);
-
+    const result = await signup(
+      name.trim(),
+      email.trim().toLowerCase(),
+      password
+    );
+    if (result.success) {
       navigate("/profile");
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || "Signup failed. Try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      setError(result.error);
     }
   };
 
   return (
     <div className="signup-container d-flex align-items-center justify-content-center">
-      <div className="shadow p-4 signup-card ">
-        <div className="row g-0 align-items-center ">
+      <div className="shadow p-4 signup-card">
+        <div className="row g-0 align-items-center">
           <div className="col-md-6 d-flex justify-content-center">
             <img
               src={SignUpImg}
@@ -86,13 +68,9 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
               }}
             />
           </div>
-
           <div className="col-md-6">
             <div className="card-body p-3">
-              <h2
-                className="card-title text-success text-center mb-4"
-                
-              >
+              <h2 className="card-title text-success text-center mb-4">
                 Create An Account
               </h2>
               <form onSubmit={handleSubmit}>
@@ -154,9 +132,9 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
                 <button
                   type="submit"
                   className="btn w-100 btn-success text-white d-flex justify-content-center align-items-center"
-                  disabled={loading}
+                  disabled={authState.loading}
                 >
-                  {loading ? (
+                  {authState.loading ? (
                     <div
                       className="spinner-border spinner-border-sm text-light"
                       role="status"
@@ -172,8 +150,8 @@ export default function Signup({ setUser, setIsLoggedIn, setCartItems }) {
                 Already have an account?{" "}
                 <a
                   href="/login"
-                  style={{textDecoration: "underline" }}
-                  className=" text-success"
+                  style={{ textDecoration: "underline" }}
+                  className="text-success"
                 >
                   Login
                 </a>

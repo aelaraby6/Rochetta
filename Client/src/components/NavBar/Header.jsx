@@ -1,26 +1,26 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext, CartContext } from "../../context/ContextObjects";
 import "./Header.css";
 
 export default function Header({
-  count,
   darkMode,
   setDarkMode,
-  user,
   searchTerm,
   setSearchTerm,
 }) {
-  
+  const { state: authState } = useContext(AuthContext);
+  const { cartCount } = useContext(CartContext);
+  const count = cartCount;
+  const user = authState.user;
+
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light px-4 fixed-top shadow-sm"
-    >
+    <nav className="navbar navbar-expand-lg navbar-light px-4 fixed-top shadow-sm">
       <div className="container-fluid">
-        {/* Logo */}
-        <Link  className="navbar-brand rochetta-font fs-3 " to="/">
-          Rochetta 
+        <Link className="navbar-brand rochetta-font fs-3" to="/">
+          Rochetta
         </Link>
 
-        {/* Toggle Button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -30,9 +30,7 @@ export default function Header({
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Collapsible Content */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          {/* Search */}
           <form className="d-flex flex-grow-1 my-2 my-lg-0 me-lg-3">
             <input
               className="form-control search-input"
@@ -43,7 +41,6 @@ export default function Header({
             />
           </form>
 
-          {/* Links */}
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
             <li className="nav-item">
               <Link className="nav-link text-dark" to="/">
@@ -55,7 +52,9 @@ export default function Header({
               <Link className="nav-link text-dark fs-5 me-lg-2" to="/cart">
                 <i className="bi bi-cart"></i>
                 {count > 0 && (
-                  <span className="badge bg-danger ms-2">{count.toFixed(2)}</span>
+                  <span className="badge bg-danger ms-2">
+                    {count.toFixed(2)}
+                  </span>
                 )}
               </Link>
             </li>
