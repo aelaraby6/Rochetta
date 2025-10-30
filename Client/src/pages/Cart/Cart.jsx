@@ -1,42 +1,34 @@
 // src/pages/Cart/Cart.jsx
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/footer";
 import api from "../../api";
 import "./Cart.css";
+import { AuthContext, CartContext } from "../../context/ContextObjects";
 
-export default function Cart({
-  cartItems,
-  handleAdd,
-  handleRemove,
-  handleDelete,
-  handleClearCart,
-  setCartItems,
-}) {
+export default function Cart() {
   const navigate = useNavigate();
-
-  const totalPrice = cartItems.reduce((acc, item) => {
-    const product = item.product ?? item;
-    const qty = Number(item.quantity ?? item.NOI ?? 1); // quantity in boxes (possibly fractional)
-    const unitPrice = Number(item.price ?? product.price ?? 0); // price per box
-    return acc + unitPrice * qty;
-  }, 0);
+  const { state: authState } = useContext(AuthContext);
+  const {
+    cartItems,
+    cartTotal,
+    handleAdd,
+    handleRemove,
+    handleDelete,
+    handleClearCart,
+    isLoading: isCartLoading,
+  } = useContext(CartContext);
 
   const handleCreateOrder = async () => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (!storedUser) {
+      if (!authState.isLoggedIn) {
         alert("Please login to place an order.");
         return;
       }
 
       const address = "Default Address";
-
       await api.post("/order/create-order", { address });
-
-      setCartItems([]);
-      localStorage.setItem("cart", JSON.stringify([]));
-
+      handleClearCart();
       navigate("/profile");
     } catch (err) {
       console.error("Error creating order:", err);
@@ -53,7 +45,7 @@ export default function Cart({
           className="container"
           style={{ paddingTop: 80, paddingBottom: 40 }}
         >
-          <h2 className="cart-title text-center mb-4"> Your Shopping Cart</h2>
+          <h2 className="cart-title text-center mb-4">Your Shopping Cart</h2>
 
           {cartItems.length === 0 ? (
             <div className="empty-cart card text-center p-5 mx-auto shadow-sm">
@@ -65,11 +57,9 @@ export default function Cart({
                 Continue Shopping
               </Link>
             </div>
-                    ) : (
+          ) : (
             <div className="row d-flex justify-content-center align-items-center gx-4">
-              {/* Single column: items then summary stacked under them */}
               <div className="col-8">
-                {/* Items card */}
                 <div className="card items-card p-3 mb-4 shadow-sm">
                   {cartItems.map((item, idx) => {
                     const id =
@@ -81,13 +71,10 @@ export default function Cart({
                     );
                     const isStripItem =
                       item.unit === "strip" && stripsPerBox > 0;
-
                     const unitPrice = isStripItem
                       ? Number(product.price ?? item.price ?? 0)
                       : Number(item.price ?? product.price ?? 0);
-
                     const subtotal = (unitPrice * qty).toFixed(2);
-
                     const qtyDisplay = isStripItem
                       ? (() => {
                           const boxes = Math.floor(qty / stripsPerBox);
@@ -104,7 +91,6 @@ export default function Cart({
                             ? `${num} box${num > 1 ? "s" : ""}`
                             : `${num.toFixed(2)} box`;
                         })();
-
                     const pieces = product.pieces ?? product.stock ?? 0;
 
                     return (
@@ -199,7 +185,6 @@ export default function Cart({
                   })}
                 </div>
 
-                {/* controls under the list */}
                 <div className="d-flex justify-content-between mb-4">
                   <button
                     className="btn btn-outline-danger"
@@ -218,8 +203,7 @@ export default function Cart({
                   </Link>
                 </div>
 
-                {/* Summary CARD now placed below the items */}
-                <div className="card summary-card p-3 shadow-sm ">
+                <div className="card summary-card p-3 shadow-sm">
                   <h5 className="mb-3">Order Summary</h5>
                   <div className="d-flex justify-content-between mb-2">
                     <div className="text-muted">Items</div>
@@ -233,15 +217,25 @@ export default function Cart({
 
                   <div className="d-flex justify-content-between mb-2">
                     <div className="text-muted">Subtotal</div>
-                    <div>${totalPrice.toFixed(2)}</div>
+                    <div>${cartTotal.toFixed(2)}</div>
                   </div>
 
                   <div className="d-grid">
                     <button
                       className="btn btn-success btn-lg"
                       onClick={handleCreateOrder}
+                      disabled={isCartLoading}
                     >
-                      Order — ${totalPrice.toFixed(2)}
+                      {isCartLoading ? (
+                        <div
+                          className="spinner-border spinner-border-sm text-light"
+                          role="status"
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      ) : (
+                        `Order — $${cartTotal.toFixed(2)}`
+                      )}
                     </button>
                   </div>
 
@@ -254,7 +248,6 @@ export default function Cart({
               </div>
             </div>
           )}
-
         </div>
       </div>
 

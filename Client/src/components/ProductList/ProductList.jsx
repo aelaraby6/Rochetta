@@ -1,28 +1,43 @@
+// src/components/ProductList/ProductList.jsx
 import { Link } from "react-router-dom";
+import { useContext, useMemo } from "react";
 import strip from "./strip.png";
-function ProductList({
-  products,
-  handleAdd,
-  user,
-  searchTerm,
-  handleDeleteProduct,
-  handleEdit,
-  handleUpdate,
-  setEditedProduct,
-  editingProductId,
-  editedProduct,
-  newProduct,
-  setNewProduct,
-  handleAddNewProduct,
-  categories,
-  setEditingProductId,
-  handleCancelEdit,
-}) {
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.desc.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+import {
+  AuthContext,
+  CartContext,
+  ProductContext,
+} from "../../context/ContextObjects";
+
+function ProductList({ searchTerm, products }) {
+  const { state: authState } = useContext(AuthContext);
+  const { handleAdd } = useContext(CartContext);
+  const {
+    categories,
+    newProduct,
+    setNewProduct,
+    editedProduct,
+    setEditedProduct,
+    editingProductId,
+    setEditingProductId,
+    handleAddNewProduct,
+    handleDeleteProduct,
+    handleUpdate,
+    handleEdit,
+    handleCancelEdit,
+  } = useContext(ProductContext);
+
+  const user = authState.user;
+
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm) return products;
+    const term = searchTerm.toLowerCase();
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        product.desc.toLowerCase().includes(term)
+    );
+  }, [products, searchTerm]);
+
   const formatPieces = (value) => {
     if (Number.isInteger(value)) return value;
     return Number(value).toFixed(2);
@@ -38,13 +53,13 @@ function ProductList({
     >
       <div
         style={{ width: "100%" }}
-        className="row shadow-2-m  justify-content-center   "
+        className="row shadow-2-m justify-content-center"
       >
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
               key={product._id}
-              className=" col-lg-3 col-md-4 col-sm-6 g-4 mb-4 "
+              className="col-lg-3 col-md-4 col-sm-6 g-4 mb-4"
             >
               <div
                 style={{
@@ -58,13 +73,13 @@ function ProductList({
                 }}
                 className="p-3 h-100 d-flex flex-column justify-content-between"
               >
-                <div className=" d-flex flex-column justify-content-between ">
-                  <div className=" h-100">
+                <div className="d-flex flex-column justify-content-between">
+                  <div className="h-100">
                     <Link to={`/product/${product._id}`}>
                       <img
                         src={product.image}
                         alt={product.name}
-                        className=" w-100 "
+                        className="w-100"
                         style={{
                           height: "240px",
                           objectFit: "contain",
@@ -76,37 +91,30 @@ function ProductList({
                       />
                     </Link>
                   </div>
-
-                  <div className="card-body d-flex flex-column justify-content-center ">
+                  <div className="card-body d-flex flex-column justify-content-center">
                     <div>
                       <div>
-                        <p className="mb-1  small">
-                          {" "}
-                          {formatPieces(
-                            product.pieces ?? product.stock ?? 0
-                          )}{" "}
+                        <p className="mb-1 small">
+                          {formatPieces(product.pieces ?? product.stock ?? 0)}{" "}
                           pieces
                         </p>
-
                         <h4 className="card-title text-truncate mb-3">
                           <Link
                             to={`/product/${product._id}`}
                             className="text-decoration-none text-dark link"
                           >
                             {product.name}
-                            <h6 className=" bg-red">
+                            <h6 className="text-danger">
                               {product.IsRoshetta ? "Need a Prescription" : ""}
                             </h6>
                           </Link>
                         </h4>
                       </div>
                     </div>
-
                     <div className="d-flex justify-content-between align-items-center mt-auto">
-                      <div className=" d-flex">
+                      <div className="d-flex">
                         <p className="mb-1 fs-4 fw-bold">${product.price}</p>
                       </div>
-
                       {user?.role !== "admin" && (
                         <div className="d-flex gap-2">
                           {product.stripsPerBox > 0 ? (
@@ -118,7 +126,7 @@ function ProductList({
                                   borderRadius: "50%",
                                   border: "solid px green",
                                 }}
-                                className="btn btn-sm scale-btn bg-success "
+                                className="btn btn-sm scale-btn bg-success"
                                 onClick={() =>
                                   handleAdd(product, 1, { unit: "strip" })
                                 }
@@ -139,7 +147,6 @@ function ProductList({
                                   className="bg-success"
                                 />
                               </button>
-
                               <button
                                 style={{
                                   height: "50px",
@@ -187,7 +194,7 @@ function ProductList({
                       <div className="mt-2 d-flex flex-column gap-2">
                         <div className="d-flex gap-2">
                           <button
-                            className="btn btn-sm btn-warning "
+                            className="btn btn-sm btn-warning"
                             onClick={() => handleEdit(product)}
                           >
                             Edit
@@ -199,7 +206,6 @@ function ProductList({
                             Delete
                           </button>
                         </div>
-
                         {editingProductId === product._id && (
                           <form
                             onSubmit={(e) => {
@@ -220,7 +226,6 @@ function ProductList({
                               placeholder="Edit Name"
                               className="form-control"
                             />
-
                             <input
                               type="number"
                               value={editedProduct.price}
@@ -233,7 +238,6 @@ function ProductList({
                               placeholder="Edit Price"
                               className="form-control"
                             />
-
                             <input
                               type="file"
                               accept="image/*"
@@ -245,7 +249,6 @@ function ProductList({
                                 })
                               }
                             />
-
                             <input
                               type="number"
                               value={editedProduct.pieces}
@@ -258,7 +261,6 @@ function ProductList({
                               placeholder="Edit Pieces Available"
                               className="form-control"
                             />
-
                             <input
                               type="number"
                               value={editedProduct.stripsPerBox}
@@ -271,7 +273,6 @@ function ProductList({
                               placeholder="Strips per Box"
                               className="form-control"
                             />
-
                             <textarea
                               value={editedProduct.desc}
                               onChange={(e) =>
@@ -283,7 +284,6 @@ function ProductList({
                               placeholder="Edit Description"
                               className="form-control"
                             />
-
                             <div className="form-check">
                               <input
                                 type="checkbox"
@@ -304,7 +304,6 @@ function ProductList({
                                 Has Strips
                               </label>
                             </div>
-
                             <div className="d-flex gap-2">
                               <button
                                 type="submit"
@@ -350,7 +349,6 @@ function ProductList({
                 setNewProduct({ ...newProduct, name: e.target.value })
               }
             />
-
             <input
               type="number"
               className="form-control mb-2"
@@ -369,26 +367,29 @@ function ProductList({
                 setNewProduct({ ...newProduct, pieces: +e.target.value })
               }
             />
-
             <input
               type="number"
               className="form-control mb-2"
               placeholder="Strips-PerUnit"
               value={newProduct.stripsPerBox}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, stripsPerBox: +e.target.value })
+                setNewProduct({
+                  ...newProduct,
+                  stripsPerBox: +e.target.value,
+                })
               }
             />
-
             <input
               type="file"
               accept="image/*"
               className="form-control mb-2"
               onChange={(e) =>
-                setNewProduct({ ...newProduct, imageFile: e.target.files[0] })
+                setNewProduct({
+                  ...newProduct,
+                  imageFile: e.target.files[0],
+                })
               }
             />
-
             <select
               className="form-control mb-2"
               value={newProduct.category}
@@ -403,7 +404,6 @@ function ProductList({
                 </option>
               ))}
             </select>
-
             <textarea
               className="form-control mb-2"
               placeholder="Desc.."
@@ -412,7 +412,6 @@ function ProductList({
                 setNewProduct({ ...newProduct, desc: e.target.value })
               }
             />
-
             <button className="btn btn-success" onClick={handleAddNewProduct}>
               Add
             </button>
@@ -422,5 +421,4 @@ function ProductList({
     </div>
   );
 }
-
 export default ProductList;
