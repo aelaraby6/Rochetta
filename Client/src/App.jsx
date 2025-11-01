@@ -1,3 +1,5 @@
+// src/App.jsx
+
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import Navbar from "./components/NavBar/Header";
@@ -14,11 +16,8 @@ import DiabetesCare from "./pages/CategoryLinks/DiabetesCare";
 import Signup from "./pages/Auth/signup";
 import NotFound from "./pages/Errors/NotFound";
 import "./App.css";
-import {
-  AuthContext,
-  CartContext,
-  ProductContext,
-} from "./context/ContextObjects";
+import { AuthContext, CartContext } from "./context/ContextObjects";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 function App() {
   const { state: authState } = useContext(AuthContext);
@@ -69,12 +68,13 @@ function App() {
         }
       >
         <Routes>
+          // <Route path="/admin/*" element={<AdminDashboard />} />
           <Route path="/" element={<LandingPage searchTerm={searchTerm} />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/*" element={<Profile />} />
           <Route
             path="/category/pain-relief"
             element={<PainRelief searchTerm={searchTerm} />}
