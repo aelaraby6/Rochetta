@@ -1,3 +1,4 @@
+// src/pages/Home/LandingPage.jsx
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Landing.css";
 import landingImage from "../../assets/Home/doctor.png";
@@ -14,37 +15,53 @@ import Abdo from "../../assets/Home/abdo.jpg";
 import Selim from "../../assets/Home/selim.jpeg";
 import Three from "../../assets/Home/three.jpg";
 import Footer from "../../components/Footer/footer";
-import { useState } from "react";
-
-const Landing = ({ handleAdd }) => {
-  const products = [
+import { useState, useContext, useMemo } from "react";
+import { CartContext, ProductContext } from "../../context/ContextObjects";
+const Landing = () => {
+  const { featuredProducts, products } = useContext(ProductContext);
+  const { handleAdd } = useContext(CartContext);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const localFallback = [
     {
-      id: 1,
+      id: "1",
       name: "Solgar ESTER 100 PLUS Kapsul",
       price: 43,
       image: ProductOne,
     },
     {
-      id: 2,
+      id: "2",
       name: "Cetirizine 50ml Coated Creme",
       price: 43,
       image: ProductTwo,
     },
     {
-      id: 3,
+      id: "3",
       name: "Sunscreen® Stick 250ml 50+",
       price: 43,
       image: ProductThree,
     },
     {
-      id: 4,
+      id: "4",
       name: "Sunscreen Care 200ml Lotion",
       price: 43,
       image: ProductFour,
     },
   ];
-  const [activeIndex, setActiveIndex] = useState(null);
-
+  const productsToShow = useMemo(() => {
+    const featured = featuredProducts.length
+      ? featuredProducts
+      : (products || []).filter((p) => !!p.top_selling);
+    return (featured.length ? featured : localFallback)
+      .slice(0, 4)
+      .map((p) => ({
+        ...p,
+        _id: p._id ?? (p.id ? String(p.id) : undefined),
+        image: p.image ?? p.img ?? "",
+        price: p.price ?? 0,
+        name: p.name ?? "Unnamed product",
+        stripsPerBox: p.stripsPerBox ?? p.strip_count ?? 1,
+      }));
+  }, [featuredProducts, products]);
   const faqs = [
     {
       question: "What is your return policy?",
@@ -62,28 +79,25 @@ const Landing = ({ handleAdd }) => {
         "Once your order is shipped, we will send you a tracking number via email.",
     },
   ];
-
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
-
   return (
     <>
       <div className="landing-container vh-100 d-flex align-items-stretch text-white pt-5">
         <div className="container-fluid">
           <div className="row h-100">
             <div className="col-md-6 d-flex flex-column justify-content-center">
-              <p className="display-4 fw-bold">Welcome to PharmaXpress</p>
+              <p className="display-4 fw-bold">Welcome to Rochetta</p>
               <p className="lead">
-                Bringing healthcare to your home — your trusted source for
-                authentic Egyptian prescriptions and services.
+                Your online pharmacy — delivering trusted medicines and care,
+                anytime, anywhere
               </p>
               <div className="mt-4">
                 <button className="btn btn-success me-3">Get Started</button>
                 <button className="btn btn-outline-light">Learn More</button>
               </div>
             </div>
-
             <div className="col-md-6 p-0">
               <div className="h-100 d-flex justify-content-center align-items-end">
                 <img src={landingImage} alt="Doctor" className="doctor-img" />
@@ -92,9 +106,6 @@ const Landing = ({ handleAdd }) => {
           </div>
         </div>
       </div>
-
-      {/*icons section */}
-
       <div className="container py-5">
         <div className="row text-center">
           <div className="col-md-3 mb-4">
@@ -106,7 +117,6 @@ const Landing = ({ handleAdd }) => {
               <p className="text-muted">For all orders over $199.00</p>
             </div>
           </div>
-
           <div className="col-md-3 mb-4">
             <div>
               <div className="icon-circle">
@@ -116,7 +126,6 @@ const Landing = ({ handleAdd }) => {
               <p className="text-muted">We ensure secure payment</p>
             </div>
           </div>
-
           <div className="col-md-3 mb-4">
             <div>
               <div className="icon-circle">
@@ -126,7 +135,6 @@ const Landing = ({ handleAdd }) => {
               <p className="text-muted">Returning money 30 days</p>
             </div>
           </div>
-
           <div className="col-md-3 mb-4">
             <div>
               <div className="icon-circle">
@@ -138,9 +146,6 @@ const Landing = ({ handleAdd }) => {
           </div>
         </div>
       </div>
-
-      {/* photos cards */}
-
       <div className="container my-5">
         <div className="row g-4">
           <div className="col-md-4">
@@ -152,7 +157,6 @@ const Landing = ({ handleAdd }) => {
               />
             </div>
           </div>
-
           <div className="col-md-4">
             <div className="promo-card">
               <img
@@ -162,7 +166,6 @@ const Landing = ({ handleAdd }) => {
               />
             </div>
           </div>
-
           <div className="col-md-4">
             <div className="promo-card">
               <img
@@ -174,32 +177,28 @@ const Landing = ({ handleAdd }) => {
           </div>
         </div>
       </div>
-
-      {/* top products */}
-
       <div className="container my-5">
         <h3 className="mb-4 section-title">Top Selling Products</h3>
         <div className="row g-4">
-          {products.map((product) => (
-            <div className="col-md-3">
-              <div
-                key={product.id}
-                className="product-card p-3 border rounded land"
-              >
+          {productsToShow.map((product) => (
+            <div key={product._id ?? product.id} className="col-md-3">
+              <div className="product-card p-3 border rounded land">
                 <img
                   src={product.image}
-                  alt="Product 1"
+                  alt={product.name}
                   className="img-fluid mb-3 product-img"
                 />
                 <div className="text-warning mb-2">★★★★★</div>
-                <h6>Solgar ESTER 100 PLUS Kapsul</h6>
-                <p className="fw-bold">$43.00</p>
+                <h6>{product.name}</h6>
+                <p className="fw-bold">${product.price}.00</p>
                 <button
                   onClick={() =>
                     handleAdd({
                       ...product,
-                      isStrip: false,
-                      NOI: product.stripsPerBox,
+                      _id: product._id ?? product.id,
+                      isStrip: product.isStrip || false,
+                      NOI: product.stripsPerBox || 1,
+                      quantity: 1,
                     })
                   }
                   className="btn btn-success w-100"
@@ -211,9 +210,6 @@ const Landing = ({ handleAdd }) => {
           ))}
         </div>
       </div>
-
-      {/* Offers photos */}
-
       <div className="container my-5">
         <div className="row g-3">
           <div className="col-md-6">
@@ -232,14 +228,11 @@ const Landing = ({ handleAdd }) => {
           </div>
         </div>
       </div>
-
-      {/*clients  */}
-
-      <div className="container my-5 ">
+      <div className="container my-5">
         <h2 className="text-center mb-4">What Our Clients Say</h2>
-        <div className="row g-4 ">
+        <div className="row g-4">
           <div className="col-md-4 bg-">
-            <div className="card h-100 text-center p-3 shadow-sm land ">
+            <div className="card h-100 text-center p-3 shadow-sm land">
               <img
                 src={Abdo}
                 alt="Client 1"
@@ -285,17 +278,12 @@ const Landing = ({ handleAdd }) => {
           </div>
         </div>
       </div>
-
-      {/* questions */}
-
       <div className="faq-section">
         <h2 className="my-5">Frequently Asked Questions</h2>
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className={`faq-item ${
-              activeIndex === index ? "active" : ""
-            } land `}
+            className={`faq-item ${activeIndex === index ? "active" : ""} land`}
             onClick={() => toggleFAQ(index)}
           >
             <div className="faq-question">
@@ -310,11 +298,8 @@ const Landing = ({ handleAdd }) => {
           </div>
         ))}
       </div>
-
-   
       <Footer />
     </>
   );
 };
-
 export default Landing;

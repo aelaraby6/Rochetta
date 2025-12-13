@@ -2,6 +2,11 @@
 
 Rochetta is a MERN-Stack web application that provides a seamless experience for users to purchase medicines online and for admins to manage pharmacy operations.
 
+
+
+https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
+
+
 ---
 
 ## 🚀 Features
@@ -11,17 +16,20 @@ Rochetta is a MERN-Stack web application that provides a seamless experience for
 - Choose between purchasing a **strip** or a **full box**, just like a real pharmacy.
 - Add medicines to the Cart and manage quantities.
 - Place an Order.
-- Secure **Login/Register** with JWT authentication.
+- Some medicines **require a prescription** (cannot be purchased without a prescription).
+
 
 ### 🛠️ Admin Features
 - Add new products with images, prices, and details.
 - Edit or delete existing products.
 
-<img width="1901" height="888" alt="home" src="https://github.com/user-attachments/assets/e36f327f-0616-420b-ae31-deef09c93ed4" />
 
 <img width="1810" height="857" alt="signup" src="https://github.com/user-attachments/assets/a3c671c8-46fa-481f-9c28-2fe752f858e2" />
 
 <img width="1851" height="861" alt="login" src="https://github.com/user-attachments/assets/96340a29-4ada-4845-818c-fbc9b6034331" />
+
+<img width="1232" height="717" alt="cart" src="https://github.com/user-attachments/assets/46792721-5840-4be1-9c6c-9cce164097ca" />
+
 
 ---
 
@@ -30,7 +38,7 @@ Rochetta is a MERN-Stack web application that provides a seamless experience for
 ### **Frontend**
 - React.js 
 - React Router DOM
-- TailwindCSS 
+- Bootstrap 
 - Axios
 
 ### **Backend**
@@ -99,7 +107,7 @@ Here are sample screenshots from **Swagger UI** showing the API endpoints:
 
 ## 👥 Contributors
 
-Thanks goes to these wonderful people in the frontend team:
+Thanks goes to these wonderful people in the Fullstack team:
 
 <table>
   <tr>

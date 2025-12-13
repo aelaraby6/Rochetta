@@ -1,74 +1,78 @@
+// src/pages/CategoryLinks/DiabetesCare.jsx
+import React, { useContext, useMemo } from "react";
 import ProductList from "../../components/ProductList/ProductList";
-import "./productStyle.css"
-function DiabetesCare({
-  products,
-  handleAdd,
-  user,
-  handleEdit,
-  handleDeleteProduct,
-  handleUpdate,
-  editedProduct,
-  editingProductId,
-  setEditedProduct,
-  searchTerm,
-  newProduct,
-  setNewProduct,
-  handleAddNewProduct
-}) {
-  const filtered = products.filter((p) => p.category === "Diabetes Care");
-
- return (
-    <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-   <div className=" productStyle"
-   onMouseEnter={(e) => {
-      
-        e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
-      }}
-      onMouseLeave={(e) => {
-
-        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-      }}
->
-  {/* ===== Description Section ===== */}
-  <div style={{ marginBottom: "25px", marginLeft:"20px"}}>
-    <h3
-      style={{
-        fontWeight: "700",
-        marginBottom: "12px",
-        borderLeft: "4px solid #28a745",
-        paddingLeft: "10px",
-        color: "#333",
-      }}
-    >
-     Diabetes Care
-    </h3>
-    <p style={{ margin: 0, color: "#555", lineHeight: "1.7", fontSize: "19px" }}>
-       Diabetes care products support blood sugar monitoring and management. They
-    include glucose meters, test strips, and supplements that help maintain a
-   healthy lifestyle for diabetic patients.
-
-    </p>
-  </div>
-
-    <ProductList
-      searchTerm={searchTerm}
-      products={filtered}
-      user={user}
-      handleAdd={handleAdd}
-      handleEdit={handleEdit}
-      handleDeleteProduct={handleDeleteProduct}
-      handleUpdate={handleUpdate}
-      editingProductId={editingProductId}
-      editedProduct={editedProduct}
-      setEditedProduct={setEditedProduct}
-        newProduct={newProduct}
-      setNewProduct={setNewProduct}
-      handleAddNewProduct={handleAddNewProduct}
-    />
-    </div> 
+import {
+  AuthContext,
+  CartContext,
+  ProductContext,
+} from "../../context/ContextObjects";
+function DiabetesCare({ searchTerm }) {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    products,
+    categories,
+    handleAddNewProduct,
+    handleDeleteProduct,
+    handleUpdate,
+    newProduct,
+    setNewProduct,
+    editedProduct,
+    setEditedProduct,
+    editingProductId,
+    setEditingProductId,
+    handleEdit,
+    handleCancelEdit,
+  } = useContext(ProductContext);
+  const { handleAdd } = useContext(CartContext);
+  const categorySlug = "Diabetes Care";
+  const filteredProducts = useMemo(() => {
+    const categoryFilter = products.filter((p) => {
+      const categoryMatch =
+        (p.category && p.category.name === categorySlug) ||
+        p.category === categorySlug;
+      return categoryMatch;
+    });
+    if (!searchTerm) return categoryFilter;
+    const term = searchTerm.toLowerCase();
+    return categoryFilter.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        (product.desc && product.desc.toLowerCase().includes(term))
+    );
+  }, [products, searchTerm]);
+  const isAdmin = authState.user && authState.user.role === "admin";
+  return (
+    <div className="d-flex justify-content-center align-items-center">
+      <div className="productStyle">
+        <div className="desc-section">
+          <h3 className="desc-title">Diabetes Care</h3>
+          <p className="desc-text">
+            Diabetes care products support blood sugar monitoring and
+            management. They include glucose meters, test strips, and
+            supplements that help maintain a healthy lifestyle for diabetic
+            patients.
+          </p>
+        </div>
+        <ProductList
+          searchTerm={searchTerm}
+          products={filteredProducts}
+          user={isAdmin ? authState.user : null}
+          handleAdd={handleAdd}
+          handleEdit={handleEdit}
+          handleDeleteProduct={handleDeleteProduct}
+          handleUpdate={handleUpdate}
+          editingProductId={editingProductId}
+          editedProduct={editedProduct}
+          setEditedProduct={setEditedProduct}
+          setEditingProductId={setEditingProductId}
+          handleCancelEdit={handleCancelEdit}
+          newProduct={newProduct}
+          setNewProduct={setNewProduct}
+          handleAddNewProduct={handleAddNewProduct}
+          categories={categories}
+        />
+      </div>
     </div>
   );
 }
 export default DiabetesCare;
-
- 

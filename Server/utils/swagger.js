@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "PharmaXpress API",
+      title: "Rochetta API",
       version: "1.0.0",
-      description: "API documentation for PharmaXpress project",
+      description: "API documentation for Rochetta project",
     },
     servers: [
       {

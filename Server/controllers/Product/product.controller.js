@@ -34,6 +34,7 @@ export const createProductController = async (req, res, next) => {
     });
 
     await newProduct.save();
+    await newProduct.populate("category");
 
     res.status(201).json({
       message: "Product created successfully",
@@ -128,23 +129,54 @@ export const DeleteProductController = async (req, res, next) => {
   }
 };
 
+
 export const updateProductController = async (req, res, next) => {
   try {
     const { id } = req.params;
     validateObjectId(id, "product id");
 
-    if (!req.body || Object.keys(req.body).length === 0)
+    // ensure there's something to update
+    // note: when using multipart, req.body values are strings
+    const body = { ...req.body };
+
+    // if file is present, upload to cloudinary and set image url into body
+    if (req.file) {
+      const uploadStream = () =>
+        new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "products" },
+            (error, result) => (error ? reject(error) : resolve(result))
+          );
+          streamifier.createReadStream(req.file.buffer).pipe(stream);
+        });
+
+      const result = await uploadStream();
+      body.image = result.secure_url;
+    }
+
+    if (!body || Object.keys(body).length === 0)
       throw new BadRequestError("Update data is required");
 
-    if (req.body.category) {
-      validateObjectId(req.body.category, "category id");
-      const categoryExists = await Category.findById(req.body.category);
+    // convert numeric/string fields if needed (optional)
+    if (body.price) body.price = Number(body.price);
+    if (body.stock) body.stock = Number(body.stock);
+    if (body.strip_count) body.strip_count = Number(body.strip_count);
+    if (typeof body.has_strips !== "undefined")
+      body.has_strips = body.has_strips === "true" || body.has_strips === true;
+    if (typeof body.requires_prescription !== "undefined")
+      body.requires_prescription =
+        body.requires_prescription === "true" ||
+        body.requires_prescription === true;
+
+    if (body.category) {
+      validateObjectId(body.category, "category id");
+      const categoryExists = await Category.findById(body.category);
       if (!categoryExists) throw new BadRequestError("Category not found");
     }
 
     const product = await Product.findOneAndUpdate(
       { _id: id, is_deleted: false },
-      { $set: req.body },
+      { $set: body },
       { new: true, runValidators: true }
     )
       .select("-is_deleted -__v")

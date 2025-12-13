@@ -1,26 +1,47 @@
+// src/components/ProductList/ProductList.jsx
 import { Link } from "react-router-dom";
+import { useContext, useMemo } from "react";
 import strip from "./strip.png";
+import {
+  AuthContext,
+  CartContext,
+  ProductContext,
+} from "../../context/ContextObjects";
 
-function ProductList({
-  products,
-  handleAdd,
-  user,
-  searchTerm,
-  handleDeleteProduct,
-  handleEdit,
-  handleUpdate,
-  setEditedProduct,
-  editingProductId,
-  editedProduct,
-  newProduct,
-  setNewProduct,
-  handleAddNewProduct,
-}) {
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.desc.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+function ProductList({ searchTerm, products }) {
+  const { state: authState } = useContext(AuthContext);
+  const { handleAdd } = useContext(CartContext);
+  const {
+    categories,
+    newProduct,
+    setNewProduct,
+    editedProduct,
+    setEditedProduct,
+    editingProductId,
+    setEditingProductId,
+    handleAddNewProduct,
+    handleDeleteProduct,
+    handleUpdate,
+    handleEdit,
+    handleCancelEdit,
+  } = useContext(ProductContext);
+
+  const user = authState.user;
+
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm) return products;
+    const term = searchTerm.toLowerCase();
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        product.desc.toLowerCase().includes(term)
+    );
+  }, [products, searchTerm]);
+
+  const formatPieces = (value) => {
+    if (Number.isInteger(value)) return value;
+    return Number(value).toFixed(2);
+  };
 
   return (
     <div
@@ -30,29 +51,37 @@ function ProductList({
         alignItems: "center",
       }}
     >
-      <div style={{ width: "100%" }} className="row justify-content-center  ">
+      <div
+        style={{ width: "100%" }}
+        className="row shadow-2-m justify-content-center"
+      >
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
               key={product._id}
-              className=" col-lg-3 col-md-4 col-sm-6 g-4 mb-4"
+              className="col-lg-3 col-md-4 col-sm-6 g-4 mb-4"
             >
               <div
-                className={` p-3 h-100 shadow-sm border-1 d-flex flex-column justify-content-between ${
-                  product.IsRoshetta
-                    ? "border-danger border-3 shadow-danger"
-                    : ""
-                }`}
+                style={{
+                  borderRadius: "8px",
+                  boxShadow: product.IsRoshetta
+                    ? "0 0 6px rgba(220, 53, 69, 0.8)"
+                    : "0 0 3px rgba(172, 172, 172, 0.8)",
+                  border: product.IsRoshetta
+                    ? "2px solid #dc3545"
+                    : "1px solid transparent",
+                }}
+                className="p-3 h-100 d-flex flex-column justify-content-between"
               >
-                <div className=" d-flex flex-column justify-content-between ">
-                  <div className=" h-100">
+                <div className="d-flex flex-column justify-content-between">
+                  <div className="h-100">
                     <Link to={`/product/${product._id}`}>
                       <img
                         src={product.image}
                         alt={product.name}
-                        className=" w-100 "
+                        className="w-100"
                         style={{
-                          height: "190px",
+                          height: "240px",
                           objectFit: "contain",
                           borderRadius: "8px",
                           marginBottom: "30px",
@@ -62,31 +91,30 @@ function ProductList({
                       />
                     </Link>
                   </div>
-
-                  <div className="card-body d-flex flex-column justify-content-center ">
+                  <div className="card-body d-flex flex-column justify-content-center">
                     <div>
                       <div>
-                        <p className="mb-1  small">{product.pieces} pieces</p>
-
+                        <p className="mb-1 small">
+                          {formatPieces(product.pieces ?? product.stock ?? 0)}{" "}
+                          pieces
+                        </p>
                         <h4 className="card-title text-truncate mb-3">
                           <Link
                             to={`/product/${product._id}`}
                             className="text-decoration-none text-dark link"
                           >
                             {product.name}
-                            <h6 style={{ color: "red" }}>
+                            <h6 className="text-danger">
                               {product.IsRoshetta ? "Need a Prescription" : ""}
                             </h6>
                           </Link>
                         </h4>
                       </div>
                     </div>
-
                     <div className="d-flex justify-content-between align-items-center mt-auto">
-                      <div className=" d-flex">
+                      <div className="d-flex">
                         <p className="mb-1 fs-4 fw-bold">${product.price}</p>
                       </div>
-
                       {user?.role !== "admin" && (
                         <div className="d-flex gap-2">
                           {product.stripsPerBox > 0 ? (
@@ -96,12 +124,11 @@ function ProductList({
                                   height: "50px",
                                   width: "50px",
                                   borderRadius: "50%",
-                                  border: "solid 1px green",
-                                  backgroundColor: "green",
+                                  border: "solid px green",
                                 }}
-                                className="btn btn-sm scale-btn"
+                                className="btn btn-sm scale-btn bg-success"
                                 onClick={() =>
-                                  handleAdd({ ...product, isStrip: true })
+                                  handleAdd(product, 1, { unit: "strip" })
                                 }
                                 disabled={
                                   product.pieces === 0 ||
@@ -116,11 +143,10 @@ function ProductList({
                                     height: "100%",
                                     borderRadius: "50%",
                                     fontSize: "900px",
-                                    backgroundColor: "green",
                                   }}
+                                  className="bg-success"
                                 />
                               </button>
-
                               <button
                                 style={{
                                   height: "50px",
@@ -130,11 +156,7 @@ function ProductList({
                                 }}
                                 className="btn btn-sm btn-outline-success scale-btn"
                                 onClick={() =>
-                                  handleAdd({
-                                    ...product,
-                                    isStrip: false,
-                                    NOI: product.stripsPerBox,
-                                  })
+                                  handleAdd(product, 1, { unit: "box" })
                                 }
                                 disabled={
                                   product.pieces === 0 ||
@@ -151,9 +173,12 @@ function ProductList({
                                 width: "50px",
                                 borderRadius: "50%",
                                 fontSize: "25px",
+                                color: "white",
                               }}
-                              className="btn btn-sm btn-success scale-btn"
-                              onClick={() => handleAdd(product)}
+                              className="btn btn-sm bg-success scale-btn"
+                              onClick={() =>
+                                handleAdd(product, 1, { unit: "box" })
+                              }
                               disabled={
                                 product.pieces === 0 ||
                                 product.IsRoshetta == true
@@ -169,7 +194,7 @@ function ProductList({
                       <div className="mt-2 d-flex flex-column gap-2">
                         <div className="d-flex gap-2">
                           <button
-                            className="btn btn-sm btn-warning "
+                            className="btn btn-sm btn-warning"
                             onClick={() => handleEdit(product)}
                           >
                             Edit
@@ -181,7 +206,6 @@ function ProductList({
                             Delete
                           </button>
                         </div>
-
                         {editingProductId === product._id && (
                           <form
                             onSubmit={(e) => {
@@ -202,7 +226,6 @@ function ProductList({
                               placeholder="Edit Name"
                               className="form-control"
                             />
-
                             <input
                               type="number"
                               value={editedProduct.price}
@@ -215,20 +238,17 @@ function ProductList({
                               placeholder="Edit Price"
                               className="form-control"
                             />
-
                             <input
-                              type="text"
-                              value={editedProduct.image}
+                              type="file"
+                              accept="image/*"
+                              className="form-control mb-2"
                               onChange={(e) =>
                                 setEditedProduct({
                                   ...editedProduct,
-                                  image: e.target.value,
+                                  imageFile: e.target.files?.[0] ?? null,
                                 })
                               }
-                              placeholder="Edit Image URL"
-                              className="form-control"
                             />
-
                             <input
                               type="number"
                               value={editedProduct.pieces}
@@ -241,7 +261,6 @@ function ProductList({
                               placeholder="Edit Pieces Available"
                               className="form-control"
                             />
-
                             <input
                               type="number"
                               value={editedProduct.stripsPerBox}
@@ -254,7 +273,6 @@ function ProductList({
                               placeholder="Strips per Box"
                               className="form-control"
                             />
-
                             <textarea
                               value={editedProduct.desc}
                               onChange={(e) =>
@@ -266,7 +284,6 @@ function ProductList({
                               placeholder="Edit Description"
                               className="form-control"
                             />
-
                             <div className="form-check">
                               <input
                                 type="checkbox"
@@ -287,13 +304,27 @@ function ProductList({
                                 Has Strips
                               </label>
                             </div>
-
-                            <button
-                              type="submit"
-                              className="btn btn-success btn-sm"
-                            >
-                              Save
-                            </button>
+                            <div className="d-flex gap-2">
+                              <button
+                                type="submit"
+                                className="btn btn-success btn-sm"
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-secondary btn-sm"
+                                onClick={() => {
+                                  if (typeof handleCancelEdit === "function")
+                                    handleCancelEdit();
+                                  else
+                                    setEditingProductId &&
+                                      setEditingProductId(null);
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </form>
                         )}
                       </div>
@@ -318,7 +349,6 @@ function ProductList({
                 setNewProduct({ ...newProduct, name: e.target.value })
               }
             />
-
             <input
               type="number"
               className="form-control mb-2"
@@ -337,27 +367,29 @@ function ProductList({
                 setNewProduct({ ...newProduct, pieces: +e.target.value })
               }
             />
-
             <input
               type="number"
               className="form-control mb-2"
               placeholder="Strips-PerUnit"
               value={newProduct.stripsPerBox}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, stripsPerBox: +e.target.value })
+                setNewProduct({
+                  ...newProduct,
+                  stripsPerBox: +e.target.value,
+                })
               }
             />
-
             <input
-              type="text"
+              type="file"
+              accept="image/*"
               className="form-control mb-2"
-              placeholder="Image-URL"
-              value={newProduct.image}
               onChange={(e) =>
-                setNewProduct({ ...newProduct, image: e.target.value })
+                setNewProduct({
+                  ...newProduct,
+                  imageFile: e.target.files[0],
+                })
               }
             />
-
             <select
               className="form-control mb-2"
               value={newProduct.category}
@@ -366,12 +398,12 @@ function ProductList({
               }
             >
               <option value="">Select Category</option>
-              <option value="pain-relief">Pain Relief</option>
-              <option value="cold-and-flu">Cold and Flu</option>
-              <option value="first-aid">First Aid</option>
-              <option value="diabetes-care">Diabetes Care</option>
+              {categories.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
             </select>
-
             <textarea
               className="form-control mb-2"
               placeholder="Desc.."
@@ -380,7 +412,6 @@ function ProductList({
                 setNewProduct({ ...newProduct, desc: e.target.value })
               }
             />
-
             <button className="btn btn-success" onClick={handleAddNewProduct}>
               Add
             </button>
@@ -390,5 +421,4 @@ function ProductList({
     </div>
   );
 }
-
 export default ProductList;
