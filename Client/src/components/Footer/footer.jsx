@@ -1,55 +1,104 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import "./Footer.css"; 
+import { Facebook, Twitter, Instagram, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="footer-container text-white py-4 mt-5">
-      <div className="container">
-        <div className="row text-center text-md-start">
-          <div className="col-md-4 mb-4">
-            <h4 className="fw-bold" style={{ color: "#f4a460" }}>
-              PharmaXpress
+    <footer className="bg-[#084235] dark:bg-[#052820] text-white py-12 transition-colors duration-300 mt-auto w-full">
+      <div className="w-full px-4 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
+          <div className="flex flex-col items-center md:items-start">
+            <h4 className="font-['Pacifico'] text-3xl text-[#f4a460] mb-4 tracking-wide">
+              Rochetta
             </h4>
-            <p style={{ fontSize: "0.9rem" }}>
-              Your go-to pharmacy marketplace for fast, reliable, and affordable healthcare products.
+            <p className="text-gray-300 text-sm leading-relaxed max-w-sm">
+              Your go-to pharmacy marketplace for fast, reliable, and affordable
+              healthcare products.
             </p>
           </div>
 
-          <div className="col-md-4 mb-4">
-            <h5 className="text-uppercase mb-3">Quick Links</h5>
-            <ul className="list-unstyled">
+          <div className="flex flex-col items-center md:items-start">
+            <h5 className="uppercase font-bold mb-4 tracking-wider text-gray-100">
+              Quick Links
+            </h5>
+            <ul className="space-y-3">
               <li>
-                <Link to="/" className="footer-link">Home</Link>
+                <Link
+                  to="/"
+                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                >
+                  Home
+                </Link>
               </li>
               <li>
-                <Link to="/cart" className="footer-link">Cart</Link>
+                <Link
+                  to="/cart"
+                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                >
+                  Cart
+                </Link>
               </li>
               <li>
-                <Link to="/profile" className="footer-link">Profile</Link>
+                <Link
+                  to="/profile"
+                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                >
+                  Profile
+                </Link>
               </li>
               <li>
-                <Link to="/login" className="footer-link">Login</Link>
+                <Link
+                  to="/login"
+                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                >
+                  Login
+                </Link>
               </li>
             </ul>
           </div>
 
-          <div className="col-md-4 mb-4">
-            <h5 className="text-uppercase mb-3">Contact Us</h5>
-            <p>Email: support@pharmaxpress.com</p>
-            <p>Phone: +20 100 123 4567</p>
-            <div className="social-icons mt-3">
-              <a href="#" className="me-3 footer-icon"><i className="bi bi-facebook"></i></a>
-              <a href="#" className="me-3 footer-icon"><i className="bi bi-twitter"></i></a>
-              <a href="#" className="footer-icon"><i className="bi bi-instagram"></i></a>
+          <div className="flex flex-col items-center md:items-start">
+            <h5 className="uppercase font-bold mb-4 tracking-wider text-gray-100">
+              Contact Us
+            </h5>
+            <div className="space-y-3 text-gray-300 text-sm w-full">
+              <div className="flex items-center gap-3 justify-center md:justify-start">
+                <Mail className="w-5 h-5 text-[#f4a460]" />
+                <span>support@rochetta.com</span>
+              </div>
+              <div className="flex items-center gap-3 justify-center md:justify-start">
+                <Phone className="w-5 h-5 text-[#f4a460]" />
+                <span dir="ltr">+20 100 123 4567</span>
+              </div>
+            </div>
+
+            <div className="flex gap-5 mt-6">
+              <a
+                href="#"
+                className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
+              >
+                <Facebook className="w-6 h-6" />
+              </a>
+              <a
+                href="#"
+                className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
+              >
+                <Twitter className="w-6 h-6" />
+              </a>
+              <a
+                href="#"
+                className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
+              >
+                <Instagram className="w-6 h-6" />
+              </a>
             </div>
           </div>
         </div>
 
-        <hr className="border-top" />
-        <p className="text-center small mb-0">
-          &copy; {new Date().getFullYear()} PharmaXpress. All rights reserved.
-        </p>
+        <div className="border-t border-gray-600/50 mt-12 pt-8 text-center">
+          <p className="text-sm text-gray-400 font-medium">
+            &copy; {new Date().getFullYear()} Rochetta. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
