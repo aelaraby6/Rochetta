@@ -1,49 +1,18 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 export default function NotFound() {
   return (
-    <div
-      style={{
-        backgroundColor: "#191919",
-        color: "#fff",
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        padding: "20px",
-      }}
-    >
-      <h1 style={{ fontSize: "6rem", fontWeight: "bold", color: "green" }}>
-        404
-      </h1>
-      <h2 style={{ fontSize: "2rem", marginBottom: "10px" }}>
+    <div className="bg-[#191919] text-white h-screen flex flex-col justify-center items-center text-center p-5">
+      <h1 className="text-[6rem] font-bold text-green-600 leading-none">404</h1>
+      <h2 className="text-3xl md:text-4xl mb-3 font-semibold mt-4">
         Oops! Page Not Found
       </h2>
-      <p style={{ maxWidth: "400px", marginBottom: "20px" }}>
+      <p className="max-w-md mb-8 text-gray-300 text-lg">
         The page you are looking for doesn't exist or has been moved.
       </p>
       <Link
         to="/"
-        style={{
-          backgroundColor: "green",
-          color: "#191919",
-          padding: "10px 20px",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          textDecoration: "none",
-          transition: "all 0.3s ease",
-        }}
-        onMouseOver={(e) => {
-          e.target.style.backgroundColor = "#fff";
-          e.target.style.color = "#191919";
-        }}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = "green";
-          e.target.style.color = "#191919";
-        }}
+        className="bg-green-600 text-[#191919] px-8 py-3 rounded-xl font-bold transition-all duration-300 hover:bg-white active:scale-95 shadow-lg"
       >
         Back to Home
       </Link>

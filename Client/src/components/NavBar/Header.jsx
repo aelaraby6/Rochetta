@@ -1,92 +1,190 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext, CartContext } from "../../context/ContextObjects";
-import "./Header.css";
+import { useSelector, useDispatch } from "react-redux";
+import { Search, ShoppingCart, User, Moon, Sun, Menu, X } from "lucide-react";
+import { toggleTheme, setSearchTerm } from "../../features/uiSlice/uiSlice";
+import { useGetCartQuery } from "../../features/cart/store/cartApi";
+import { useDebounce } from "../../hooks/useDebounce";
 
-export default function Header({
-  darkMode,
-  setDarkMode,
-  searchTerm,
-  setSearchTerm,
-}) {
-  const { state: authState } = useContext(AuthContext);
-  const { cartCount } = useContext(CartContext);
-  const count = cartCount;
-  const user = authState.user;
+export default function Header() {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { darkMode, searchTerm } = useSelector((state) => state.ui);
+
+  const [localSearch, setLocalSearch] = useState(searchTerm);
+  const debouncedSearch = useDebounce(localSearch, 500);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const { data: cartData } = useGetCartQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const cartItems = cartData?.data?.items || [];
+  const cartCount = cartItems.length;
+
+  useEffect(() => {
+    dispatch(setSearchTerm(debouncedSearch));
+  }, [debouncedSearch, dispatch]);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light px-4 fixed-top shadow-sm">
-      <div className="container-fluid">
-        <Link className="navbar-brand rochetta-font fs-3" to="/">
-          Rochetta
-        </Link>
+    <nav className="fixed top-0 w-full z-50 bg-green-700 dark:bg-green-900 text-white shadow-md transition-colors duration-300">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <Link
+            to="/"
+            className="font-['Pacifico'] text-3xl tracking-wide text-white flex-shrink-0 hover:opacity-90 transition-opacity"
+          >
+            Rochetta
+          </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <form className="d-flex flex-grow-1 my-2 my-lg-0 me-lg-3">
+          <div className="hidden md:flex flex-1 w-full mx-6 lg:mx-12 relative">
             <input
-              className="form-control search-input"
-              type="search"
-              placeholder="Search medicine, medical products"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              type="text"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              placeholder="Search medicine, medical products..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-400 outline-none border-none transition-all shadow-inner"
             />
-          </form>
+            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+          </div>
 
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-            <li className="nav-item">
-              <Link className="nav-link text-dark" to="/">
-                Home
-              </Link>
-            </li>
+          <div className="hidden md:flex items-center gap-6">
+            <Link
+              to="/"
+              className="font-medium text-white hover:text-green-200 transition-colors"
+            >
+              Home
+            </Link>
 
-            <li className="nav-item">
-              <Link className="nav-link text-dark fs-5 me-lg-2" to="/cart">
-                <i className="bi bi-cart"></i>
-                {count > 0 && (
-                  <span className="badge bg-danger ms-2">
-                    {count.toFixed(2)}
-                  </span>
-                )}
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <button
-                className="btn btn-toggle-mode btn-sm btn-outline-secondary w-100 w-lg-auto me-lg-3 mt-2 mt-lg-0"
-                onClick={() => setDarkMode((prev) => !prev)}
-              >
-                {darkMode ? "Light Mode" : "Dark Mode"}
-              </button>
-            </li>
-
-            <li className="nav-item d-flex flex-column flex-lg-row gap-2 ms-2 mt-2 mt-lg-0">
-              {user ? (
-                <Link className="nav-link text-dark" to="/profile">
-                  <i className="bi bi-person-circle fs-5"></i>
-                </Link>
-              ) : (
-                <>
-                  <Link className="nav-link text-dark auth-link" to="/login">
-                    Login
-                  </Link>
-                  <Link className="nav-link text-dark auth-link" to="/signup">
-                    Signup
-                  </Link>
-                </>
+            <Link
+              to="/cart"
+              className="relative text-white hover:text-green-200 transition-colors"
+            >
+              <ShoppingCart className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-green-700">
+                  {cartCount}
+                </span>
               )}
-            </li>
-          </ul>
+            </Link>
+
+            <button
+              onClick={() => dispatch(toggleTheme())}
+              className="p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800 transition-all"
+            >
+              {darkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+
+            {isAuthenticated ? (
+              <Link
+                to="/profile"
+                className="text-white hover:text-green-200 transition-colors"
+              >
+                <User className="w-6 h-6" />
+              </Link>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Link
+                  to="/login"
+                  className="font-bold text-white hover:text-green-200 transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="font-bold bg-white text-green-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors shadow-sm"
+                >
+                  Signup
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <div className="md:hidden flex items-center gap-4">
+            <Link to="/cart" className="relative text-white">
+              <ShoppingCart className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-green-700">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-white"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-7 h-7" />
+              ) : (
+                <Menu className="w-7 h-7" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Menu Content */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-green-800 dark:bg-green-950 px-4 pt-2 pb-4 space-y-4 border-t border-green-600 dark:border-green-800 shadow-xl">
+          <div className="relative">
+            <input
+              type="text"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-white outline-none"
+            />
+            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+          </div>
+          <div className="flex flex-col gap-4 pt-2">
+            <Link
+              to="/"
+              className="text-white font-medium text-lg"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <button
+              onClick={() => {
+                dispatch(toggleTheme());
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-left text-green-200 font-medium text-lg"
+            >
+              Toggle Theme
+            </button>
+            {isAuthenticated ? (
+              <Link
+                to="/profile"
+                className="text-white font-medium text-lg"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Profile
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-white font-bold text-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="text-green-800 bg-white inline-block text-center py-2 rounded-lg font-bold text-lg"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Signup
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
