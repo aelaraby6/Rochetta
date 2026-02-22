@@ -5,9 +5,11 @@ import { ShoppingCart, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useDeleteProductMutation } from "../../store/productsApi";
 import { useAddToCartMutation } from "../../../cart/store/cartApi";
-import stripImage from "./strip.png";
+import stripImage from "./strip.webp";
 
-export default function ProductCard({ product }) {
+import { optimizeCloudinaryUrl } from "../../../../utils/productUtils";
+
+export default function ProductCard({ product, priority }) {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const isAdmin = user?.role === "admin";
@@ -26,6 +28,9 @@ export default function ProductCard({ product }) {
 
   const formatPieces = (value) =>
     Number.isInteger(value) ? value : Number(value).toFixed(2);
+
+  const optimizedImage =
+    optimizeCloudinaryUrl(product.image) || "/placeholder.png";
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -67,10 +72,12 @@ export default function ProductCard({ product }) {
         className="block h-60 mb-4 p-2 rounded-lg shadow-inner bg-gray-50 dark:bg-gray-700"
       >
         <img
-          src={product.image}
+          src={optimizedImage}
           alt={product.name}
           className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchpriority={priority ? "high" : "auto"}
+          decoding="async"
         />
       </Link>
 
@@ -78,22 +85,17 @@ export default function ProductCard({ product }) {
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
           {formatPieces(stock)} pieces in stock
         </p>
-        <h4 className="font-bold text-lg mb-1 truncate text-gray-900 dark:text-white">
-          <Link
-            to={`/product/${product._id}`}
-            className="hover:text-green-600 transition-colors"
-          >
-            {product.name}
-          </Link>
+        <h4 className="font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 hover:text-green-600 transition-colors">
+          <Link to={`/product/${product._id}`}>{product.name}</Link>
         </h4>
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
           {description}
         </p>
 
         {(product.requires_prescription || product.IsRoshetta) && (
-          <h6 className="text-red-500 text-sm font-semibold mb-2">
+          <p className="text-red-600 dark:text-red-400 text-sm font-bold mb-2">
             Needs Prescription
-          </h6>
+          </p>
         )}
 
         <div className="flex justify-between items-center mt-auto pt-2">
@@ -105,7 +107,8 @@ export default function ProductCard({ product }) {
             <div className="flex gap-2">
               {hasStrips && (
                 <button
-                  className="w-11 h-11 rounded-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
+                  aria-label={`Add one strip of ${product.name} to cart`}
+                  className="w-11 h-11 rounded-full bg-green-700 hover:bg-green-800 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
                   disabled={
                     outOfStock ||
                     isAdding ||
@@ -115,18 +118,22 @@ export default function ProductCard({ product }) {
                   onClick={() => handleAddToCart("strip")}
                 >
                   {isAdding && addingUnit === "strip" ? (
-                    <Loader2 className="w-5 h-5 text-white animate-spin" />
+                    <Loader2
+                      className="w-5 h-5 text-white animate-spin"
+                      aria-hidden="true"
+                    />
                   ) : (
                     <img
                       src={stripImage}
-                      alt="strip"
+                      alt="strip icon"
                       className="w-8 h-8 object-contain"
                     />
                   )}
                 </button>
               )}
               <button
-                className="w-11 h-11 rounded-full border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white disabled:border-gray-400 disabled:text-gray-400 transition-all active:scale-95 flex justify-center items-center"
+                aria-label={`Add one box of ${product.name} to cart`}
+                className="w-11 h-11 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 transition-all active:scale-95 flex justify-center items-center"
                 disabled={
                   outOfStock ||
                   isAdding ||
@@ -136,9 +143,12 @@ export default function ProductCard({ product }) {
                 onClick={() => handleAddToCart("box")}
               >
                 {isAdding && addingUnit === "box" ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2
+                    className="w-5 h-5 animate-spin"
+                    aria-hidden="true"
+                  />
                 ) : (
-                  <ShoppingCart className="w-5 h-5" />
+                  <ShoppingCart className="w-5 h-5" aria-hidden="true" />
                 )}
               </button>
             </div>

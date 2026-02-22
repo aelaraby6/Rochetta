@@ -1,4 +1,4 @@
-import { apiSlice } from "../../../app/apiSlice";
+import { apiSlice } from "../../../app/store/apiSlice";
 
 export const cartApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

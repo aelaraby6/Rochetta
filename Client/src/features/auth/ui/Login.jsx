@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Mail, Lock, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
-import { useLoginMutation } from "../store.js/authApi";
-import { setCredentials } from "../store.js/authSlice";
+import { useLoginMutation } from "../store/authApi";
+import { setCredentials } from "../store/authSlice";
 
-import LoginImg from "../../../assets/Auth/login.png";
-import LoginBg from "../../../assets/Auth/login_background.jpg";
+import LoginImg from "../../../assets/Auth/login.webp";
+import LoginBg from "../../../assets/Auth/login_background.webp";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email address"),

@@ -31,7 +31,7 @@ export default function Cart() {
     },
   );
   const [removeFromCart] = useRemoveFromCartMutation();
-  const [clearCart] = useClearCartMutation();
+  const [clearCart, { isLoading: isClearingCart }] = useClearCartMutation();
   const [createOrder, { isLoading: isOrdering }] = useCreateOrderMutation();
   const [addToCart] = useAddToCartMutation();
   const [updateCartItem] = useUpdateCartItemMutation();
@@ -68,7 +68,7 @@ export default function Cart() {
       await addToCart({ productId: id, quantity: addQty }).unwrap();
       toast.success("Quantity updated");
     } catch (err) {
-      toast.error("Failed to increase quantity",err);
+      toast.error("Failed to increase quantity", err);
     } finally {
       setActiveAction({ id: null, type: null });
     }
@@ -92,7 +92,7 @@ export default function Cart() {
         toast.success("Quantity updated");
       }
     } catch (err) {
-      toast.error("Failed to decrease quantity",err);
+      toast.error("Failed to decrease quantity", err);
     } finally {
       setActiveAction({ id: null, type: null });
     }
@@ -104,7 +104,7 @@ export default function Cart() {
       await removeFromCart(id).unwrap();
       toast.success("Item removed");
     } catch (err) {
-      toast.error("Failed to remove item",err);
+      toast.error("Failed to remove item", err);
     } finally {
       setActiveAction({ id: null, type: null });
     }
@@ -121,25 +121,28 @@ export default function Cart() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center flex justify-center items-center gap-3">
-          <ShoppingCart className="w-8 h-8 text-green-600" />
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center flex justify-center items-center gap-3">
+          <ShoppingCart className="w-8 h-8 text-green-600" aria-hidden="true" />
           Your Shopping Cart
-        </h2>
+        </h1>
 
         {cartItems.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-700 max-w-2xl mx-auto">
-            <ShoppingCart className="w-20 h-20 text-gray-300 dark:text-gray-600 mx-auto mb-6" />
-            <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            <ShoppingCart
+              className="w-20 h-20 text-gray-300 dark:text-gray-600 mx-auto mb-6"
+              aria-hidden="true"
+            />
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Your cart is empty
-            </h4>
+            </h2>
             <p className="text-gray-500 dark:text-gray-400 mb-8">
               Browse products and add them to your cart.
             </p>
             <Link
               to="/category/pain-relief"
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all active:scale-95"
+              className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-6 rounded-xl transition-all active:scale-95"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5" aria-hidden="true" />
               Continue Shopping
             </Link>
           </div>
@@ -192,6 +195,7 @@ export default function Cart() {
                       <Link
                         to={`/product/${id}`}
                         className="w-24 h-24 flex-shrink-0 bg-gray-50 dark:bg-gray-700 rounded-xl p-2 border border-gray-100 dark:border-gray-600"
+                        aria-label={`View details of ${product.name}`}
                       >
                         <img
                           src={product.image || "/placeholder.png"}
@@ -214,6 +218,7 @@ export default function Cart() {
                         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mt-3">
                           <div className="flex items-center gap-2">
                             <button
+                              aria-label={`Increase quantity of ${product.name}`}
                               onClick={() =>
                                 handleIncrement(item, isStripItem, stripsPerBox)
                               }
@@ -223,15 +228,19 @@ export default function Cart() {
                               className="w-8 h-8 flex justify-center items-center rounded-lg border border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                               {isIncLoading ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <Loader2
+                                  className="w-4 h-4 animate-spin"
+                                  aria-hidden="true"
+                                />
                               ) : (
-                                <Plus className="w-4 h-4" />
+                                <Plus className="w-4 h-4" aria-hidden="true" />
                               )}
                             </button>
                             <div className="min-w-[4rem] text-center font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 py-1 px-2 rounded-lg text-sm">
                               {qtyDisplay}
                             </div>
                             <button
+                              aria-label={`Decrease quantity of ${product.name}`}
                               onClick={() =>
                                 handleDecrement(item, isStripItem, stripsPerBox)
                               }
@@ -239,9 +248,12 @@ export default function Cart() {
                               className="w-8 h-8 flex justify-center items-center rounded-lg border border-yellow-600 text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                               {isDecLoading ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <Loader2
+                                  className="w-4 h-4 animate-spin"
+                                  aria-hidden="true"
+                                />
                               ) : (
-                                <Minus className="w-4 h-4" />
+                                <Minus className="w-4 h-4" aria-hidden="true" />
                               )}
                             </button>
                           </div>
@@ -264,14 +276,18 @@ export default function Cart() {
                           </div>
                         </div>
                         <button
+                          aria-label={`Remove ${product.name} from cart`}
                           onClick={() => handleRemove(id)}
                           disabled={actionInProgress}
                           className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           {isRemLoading ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <Loader2
+                              className="w-5 h-5 animate-spin"
+                              aria-hidden="true"
+                            />
                           ) : (
-                            <Trash2 className="w-5 h-5" />
+                            <Trash2 className="w-5 h-5" aria-hidden="true" />
                           )}
                         </button>
                       </div>
@@ -282,16 +298,26 @@ export default function Cart() {
 
               <div className="flex justify-between items-center mt-6">
                 <button
+                  aria-label="Clear all items from cart"
+                  disabled={isClearingCart}
                   onClick={async () => {
                     try {
                       await clearCart().unwrap();
                       toast.success("Cart cleared");
                     } catch (e) {
-                      toast.error("Failed to clear cart",e);
+                      toast.error("Failed to clear cart", e);
                     }
                   }}
-                  className="text-red-600 hover:text-red-800 font-semibold px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  className="flex items-center gap-2 text-red-600 hover:text-red-800 font-semibold px-4 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  {isClearingCart ? (
+                    <Loader2
+                      className="w-4 h-4 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Trash2 className="w-4 h-4" aria-hidden="true" />
+                  )}
                   Clear Cart
                 </button>
                 <Link
@@ -305,9 +331,9 @@ export default function Cart() {
 
             <div className="w-full lg:w-1/3">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-24">
-                <h5 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                   Order Summary
-                </h5>
+                </h2>
 
                 <div className="flex justify-between items-center mb-4 text-gray-600 dark:text-gray-400">
                   <span>Total Items</span>
@@ -328,13 +354,16 @@ export default function Cart() {
                 <button
                   onClick={handleCreateOrder}
                   disabled={isOrdering}
-                  className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-bold py-4 rounded-xl transition-transform active:scale-95 flex justify-center items-center gap-2 shadow-md"
+                  className="w-full bg-green-700 hover:bg-green-800 disabled:bg-green-500 text-white font-bold py-4 rounded-xl transition-transform active:scale-95 flex justify-center items-center gap-2 shadow-md"
                 >
                   {isOrdering ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
+                    <Loader2
+                      className="w-6 h-6 animate-spin"
+                      aria-hidden="true"
+                    />
                   ) : (
                     <>
-                      <CheckCircle className="w-5 h-5" />
+                      <CheckCircle className="w-5 h-5" aria-hidden="true" />
                       Checkout
                     </>
                   )}

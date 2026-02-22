@@ -1,9 +1,22 @@
-import { apiSlice } from "../../../app/apiSlice";
+import { apiSlice } from "../../../app/store/apiSlice";
 
 export const productsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: (limit = 100) => `/products?limit=${limit}`,
+      query: ({
+        limit = 10,
+        page = 1,
+        top_selling,
+        categoryName,
+        search,
+      } = {}) => {
+        const params = new URLSearchParams({ limit, page });
+        if (top_selling) params.append("top_selling", "true");
+        if (categoryName) params.append("categoryName", categoryName);
+        if (search) params.append("name", search);
+
+        return `/products?${params.toString()}`;
+      },
       providesTags: ["Product"],
     }),
     getProductById: builder.query({

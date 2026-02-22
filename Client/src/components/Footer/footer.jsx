@@ -17,9 +17,9 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col items-center md:items-start">
-            <h5 className="uppercase font-bold mb-4 tracking-wider text-gray-100">
+            <h2 className="uppercase font-bold mb-4 tracking-wider text-gray-100 text-lg">
               Quick Links
-            </h5>
+            </h2>
             <ul className="space-y-3">
               <li>
                 <Link
@@ -57,16 +57,16 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col items-center md:items-start">
-            <h5 className="uppercase font-bold mb-4 tracking-wider text-gray-100">
+            <h2 className="uppercase font-bold mb-4 tracking-wider text-gray-100 text-lg">
               Contact Us
-            </h5>
+            </h2>
             <div className="space-y-3 text-gray-300 text-sm w-full">
               <div className="flex items-center gap-3 justify-center md:justify-start">
-                <Mail className="w-5 h-5 text-[#f4a460]" />
+                <Mail className="w-5 h-5 text-[#f4a460]" aria-hidden="true" />
                 <span>support@rochetta.com</span>
               </div>
               <div className="flex items-center gap-3 justify-center md:justify-start">
-                <Phone className="w-5 h-5 text-[#f4a460]" />
+                <Phone className="w-5 h-5 text-[#f4a460]" aria-hidden="true" />
                 <span dir="ltr">+20 100 123 4567</span>
               </div>
             </div>
@@ -74,21 +74,24 @@ export default function Footer() {
             <div className="flex gap-5 mt-6">
               <a
                 href="#"
+                aria-label="Visit our Facebook page"
                 className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
               >
-                <Facebook className="w-6 h-6" />
+                <Facebook className="w-6 h-6" aria-hidden="true" />
               </a>
               <a
                 href="#"
+                aria-label="Visit our Twitter page"
                 className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
               >
-                <Twitter className="w-6 h-6" />
+                <Twitter className="w-6 h-6" aria-hidden="true" />
               </a>
               <a
                 href="#"
+                aria-label="Visit our Instagram page"
                 className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
               >
-                <Instagram className="w-6 h-6" />
+                <Instagram className="w-6 h-6" aria-hidden="true" />
               </a>
             </div>
           </div>

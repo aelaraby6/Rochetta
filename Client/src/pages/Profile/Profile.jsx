@@ -12,11 +12,11 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { logout } from "../../features/auth/store.js/authSlice";
+import { logout } from "../../features/auth/store/authSlice";
 import {
   useGetOrdersQuery,
   useCancelOrderMutation,
-} from "../../features/orders/ordersApi";
+} from "../../features/orders/store/ordersApi";
 
 const round2 = (n) => Math.round(Number(n || 0) * 100) / 100;
 const formatQty = (n) =>

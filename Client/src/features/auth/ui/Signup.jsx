@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { User, Mail, Lock, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
-import { useSignupMutation } from "../store.js/authApi";
-import { setCredentials } from "../store.js/authSlice";
+import { useSignupMutation } from "../store/authApi";
+import { setCredentials } from "../store/authSlice";
 
-import SignUpImg from "../../../assets/Auth/signup.png";
-import LoginBg from "../../../assets/Auth/login_background.jpg";
+import SignUpImg from "../../../assets/Auth/signup.webp";
+import LoginBg from "../../../assets/Auth/login_background.webp";
 
 const signupSchema = z
   .object({
