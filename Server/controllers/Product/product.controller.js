@@ -21,7 +21,7 @@ export const createProductController = async (req, res, next) => {
       new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "products" },
-          (error, result) => (error ? reject(error) : resolve(result))
+          (error, result) => (error ? reject(error) : resolve(result)),
         );
         streamifier.createReadStream(req.file.buffer).pipe(stream);
       });
@@ -60,14 +60,29 @@ export const GetAllProductsController = async (req, res, next) => {
 
     const filters = { is_deleted: false };
 
-    // Filter by name if provided
     if (req.query.name) {
       filters.name = { $regex: req.query.name, $options: "i" };
     }
 
-    // Filter by top_selling if provided
     if (req.query.top_selling !== undefined) {
       filters.top_selling = req.query.top_selling === "true";
+    }
+
+    if (req.query.categoryName) {
+      const categoryDoc = await Category.findOne({
+        name: req.query.categoryName,
+      });
+      if (categoryDoc) {
+        filters.category = categoryDoc._id;
+      } else {
+        return res.json({
+          message: "Products fetched successfully",
+          page,
+          total: 0,
+          totalPages: 0,
+          data: [],
+        });
+      }
     }
 
     const products = await Product.find(filters)
@@ -119,7 +134,7 @@ export const DeleteProductController = async (req, res, next) => {
     const product = await Product.findByIdAndUpdate(
       id,
       { is_deleted: true },
-      { new: true }
+      { new: true },
     ).select("-__v");
     if (!product) throw new NotFoundError("Product not found");
 
@@ -128,7 +143,6 @@ export const DeleteProductController = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export const updateProductController = async (req, res, next) => {
   try {
@@ -144,8 +158,14 @@ export const updateProductController = async (req, res, next) => {
       const uploadStream = () =>
         new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
-            { folder: "products" },
-            (error, result) => (error ? reject(error) : resolve(result))
+            {
+              folder: "products",
+              fetch_format: "auto",
+              quality: "auto",
+              width: 600,
+              crop: "limit",
+            },
+            (error, result) => (error ? reject(error) : resolve(result)),
           );
           streamifier.createReadStream(req.file.buffer).pipe(stream);
         });
@@ -177,7 +197,7 @@ export const updateProductController = async (req, res, next) => {
     const product = await Product.findOneAndUpdate(
       { _id: id, is_deleted: false },
       { $set: body },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     )
       .select("-is_deleted -__v")
       .populate("category");
