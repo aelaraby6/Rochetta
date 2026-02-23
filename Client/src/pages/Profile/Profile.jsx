@@ -32,7 +32,10 @@ export default function Profile() {
     data: response,
     isLoading,
     isError,
-  } = useGetOrdersQuery(undefined, { skip: !user });
+  } = useGetOrdersQuery(undefined, {
+    skip: !user,
+    refetchOnMountOrArgChange: true,
+  });
   const [cancelOrderMutation, { isLoading: isCancelling }] =
     useCancelOrderMutation();
 
@@ -83,8 +86,7 @@ export default function Profile() {
           toast.success("Order cancelled successfully");
         }
       } catch (err) {
-        console.error(err);
-        toast.error("Failed to cancel local order");
+        toast.error("Failed to cancel local order", err);
       } finally {
         setCancellingId(null);
       }
@@ -101,7 +103,6 @@ export default function Profile() {
       localStorage.setItem(orderKey, JSON.stringify(cleaned));
       toast.success("Order cancelled successfully");
     } catch (err) {
-      console.error(err);
       toast.error(err.data?.message || "Failed to cancel order");
     } finally {
       setCancellingId(null);
@@ -114,23 +115,25 @@ export default function Profile() {
 
   return (
     <div className="max-w-6xl mx-auto mt-24 px-4 sm:px-6 lg:px-8 mb-20 w-full transition-colors duration-300">
-      {/* Profile Header Card */}
       <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 mb-8 flex flex-col md:flex-row items-center md:items-start justify-between gap-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
 
         <div className="flex flex-col md:flex-row items-center gap-6 z-10">
           <div className="w-28 h-28 bg-gradient-to-br from-green-400 to-green-600 text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-gray-800 shrink-0">
-            <User className="w-14 h-14" />
+            <User className="w-14 h-14" aria-hidden="true" />
           </div>
           <div className="text-center md:text-left">
-            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-1 tracking-tight">
+            <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-1 tracking-tight">
               {user.name || user.username || "Valued Customer"}
-            </h2>
+            </h1>
             <p className="text-gray-500 dark:text-gray-400 font-medium mb-2">
               {user.email}
             </p>
             <div className="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-sm font-semibold text-gray-700 dark:text-gray-300">
-              <ShoppingBag className="w-4 h-4 text-green-600" />
+              <ShoppingBag
+                className="w-4 h-4 text-green-600"
+                aria-hidden="true"
+              />
               {visibleOrders.length} Active Orders
             </div>
           </div>
@@ -140,27 +143,32 @@ export default function Profile() {
           onClick={handleLogout}
           className="z-10 inline-flex items-center gap-2 px-6 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-xl font-bold transition-all active:scale-95"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-5 h-5" aria-hidden="true" />
           Sign Out
         </button>
       </div>
 
-      {/* Orders Section */}
       <div className="bg-white dark:bg-[#1e1e1e] rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 md:p-10 min-h-[500px]">
         <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
-              <Package className="w-7 h-7 text-green-600 dark:text-green-500" />
+              <Package
+                className="w-7 h-7 text-green-600 dark:text-green-500"
+                aria-hidden="true"
+              />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Order History
-            </h3>
+            </h2>
           </div>
         </div>
 
         {isLoading ? (
           <div className="flex flex-col justify-center items-center py-20 text-green-600">
-            <Loader2 className="w-10 h-10 animate-spin mb-4" />
+            <Loader2
+              className="w-10 h-10 animate-spin mb-4"
+              aria-hidden="true"
+            />
             <p className="font-medium text-gray-500 dark:text-gray-400">
               Loading your orders...
             </p>
@@ -168,11 +176,14 @@ export default function Profile() {
         ) : visibleOrders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-24 h-24 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6">
-              <Package className="w-12 h-12 text-gray-300 dark:text-gray-600" />
+              <Package
+                className="w-12 h-12 text-gray-300 dark:text-gray-600"
+                aria-hidden="true"
+              />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               No orders found
-            </h4>
+            </h3>
             <p className="text-gray-500 dark:text-gray-400 max-w-sm">
               Looks like you haven't placed any orders yet. Start exploring our
               products!
@@ -204,7 +215,6 @@ export default function Profile() {
                   key={orderId}
                   className="group bg-gray-50 dark:bg-[#252525] border border-gray-200 dark:border-gray-700 rounded-2xl p-6 transition-all duration-300 hover:shadow-md hover:border-green-300 dark:hover:border-green-700/50"
                 >
-                  {/* Order Header */}
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-3">
@@ -213,7 +223,10 @@ export default function Profile() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-900 dark:text-white font-semibold">
-                        <Calendar className="w-4 h-4 text-green-600" />
+                        <Calendar
+                          className="w-4 h-4 text-green-600"
+                          aria-hidden="true"
+                        />
                         {new Date(
                           order.createdAt || order.date,
                         ).toLocaleDateString("en-GB", {
@@ -231,13 +244,15 @@ export default function Profile() {
                         Total Amount
                       </p>
                       <div className="flex items-center justify-end gap-1 text-2xl font-black text-green-600 dark:text-green-400">
-                        <DollarSign className="w-6 h-6 -mr-1" />
+                        <DollarSign
+                          className="w-6 h-6 -mr-1"
+                          aria-hidden="true"
+                        />
                         {formatPrice(total)}
                       </div>
                     </div>
                   </div>
 
-                  {/* Order Items */}
                   <div className="bg-white dark:bg-[#1e1e1e] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden mb-6">
                     <ul className="divide-y divide-gray-100 dark:divide-gray-800">
                       {(order.items || []).map((item, i) => {
@@ -251,7 +266,10 @@ export default function Profile() {
                           >
                             <div className="flex items-center gap-4">
                               <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center p-2 shrink-0">
-                                <Package className="w-6 h-6 text-gray-400" />
+                                <Package
+                                  className="w-6 h-6 text-gray-400"
+                                  aria-hidden="true"
+                                />
                               </div>
                               <div>
                                 <p className="font-bold text-gray-900 dark:text-white line-clamp-1">
@@ -271,7 +289,6 @@ export default function Profile() {
                     </ul>
                   </div>
 
-                  {/* Order Actions */}
                   {order.status !== "canceled" &&
                     order.status !== "delivered" &&
                     order._id && (
@@ -282,9 +299,12 @@ export default function Profile() {
                           className="flex items-center gap-2 px-5 py-2.5 border-2 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-bold transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isCancellingThis ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <Loader2
+                              className="w-5 h-5 animate-spin"
+                              aria-hidden="true"
+                            />
                           ) : (
-                            <XCircle className="w-5 h-5" />
+                            <XCircle className="w-5 h-5" aria-hidden="true" />
                           )}
                           {isCancellingThis ? "Cancelling..." : "Cancel Order"}
                         </button>

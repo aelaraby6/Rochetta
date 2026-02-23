@@ -5,7 +5,7 @@ import { ShoppingCart, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useDeleteProductMutation } from "../../store/productsApi";
 import { useAddToCartMutation } from "../../../cart/store/cartApi";
-import stripImage from "./strip.webp";
+import stripImage from "../../../../assets/strip.webp";
 
 import { optimizeCloudinaryUrl } from "../../../../utils/productUtils";
 
@@ -69,12 +69,12 @@ export default function ProductCard({ product, priority }) {
     >
       <Link
         to={`/product/${product._id}`}
-        className="block h-60 mb-4 p-2 rounded-lg shadow-inner bg-gray-50 dark:bg-gray-700"
+        className="block h-60 mb-4 p-4 rounded-xl bg-white shadow-sm border border-gray-100 dark:border-gray-700 flex justify-center items-center"
       >
         <img
           src={optimizedImage}
           alt={product.name}
-          className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal"
+          className="max-w-full max-h-full object-contain"
           loading={priority ? "eager" : "lazy"}
           fetchpriority={priority ? "high" : "auto"}
           decoding="async"
