@@ -8,6 +8,7 @@ import {
   Headphones,
   ShoppingCart,
   Star,
+  Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useGetProductsQuery } from "../../features/products/store/productsApi";
@@ -48,6 +49,7 @@ export default function LandingPage() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const [activeIndex, setActiveIndex] = useState(null);
   const [addToCart] = useAddToCartMutation();
+  const [addingProductId, setAddingProductId] = useState(null);
 
   const queryParams = searchTerm
     ? { limit: 20, search: searchTerm }
@@ -64,20 +66,23 @@ export default function LandingPage() {
       toast.error("Please login to add items");
       return;
     }
+    setAddingProductId(product._id);
     try {
       await addToCart({ productId: product._id, quantity: 1 }).unwrap();
       toast.success("Added to cart successfully");
     } catch (err) {
       toast.error("Failed to add to cart", err);
+    } finally {
+      setAddingProductId(null);
     }
   };
 
   return (
     <div className="w-full bg-gray-50 dark:bg-[#121212] transition-colors duration-300">
-      <div className="relative w-full overflow-hidden bg-gradient-to-l from-[#0a3c2f] to-[#2c6e49] text-white pt-24 pb-12 lg:pt-32 lg:pb-20">
+      <div className="relative w-full overflow-hidden bg-gradient-to-l from-[#0a3c2f] to-[#2c6e49] text-white pt-24 ">
         <div className="w-full px-4 sm:px-8 lg:px-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left z-10">
+            <div className="w-full lg:w-1/2 flex flex-col justify-center text-center lg:text-left z-10 pb-12 lg:pb-20">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 Welcome to Rochetta
               </h1>
@@ -97,7 +102,7 @@ export default function LandingPage() {
                 </button>
               </div>
             </div>
-            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end relative">
+            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end items-end relative top-1">
               <div className="absolute inset-0 bg-green-400/20 rounded-full blur-3xl scale-150 -z-10"></div>
               <img
                 src={landingImage}
@@ -105,7 +110,7 @@ export default function LandingPage() {
                 width="417"
                 height="625"
                 fetchPriority="high"
-                className="max-h-[500px] lg:max-h-[625px] w-auto object-contain drop-shadow-2xl"
+                className="max-h-[450px] lg:max-h-[600px] w-auto object-contain drop-shadow-2xl"
                 style={{ animation: "float 4s ease-in-out infinite" }}
               />
             </div>
@@ -232,10 +237,20 @@ export default function LandingPage() {
                     <button
                       aria-label={`Add one box of ${product.name} to cart`}
                       onClick={() => handleAddToCart(product)}
-                      className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-transform active:scale-95"
+                      disabled={addingProductId === product._id}
+                      className="w-full bg-green-700 hover:bg-green-800 disabled:bg-green-500 disabled:cursor-not-allowed text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-transform active:scale-95"
                     >
-                      <ShoppingCart className="w-5 h-5" aria-hidden="true" />
-                      Add To Cart
+                      {addingProductId === product._id ? (
+                        <Loader2
+                          className="w-5 h-5 animate-spin"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ShoppingCart className="w-5 h-5" aria-hidden="true" />
+                      )}
+                      {addingProductId === product._id
+                        ? "Adding..."
+                        : "Add To Cart"}
                     </button>
                   </div>
                 </div>
