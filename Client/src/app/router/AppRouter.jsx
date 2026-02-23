@@ -7,13 +7,13 @@ import LandingPage from "../../pages/Home/landingPage";
 
 const Cart = lazy(() => import("../../features/cart/ui/Cart"));
 const ProductDetails = lazy(
-  () => import("../../features/products/ui/productDetails/ProductDetails"),
+  () => import("../../features/products/ui/ProductDetails/ProductDetails"),
 );
 const CategoryView = lazy(
   () => import("../../features/products/ui/CategoryView/CategoryView"),
 );
 const Login = lazy(() => import("../../features/auth/ui/Login"));
-const Signup = lazy(() => import("../../features/auth/ui/signup"));
+const Signup = lazy(() => import("../../features/auth/ui/Signup"));
 const Profile = lazy(() => import("../../pages/Profile/Profile"));
 const NotFound = lazy(() => import("../../pages/Errors/NotFound"));
 const AdminAddProduct = lazy(
