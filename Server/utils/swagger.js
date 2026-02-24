@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:4000",
+        url: "https://abd0selim.alwaysdata.net",
       },
     ],
     components: {
@@ -25,10 +25,8 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: ["./docs/**/*.js"], 
-
-}
-
+  apis: ["./docs/**/*.js"],
+};
 
 const swaggerSpec = swaggerJsdoc(options);
 
