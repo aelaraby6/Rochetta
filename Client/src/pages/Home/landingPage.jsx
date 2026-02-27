@@ -201,7 +201,7 @@ export default function LandingPage() {
                 >
                   <Link
                     to={`/product/${product._id}`}
-                    className="block h-48 mb-4 overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800 p-2"
+                    className="block h-48 mb-4 overflow-hidden rounded-xl bg-white  dark:border-gray-700p-2"
                   >
                     <img
                       src={
