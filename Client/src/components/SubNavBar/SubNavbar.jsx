@@ -7,25 +7,25 @@ export default function SubNavbar() {
         <div className="flex justify-center md:justify-start gap-2 w-full">
           <Link
             to="/category/pain-relief"
-            className="px-3 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             Pain Relief
           </Link>
           <Link
             to="/category/cold-and-flu"
-            className="px-3 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             Cold and Flu
           </Link>
           <Link
             to="/category/diabetes-care"
-            className="px-3 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             Diabetes Care
           </Link>
           <Link
             to="/category/first-aid"
-            className="px-3 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             First Aid
           </Link>
