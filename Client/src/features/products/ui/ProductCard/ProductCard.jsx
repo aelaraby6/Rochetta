@@ -69,7 +69,7 @@ export default function ProductCard({ product, priority }) {
     >
       <Link
         to={`/product/${product._id}`}
-        className="block h-60 mb-4 p-4 rounded-xl bg-white shadow-sm border border-gray-100 dark:border-gray-700 flex justify-center items-center"
+        className="md:h-50 mb-4 p-4 rounded-xl bg-white shadow-sm border border-gray-100 dark:border-gray-700 flex justify-center items-center"
       >
         <img
           src={optimizedImage}

@@ -170,15 +170,15 @@ export default function Header() {
             >
               Home
             </Link>
-            <button
-              onClick={() => {
-                dispatch(toggleTheme());
-                setIsMobileMenuOpen(false);
-              }}
-              className="text-left text-green-200 font-medium text-lg"
-            >
-              Toggle Theme
-            </button>
+              <button
+                onClick={() => {
+                  dispatch(toggleTheme());
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-left text-green-200 font-medium text-lg"
+              >
+                Toggle {darkMode ? "Light" : "Dark"} Mode
+              </button>
             {isAuthenticated ? (
               <Link
                 to="/profile"
