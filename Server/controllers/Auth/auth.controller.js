@@ -1,119 +1,137 @@
-import { BadRequestError } from "../../Errors/error.js";
-import { UnAuthorizedError } from "../../Errors/error.js";
+import { BadRequestError, NotFoundError,ConflictError  } from "../../utils/errors.js";
 import { generateToken } from "../../services/jwt.service.js";
 import User from "../../models/User/user.model.js";
 import {
   ComparePassword,
   hashPassword,
 } from "../../services/password.service.js";
+import nodemailer from "nodemailer";
+import { getWelcomeTemplate } from "../../utils/email.js"
 
-// Signup Controller
-export const SignUpController = async (req, res, next) => {
+
+const formatUserResponse = (user) => {
+  const { name, email } = user.toObject();
+  return { name, email };
+};
+
+
+// Register
+export const RegisterController = async (req, res, next) => {
   try {
-    const data = req.body;
-    const email = data.email.toLowerCase();
+    const { name, email, password } = req.body;
+    const normalizedEmail = email.toLowerCase();
 
-    if (!data.name || !data.email || !data.password) {
-      throw new BadRequestError("All fields are required");
+    const existingUser = await User.findOne({ email: normalizedEmail });
+
+    if (existingUser?.is_active && !existingUser?.is_deleted) {
+      throw new ConflictError("Email already exists");
     }
 
-    const existingUser = await User.findOne({ email });
+    const hashedPassword = await hashPassword(password);
 
-    if (
-      existingUser &&
-      existingUser.is_deleted === false &&
-      existingUser.is_active === true
-    ) {
-      throw new BadRequestError("user already exists");
-    }
-
-    const hashedPassword = await hashPassword(data.password);
-
-    let newUser;
-
-    if (existingUser && existingUser.is_deleted === true) {
-      existingUser.name = data.name;
-      existingUser.password = hashedPassword;
-      existingUser.phone = data.phone;
-      existingUser.role = data.role || "user";
-      existingUser.is_deleted = false;
-      existingUser.is_active = true;
-
-      await existingUser.save();
-      newUser = existingUser;
-    } else {
-      newUser = new User({
-        ...data,
-        email,
+    const savedUser = existingUser?.is_deleted
+      ? await User.findByIdAndUpdate(
+        existingUser._id,
+        {
+          name,
+          password: hashedPassword,
+          role: DEFAULT_ROLE,
+          is_deleted: false,
+          is_active: true,
+        },
+        { new: true }
+      )
+      : await User.create({
+        name,
+        email: normalizedEmail,
         password: hashedPassword,
-        role: data.role || "user",
       });
-      await newUser.save();
-    }
 
-    const token = generateToken(
-      newUser.name,
-      newUser.email,
-      newUser.phone,
-      newUser._id,
-      newUser.role
-    );
+    const token = generateToken(savedUser._id, savedUser.role);
 
-    const userResponse = {
-      ...newUser.toObject(),
-      password: undefined,
-      __v: undefined,
-      is_deleted: undefined,
-      is_active: undefined,
-    };
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-    res.status(201).json({
-      message:
-        existingUser && existingUser.is_deleted
-          ? "User reactivated successfully"
-          : "User registered successfully",
-      data: userResponse,
-      token,
+    // Send welcome email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    transporter.sendMail({
+      from: `"Rochetta 💊" <${process.env.EMAIL_USER}>`,
+      to: savedUser.email,
+      subject: "Welcome to Rochetta!",
+      html: getWelcomeTemplate(savedUser.name),
+    }).catch((err) => {
+      console.error("Welcome email failed:", err.message);
+    });
+
+    return res.status(201).json({
+      message: existingUser?.is_deleted
+        ? "Account reactivated successfully"
+        : "Registered successfully",
+      data: formatUserResponse(savedUser),
     });
   } catch (error) {
     next(error);
   }
 };
 
-// Login Controller
+// Login 
 export const LoginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = email.toLowerCase();
 
-    if (!email || !password) {
-      throw new BadRequestError("Email and password are required");
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email: normalizedEmail }).select("+password");
 
     if (!user || user.is_deleted || !user.is_active) {
-      throw new UnAuthorizedError("Invalid credentials");
+      throw new NotFoundError("Invalid email or password");
     }
 
-    const isPasswordValid = await ComparePassword(password, user.password);
-    if (!isPasswordValid) {
-      throw new UnAuthorizedError("Invalid credentials");
+    const isMatch = await ComparePassword(password, user.password);
+
+    if (!isMatch) {
+      throw new BadRequestError("Invalid email or password");
     }
 
-    const token = generateToken(user.name, user.email, user.phone, user._id);
+    const token = generateToken(user._id, user.role);
 
-    const userResponse = {
-      ...user.toObject(),
-      password: undefined,
-      __v: undefined,
-      is_deleted: undefined,
-      is_active: undefined,
-    };
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-    res.status(200).json({
-      message: "Login successful",
-      data: userResponse,
-      token,
+    return res.status(200).json({
+      message: "Logged in successfully",
+      data: formatUserResponse(user),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Logout
+export const LogoutController = async (req, res, next) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
+      message: "Logged out successfully",
     });
   } catch (error) {
     next(error);

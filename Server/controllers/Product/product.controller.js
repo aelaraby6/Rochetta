@@ -1,6 +1,6 @@
 import Product from "../../models/Product/product.model.js";
 import { Category } from "../../models/Category/category.model.js";
-import { BadRequestError, NotFoundError } from "../../Errors/error.js";
+import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 import { validateObjectId } from "../../utils/validateObjectId.js";
 import cloudinary from "../../config/cloudinary.js";
 import streamifier from "streamifier";

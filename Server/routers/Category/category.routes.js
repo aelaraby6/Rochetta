@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { checkRole } from "../../middlewares/check_roles.middleware.js";
-import { authenticateToken } from "../../middlewares/authenticate_token.middlware.js";
+import { checkRole } from "../../middleware/check_roles.middleware.js";
+import { authMiddleware } from "../../middleware/auth.middlware.js";
 import {
   createCategoryController,
   deleteCategoryController,
@@ -14,21 +14,21 @@ const router = Router();
 // Admin Routes
 router.post(
   "/",
-  authenticateToken,
+  authMiddleware,
   checkRole(["admin"]),
   createCategoryController
 );
 
 router.delete(
   "/:id",
-  authenticateToken,
+  authMiddleware,
   checkRole(["admin"]),
   deleteCategoryController
 );
 
 router.patch(
   "/:id",
-  authenticateToken,
+  authMiddleware,
   checkRole(["admin"]),
   updateCategoryController
 );

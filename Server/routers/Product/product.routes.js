@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { validate } from "../../middlewares/validate.middleware.js";
-import { checkRole } from "../../middlewares/check_roles.middleware.js";
-import { authenticateToken } from "../../middlewares/authenticate_token.middlware.js";
-import upload from "../../middlewares/upload.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
+import { checkRole } from "../../middleware/check_roles.middleware.js";
+import { authMiddleware } from "../../middleware/auth.middlware.js";
+import upload from "../../middleware/upload.middleware.js";
 import {
   CreateProductSchema,
   UpdateProductSchema,
@@ -20,7 +20,7 @@ const router = Router();
 // Admin Routes
 router.post(
   "/",
-  authenticateToken,
+  authMiddleware,
   checkRole(["admin"]),
   upload.single("image"),
   validate(CreateProductSchema),
@@ -29,13 +29,13 @@ router.post(
 
 router.delete(
   "/:id",
-  authenticateToken,
+  authMiddleware,
   checkRole(["admin"]),
   DeleteProductController
 );
 router.patch(
   "/:id",
-  authenticateToken,
+  authMiddleware,
   checkRole(["admin"]),
   upload.single("image"), //new
   validate(UpdateProductSchema),

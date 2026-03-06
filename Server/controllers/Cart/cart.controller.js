@@ -1,6 +1,6 @@
 import { Cart } from "../../models/Cart/cart.model.js";
 import Product from "../../models/Product/product.model.js";
-import { BadRequestError } from "../../Errors/error.js";
+import { BadRequestError } from "../../utils/errors.js";
 
 // Get Cart
 export const GetUserCartController = async (req, res, next) => {

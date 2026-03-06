@@ -2,20 +2,23 @@ import { Router } from "express";
 import {
   signupLimiter,
   loginLimiter,
-} from "../../middlewares/rate_limiter.middleware.js";
+} from "../../middleware/rate_limiter.middleware.js";
 import {
-  SignUpController,
   LoginController,
+  LogoutController,
+  RegisterController,
 } from "../../controllers/Auth/auth.controller.js";
 import {
-  SignUpSchema,
+  RegisterSchema,
   LoginSchema,
 } from "../../validations/Auth/auth.validation.js";
-import { validate } from "../../middlewares/validate.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
+import { authMiddleware } from "../../middleware/auth.middlware.js";
 
 const router = Router();
 
-router.post("/signup", signupLimiter, validate(SignUpSchema), SignUpController);
+router.post("/register", signupLimiter, validate(RegisterSchema), RegisterController);
 router.post("/login", loginLimiter, validate(LoginSchema), LoginController);
+router.post("/logout", authMiddleware, LogoutController);
 
 export { router as AuthRouter };

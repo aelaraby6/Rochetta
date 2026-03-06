@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateToken } from "../../middlewares/authenticate_token.middlware.js";
+import { authMiddleware } from "../../middleware/auth.middlware.js";
 import {
   AddToCartController,
   ClearCartController,
@@ -10,7 +10,7 @@ import {
 
 const router = Router();
 
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 router.get("/get-user-cart", GetUserCartController);
 router.post("/add-to-cart", AddToCartController);

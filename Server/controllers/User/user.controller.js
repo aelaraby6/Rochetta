@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../Errors/error.js";
+import { NotFoundError } from "../../utils/errors.js";
 import User from "../../models/User/user.model.js";
 
 export const GetUserProfileController = async (req, res, next) => {

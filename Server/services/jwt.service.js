@@ -1,10 +1,10 @@
 import Jwt from "jsonwebtoken";
-import { UnAuthorizedError } from "../Errors/error.js";
+import { UnAuthorizedError } from "../utils/errors.js";
 
-export const generateToken = (name, email, phone, _id) => {
+export const generateToken = (id, role) => {
   const secret = process.env.JWT_SECRET;
-  const expiresIn = "30d";
-  const token = Jwt.sign({ name, email, phone, _id }, secret, { expiresIn });
+  const expiresIn = "7d";
+  const token = Jwt.sign({ id, role }, secret, { expiresIn });
   return token;
 };
 
