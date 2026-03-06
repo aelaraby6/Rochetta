@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from "../../Errors/error.js";
+import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 import { Cart } from "../../models/Cart/cart.model.js";
 import { Order } from "../../models/Order/order.model.js";
 import User from "../../models/User/user.model.js";

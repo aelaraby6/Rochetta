@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { authenticateToken } from "../../middlewares/authenticate_token.middlware.js";
+import { authMiddleware } from "../../middleware/auth.middlware.js";
 import { CreateOrderController, GetUserOrdersController,CancelOrderController} from "../../controllers/Order/order.controller.js";
 
 const router = Router();
 
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 router.post("/create-order", CreateOrderController);
 router.get("/", GetUserOrdersController);
