@@ -50,26 +50,24 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    addresses: [
-      {
-        label: { type: String },
-        city: { type: String },
-        street: { type: String },
-        is_default: { type: Boolean, default: false },
-      },
-    ],
-    is_deleted: {
-      type: Boolean,
-      default: false,
+    address:
+    {
+      label: { type: String },
+      city: { type: String },
+      street: { type: String }
     },
-    is_active: {
-      type: Boolean,
-      default: true,
-    },
+  is_deleted: {
+  type: Boolean,
+  default: false,
+},
+  is_active: {
+  type: Boolean,
+  default: true,
+},
   },
-  {
-    timestamps: true
-  }
+{
+  timestamps: true
+}
 );
 
 
