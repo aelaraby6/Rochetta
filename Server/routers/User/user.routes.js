@@ -12,7 +12,6 @@ router.use(authMiddleware);
 router.get("/me", GetUserProfileController);
 
 router.patch("/update-avatar",
-    authMiddleware,
     uploadSingle("avatar"),
     processImage({ width: 300, height: 300 }),
     UpdateAvatarController);
