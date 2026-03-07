@@ -2,7 +2,7 @@ import { Router } from "express";
 import { validate } from "../../middleware/validate.middleware.js";
 import { checkRole } from "../../middleware/check_roles.middleware.js";
 import { authMiddleware } from "../../middleware/auth.middlware.js";
-import upload from "../../middleware/upload.middleware.js";
+import { uploadSingle } from "../../middleware/upload.middleware.js";
 import {
   CreateProductSchema,
   UpdateProductSchema,
@@ -22,7 +22,7 @@ router.post(
   "/",
   authMiddleware,
   checkRole(["admin"]),
-  upload.single("image"),
+  uploadSingle("image"),
   validate(CreateProductSchema),
   createProductController
 );
@@ -37,7 +37,7 @@ router.patch(
   "/:id",
   authMiddleware,
   checkRole(["admin"]),
-  upload.single("image"), //new
+  uploadSingle("image"), //new
   validate(UpdateProductSchema),
   updateProductController
 );
