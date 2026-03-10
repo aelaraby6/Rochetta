@@ -158,7 +158,7 @@ export default function Cart() {
                     product.stripsPerBox || product.strip_count || 0,
                   );
                   const isStripItem = item.unit === "strip" && stripsPerBox > 0;
-                  const unitPrice = Number(product.price ?? 0);
+                  const unitPrice = Number(product.price.toFixed(2) ?? 0);
                   const subtotal = (unitPrice * qty).toFixed(2);
                   const stockAvailable = product.pieces ?? product.stock ?? 0;
 
@@ -272,7 +272,7 @@ export default function Cart() {
                             ${subtotal}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            {stockAvailable} in stock
+                            {stockAvailable.toFixed(2)} in stock
                           </div>
                         </div>
                         <button

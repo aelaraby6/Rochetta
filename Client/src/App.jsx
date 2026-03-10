@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "./components/NavBar/Header";
 import SubNavbar from "./components/SubNavBar/SubNavbar";
 import AppRouter from "./app/router/AppRouter";
+import Footer from "./components/Footer/footer";
 
 export default function App() {
   const { darkMode } = useSelector((state) => state.ui);
@@ -40,6 +41,7 @@ export default function App() {
         className={`flex-grow w-full flex flex-col ${!shouldHideNavbar ? "pt-[112px]" : ""}`}
       >
         <AppRouter />
+        {!shouldHideNavbar && <Footer />}
       </main>
     </div>
   );

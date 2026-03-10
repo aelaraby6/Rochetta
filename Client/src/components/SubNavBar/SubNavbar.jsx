@@ -2,30 +2,30 @@ import { Link } from "react-router-dom";
 
 export default function SubNavbar() {
   return (
-    <nav className="fixed top-16 w-full z-40 bg-gray-50 dark:bg-[#1e1e1e] border-b border-gray-200 dark:border-gray-800 shadow-sm transition-colors duration-300">
+    <nav className="fixed top-16 w-full z-40 bg-gray-50 dark:bg-[#1e1e1e] border-b border-gray-200 dark:border-gray-800 shadow-sm">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
         <div className="flex justify-center md:justify-start gap-2 w-full">
           <Link
             to="/category/pain-relief"
-            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             Pain Relief
           </Link>
           <Link
             to="/category/cold-and-flu"
-            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             Cold and Flu
           </Link>
           <Link
             to="/category/diabetes-care"
-            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             Diabetes Care
           </Link>
           <Link
             to="/category/first-aid"
-            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="px-1 md:px-4 whitespace-nowrap py-1.5 rounded-md text-sm md:text-base font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             First Aid
           </Link>

@@ -47,9 +47,9 @@ export default function ProductDetails() {
   }
 
   const stock =
-    product.stock !== undefined ? product.stock : product.pieces || 0;
+    product.stock !== undefined ? product.stock.toFixed(2) : product.pieces?.toFixed(2) || 0;
   const description = product.description || product.desc || "";
-  const outOfStock = stock <= 0;
+  const outOfStock = stock < 0;
   const isRoshetta = product.requires_prescription || product.IsRoshetta;
   const hasStrips = product.has_strips || product.stripsPerBox > 0;
   const stripsPerBox = product.strip_count || product.stripsPerBox || 1;
@@ -65,7 +65,7 @@ export default function ProductDetails() {
     setAddingUnit(unit);
     let qtyToSend = 1;
     if (unit === "strip" && hasStrips && stripsPerBox > 0) {
-      qtyToSend = Number((1 / Math.max(1, stripsPerBox)).toFixed(6));
+      qtyToSend = Number((1 / Math.max(1, stripsPerBox)).toFixed(2));
     }
     try {
       await addToCart({ productId: product._id, quantity: qtyToSend }).unwrap();
