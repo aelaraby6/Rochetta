@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Instagram, Mail, Phone } from "lucide-react";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Mail,
+  Phone,
+} from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#084235] dark:bg-[#052820] text-white py-12 transition-colors duration-300 mt-auto w-full">
-      <div className="w-full px-4 sm:px-8 lg:px-12">
+    <footer className="bg-[#084235] dark:bg-[#052820] text-white pt-10 pb-5 mt-auto w-full border-t border-green-900/30">
+      <div className="w-full px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <h4 className="font-['Pacifico'] text-3xl text-[#f4a460] mb-4 tracking-wide">
@@ -24,7 +30,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/"
-                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                  className="text-gray-300 hover:text-[#f4a460] hover:underline font-medium"
                 >
                   Home
                 </Link>
@@ -47,10 +53,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/login"
-                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                  to="/policy"
+                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium flex items-center justify-center md:justify-start gap-1.5"
                 >
-                  Login
+                   Terms & Policy
                 </Link>
               </li>
             </ul>
@@ -97,7 +103,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-600/50 mt-12 pt-8 text-center">
+        <div className="border-t border-gray-600/50 mt-8 pt-4 items-center gap-4 text-center">
           <p className="text-sm text-gray-400 font-medium">
             &copy; {new Date().getFullYear()} Rochetta. All rights reserved.
           </p>

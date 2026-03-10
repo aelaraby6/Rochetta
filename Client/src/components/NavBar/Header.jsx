@@ -47,7 +47,7 @@ export default function Header() {
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
               placeholder="Search medicine, medical products..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-400 outline-none border-none transition-all shadow-inner"
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-400 outline-none border-none shadow-inner"
             />
             <Search
               className="absolute left-3 top-3 w-5 h-5 text-gray-400"
@@ -79,7 +79,7 @@ export default function Header() {
             <button
               aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
               onClick={() => dispatch(toggleTheme())}
-              className="p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800 transition-all"
+              className="p-2 rounded-lg text-white hover:bg-green-600 dark:hover:bg-green-800"
             >
               {darkMode ? (
                 <Sun className="w-5 h-5" aria-hidden="true" />

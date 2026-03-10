@@ -65,7 +65,7 @@ export default function ProductCard({ product, priority }) {
 
   return (
     <div
-      className={`flex flex-col justify-between h-full p-4 rounded-xl transition-all duration-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-xl ${product.requires_prescription || product.IsRoshetta ? "border-2 border-red-500 shadow-[0_0_6px_rgba(220,53,69,0.8)]" : "border border-transparent dark:border-gray-700"}`}
+      className={`flex flex-col justify-between h-full p-4 rounded-xl duration-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-xl ${product.requires_prescription || product.IsRoshetta ? "border-2 border-red-500 shadow-[0_0_6px_rgba(220,53,69,0.8)]" : "border border-transparent dark:border-gray-700"}`}
     >
       <Link
         to={`/product/${product._id}`}
@@ -133,7 +133,7 @@ export default function ProductCard({ product, priority }) {
               )}
               <button
                 aria-label={`Add one box of ${product.name} to cart`}
-                className="w-11 h-11 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 transition-all active:scale-95 flex justify-center items-center"
+                className="w-11 h-11 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center"
                 disabled={
                   outOfStock ||
                   isAdding ||

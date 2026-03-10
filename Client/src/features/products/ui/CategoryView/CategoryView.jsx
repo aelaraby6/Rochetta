@@ -48,7 +48,7 @@ export default function CategoryView() {
 
   return (
     <div className="flex justify-center items-center px-4 w-full">
-      <div className="w-full mt-20 mb-10 p-8 rounded-2xl bg-white dark:bg-[#2c2c2c] text-black dark:text-[#f1f1f1] shadow-lg transition-all duration-300">
+      <div className="w-full mt-20 mb-10 p-8 rounded-2xl bg-white dark:bg-[#2c2c2c] text-black dark:text-[#f1f1f1] shadow-lg duration-300">
         <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 className="font-bold text-2xl mb-3 border-l-4 border-green-500 pl-3">
@@ -62,7 +62,7 @@ export default function CategoryView() {
           {isAdmin && (
             <Link
               to="/admin/add-product"
-              className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-md shrink-0"
+              className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-md shrink-0"
             >
               <PlusCircle className="w-5 h-5" aria-hidden="true" />
               Add New Product
