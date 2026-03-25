@@ -1,16 +1,17 @@
-import { ForbiddenError, UnAuthorizedError } from "../utils/errors.js";
+import { UnAuthorizedError, ForbiddenError } from "../utils/errors.js";
 
 export const checkRole = (allowedRoles) => {
   return (req, res, next) => {
     const userRole = req.user.role;
 
     if (!userRole) {
-      return new UnAuthorizedError("Unauthorized");
+      return next(new UnAuthorizedError("Unauthorized"));
     }
 
     if (!allowedRoles.includes(userRole)) {
-      return new ForbiddenError("Forbidden: You don't have permission");
+      return next(new ForbiddenError("Forbidden: You don't have permission"));
     }
+
     next();
   };
 };

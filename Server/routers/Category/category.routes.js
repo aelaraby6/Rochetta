@@ -7,7 +7,11 @@ import {
   getAllCategoriesController,
   getOneCategoryController,
   updateCategoryController,
+  getCategoryBySlugController,
 } from "../../controllers/Category/category.controller.js";
+import { processImage, uploadSingle } from "../../middleware/upload.middleware.js";
+import { validate } from "../../middleware/validate.middleware.js";
+import { createCategorySchema, updateCategorySchema } from "../../validations/Category/category.validation.js";
 
 const router = Router();
 
@@ -16,6 +20,9 @@ router.post(
   "/",
   authMiddleware,
   checkRole(["admin"]),
+  uploadSingle("img"),
+  processImage({}),
+  validate(createCategorySchema),
   createCategoryController
 );
 
@@ -30,11 +37,15 @@ router.patch(
   "/:id",
   authMiddleware,
   checkRole(["admin"]),
+  uploadSingle("img"),
+  processImage({}),
+  validate(updateCategorySchema),
   updateCategoryController
 );
 
 // User Routes
 router.get("/", getAllCategoriesController);
+router.get("/slug/:slug", getCategoryBySlugController); 
 router.get("/:id", getOneCategoryController);
 
 export { router as CategoryRouter };

@@ -13,6 +13,6 @@ router.use("/auth", AuthRouter);
 router.use("/products", ProductRouter);
 router.use("/cart", CartRouter);
 router.use("/order", OrderRouter);
-router.use("/category", CategoryRouter);
+router.use("/categories", CategoryRouter);
 
 export { router as ApiRouter };
