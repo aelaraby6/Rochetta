@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { PRODUCT_CATEGORIES } from "../../utils/constants.js";
+import slugify from "slugify"; 
 
 const categorySchema = new mongoose.Schema(
   {
@@ -8,18 +8,33 @@ const categorySchema = new mongoose.Schema(
       required: [true, "Category name is required"],
       trim: true,
       unique: true,
-      enum: {
-        values: PRODUCT_CATEGORIES,
-        message:
-          "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
-      },
+      lowercase: true,
+      maxlength: [50, "Category name must be at most 50 characters"],
+    },
+    slug: {
+      type: String,
+      unique: true,
     },
     description: {
       type: String,
       default: "",
+      maxlength: [500, "Description must be at most 500 characters"],
     },
+    image: {
+      type: String,
+      default: null,
+    },
+    is_active: {
+      type: Boolean,
+      default: true,
+    },
+    is_deleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  {
+    timestamps: true
+  }
 );
+
+categorySchema.index({ slug: 1 });
 
 export const Category = mongoose.model("Category", categorySchema);
