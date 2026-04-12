@@ -34,7 +34,7 @@ export default function Login() {
     setGlobalError("");
     try {
       const response = await loginMutation(data).unwrap();
-      dispatch(setCredentials({ user: response.data, token: response.token }));
+      dispatch(setCredentials({ user: response.data}));
       navigate("/");
     } catch (err) {
       setGlobalError(
