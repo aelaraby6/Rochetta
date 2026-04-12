@@ -5,7 +5,8 @@ import { User, LogOut, Camera, Loader2, FilePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { logout } from "../../../auth/store/authSlice";
 import ProfileNav from "./ProfileNav";
-import Footer from "../../../../components/Footer/footer";
+import { useUpdateAvatarMutation } from "../../store/userApi"; 
+import { setCredentials } from "../../../auth/store/authSlice"; 
 
 export default function ProfileLayout() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function ProfileLayout() {
 
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [updateAvatar] = useUpdateAvatarMutation();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -33,12 +35,16 @@ export default function ProfileLayout() {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("avatar", file); 
+
     setIsUploading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await updateAvatar(formData).unwrap();
+      dispatch(setCredentials({ user: response.data, token: user.token }));
       toast.success("Avatar updated successfully!");
     } catch (error) {
-      toast.error("Failed to update avatar", error);
+      toast.error(error?.data?.message || "Failed to update avatar");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -111,7 +117,10 @@ export default function ProfileLayout() {
               className="sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 bg-green-700 hover:bg-green-800 text-white rounded-xl font-bold transition-transform active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
               aria-label="Upload new Rochetta"
             >
-              <FilePlus className="w-5 h-5  hidden sm:inline" aria-hidden="true" />
+              <FilePlus
+                className="w-5 h-5  hidden sm:inline"
+                aria-hidden="true"
+              />
               Upload Rochetta
             </button>
 
