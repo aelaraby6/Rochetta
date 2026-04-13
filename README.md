@@ -1,4 +1,4 @@
-# 💊 Rochetta – Online Pharmacy Platform
+# Rochetta – Online Pharmacy Platform
 
 Rochetta is a MERN-Stack web application that provides a seamless experience for users to purchase medicines online and for admins to manage pharmacy operations.
 
@@ -9,9 +9,9 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 
 ---
 
-## 🚀 Features
+## Features
 
-### 👤 User Features
+### User Features
 - Browse medicines by categories.
 - Choose between purchasing a **strip** or a **full box**, just like a real pharmacy.
 - Add medicines to the Cart and manage quantities.
@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 - Some medicines **require a prescription** (cannot be purchased without a prescription).
 
 
-### 🛠️ Admin Features
+### Admin Features
 - Add new products with images, prices, and details.
 - Edit or delete existing products.
 
@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 ### **Frontend**
 - React.js 
 - React Router DOM
-- Bootstrap 
+- Tailwind
 - Axios
 
 ### **Backend**
@@ -53,7 +53,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 
 ---
 
-## 🎨 Frontend – Features
+## Frontend – Features
 - **Home Page** – Showcase top products and quick navigation to categories.
 - **Cart Page** – View, update, and remove products from the cart.
 - **Profile Page** – Display user details and manage account.
@@ -66,7 +66,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 
 ---
 
-## ⚙️ Backend – Features
+## Backend – Features
 - **Authentication & Authorization** – Secure login/register using JWT & bcrypt with role-based access (User/Admin).
 - **Product Management** – Admin can add, edit, and delete products with images uploaded to **Cloudinary**.
 - **Order Management** – Create, update, and manage orders with different statuses.
@@ -79,7 +79,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 
 ---
 
-### 🎯 Use Cases
+### Use Cases
 
 <img width="894" height="197" alt="Admin" src="https://github.com/user-attachments/assets/2396b164-c8d4-419a-a0f5-1b05cb55821f" />
 
@@ -89,14 +89,14 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 
 ---
 
-### 🗂️ ERD 
+### ERD 
 Below is the **ERD** representation of the system:  
 
 <img width="1279" height="1236" alt="erd" src="https://github.com/user-attachments/assets/9c884abb-57b5-49ea-a170-a93e05090fb3" />
 
 ---
 
-## 📸 API Endpoints – Screenshots
+## API Endpoints – Screenshots
 Here are sample screenshots from **Swagger UI** showing the API endpoints:
 
 <img width="650" height="557" alt="first" src="https://github.com/user-attachments/assets/8e7b37e4-4437-466b-97c4-6bae8c5a2304" />
@@ -105,7 +105,7 @@ Here are sample screenshots from **Swagger UI** showing the API endpoints:
 
 ---
 
-## 👥 Contributors
+## Contributors
 
 Thanks goes to these wonderful people in the Fullstack team:
 
