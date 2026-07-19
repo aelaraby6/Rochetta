@@ -38,7 +38,7 @@ export default function App() {
       )}
 
       <main
-        className={`flex-grow w-full flex flex-col ${!shouldHideNavbar ? "pt-[112px]" : ""}`}
+        className={`grow w-full flex flex-col ${!shouldHideNavbar ? "pt-28" : ""}`}
       >
         <AppRouter />
         {!shouldHideNavbar && <Footer />}

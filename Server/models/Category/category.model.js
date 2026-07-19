@@ -35,6 +35,6 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
-categorySchema.index({ slug: 1 });
+// categorySchema.index({ slug: 1 });
 
 export const Category = mongoose.model("Category", categorySchema);
