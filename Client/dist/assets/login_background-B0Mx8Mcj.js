@@ -1,0 +1,1 @@
+import{g as n}from"./index-BQ1hPvWf.js";const i=n.injectEndpoints({endpoints:o=>({login:o.mutation({query:t=>({url:"/auth/login",method:"POST",body:t})}),signup:o.mutation({query:t=>({url:"/auth/register",method:"POST",body:t})})})}),{useLoginMutation:a,useSignupMutation:u}=i,e="/assets/second-Dbknofa7.webp";export{e as L,u as a,a as u};
