@@ -24,7 +24,7 @@ export const productsApi = apiSlice.injectEndpoints({
       providesTags: (result, error, id) => [{ type: "Product", id }],
     }),
     getCategories: builder.query({
-      query: () => "/category",
+      query: () => "/categories",
       providesTags: ["Category"],
     }),
     addProduct: builder.mutation({
@@ -53,6 +53,9 @@ export const productsApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+    getCategoryBySlug: builder.query({
+      query: (slug) => `/categories/slug/${slug}`,
+    }),
   }),
 });
 
@@ -63,4 +66,5 @@ export const {
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetCategoryBySlugQuery,
 } = productsApi;

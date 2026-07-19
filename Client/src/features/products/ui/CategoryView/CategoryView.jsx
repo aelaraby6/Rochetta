@@ -1,85 +1,123 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { PlusCircle, Loader2 } from "lucide-react";
-import { useGetProductsQuery } from "../../store/productsApi";  
+import {
+  useGetProductsQuery,
+  useGetCategoryBySlugQuery,
+} from "../../store/productsApi";
 import ProductList from "../ProductList/ProductList";
-
-const categoryDetails = {
-  "cold-and-flu": {
-    title: "Cold and Flu",
-    desc: "Cold and Flu products help relieve common symptoms such as nasal congestion, cough, fever, and headache.",
-  },
-  "diabetes-care": {
-    title: "Diabetes Care",
-    desc: "Diabetes care products support blood sugar monitoring and management. They include glucose meters, test strips, and supplements.",
-  },
-  "first-aid": {
-    title: "First Aid",
-    desc: "First aid products include bandages, antiseptics, and wound care essentials that provide quick treatment for minor injuries.",
-  },
-  "pain-relief": {
-    title: "Pain Relief",
-    desc: "Pain relief products help reduce mild to moderate pain such as headaches, muscle aches, and joint pain.",
-  },
-};
+import Pagination from "../../../../components/ui/Pagination";
+import { useDispatch } from "react-redux";
+import { setSearchTerm } from "../../../uiSlice/uiSlice";
+import { useEffect } from "react";
 
 export default function CategoryView() {
-  const { slug } = useParams();
-  const { searchTerm } = useSelector((state) => state.ui);
+  const { slug } = useParams(); 
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useSelector((state) => state.auth);
   const isAdmin = user?.role === "admin";
+  const { searchTerm } = useSelector((state) => state.ui);
+  const dispatch = useDispatch();
 
-  const details = categoryDetails[slug] || {
-    title: "Category",
-    desc: "Explore our products.",
-  };
+useEffect(() => {
+  dispatch(setSearchTerm(""));
+}, [slug, dispatch]);
+
+  const currentPage = parseInt(searchParams.get("page")) || 1;
+  const ITEMS_PER_PAGE = 20;
+
+  const {
+    data: categoryResponse,
+    isLoading: isCategoryLoading,
+    isError: isCategoryError,
+  } = useGetCategoryBySlugQuery(slug);
+  const currentCategory = categoryResponse?.data;
 
   const {
     data: productsResponse,
-    isLoading,
-    isError,
-  } = useGetProductsQuery({
-    limit: 20,
-    categoryName: details.title,
-    search: searchTerm,
-  });
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+    isFetching,
+  } = useGetProductsQuery(
+    {
+      limit: ITEMS_PER_PAGE,
+      page: currentPage,
+      categoryName: currentCategory?.name, 
+      search: searchTerm,
+    },
+    { skip: !currentCategory },
+  );
 
   const products = productsResponse?.data || [];
+  const totalPages = productsResponse?.totalPages || 1;
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setSearchParams({ page: page.toString() });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  if (isCategoryLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-green-600">
+        <Loader2 className="w-10 h-10 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isCategoryError || !currentCategory) {
+    return (
+      <div className="text-center mt-24 text-red-500 font-bold text-xl">
+        Category not found!
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center px-4 w-full">
-      <div className="w-full mt-20 mb-10 p-8 rounded-2xl bg-white dark:bg-[#2c2c2c] text-black dark:text-[#f1f1f1] shadow-lg duration-300">
+      <div className="w-full mt-20 mb-10 p-8 rounded-2xl bg-white dark:bg-[#2c2c2c] text-black dark:text-[#f1f1f1] shadow-lg">
+        {/* Header */}
         <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 className="font-bold text-2xl mb-3 border-l-4 border-green-500 pl-3">
-              {details.title}
+            <h2 className="font-bold text-2xl mb-3 border-l-4 border-green-500 pl-3 capitalize">
+              {currentCategory.name}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-              {details.desc}
+              {currentCategory.description}
             </p>
           </div>
 
           {isAdmin && (
             <Link
               to="/admin/add-product"
-              className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-md shrink-0"
+              className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2"
             >
-              <PlusCircle className="w-5 h-5" aria-hidden="true" />
-              Add New Product
+              <PlusCircle className="w-5 h-5" /> Add New Product
             </Link>
           )}
         </div>
 
-        {isLoading ? (
+        {/* Products Grid */}
+        {isProductsLoading ? (
           <div className="flex justify-center items-center h-64 text-green-600">
-            <Loader2 className="w-10 h-10 animate-spin" aria-hidden="true" />
+            <Loader2 className="w-10 h-10 animate-spin" />
           </div>
-        ) : isError ? (
+        ) : isProductsError ? (
           <div className="text-red-500 text-center mt-10 text-xl font-bold">
             Error loading products.
           </div>
         ) : (
-          <ProductList products={products} />
+          <div
+            className={`transition-opacity duration-300 ${isFetching ? "opacity-50" : "opacity-100"}`}
+          >
+            <ProductList products={products} />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         )}
       </div>
     </div>

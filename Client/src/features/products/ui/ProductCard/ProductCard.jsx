@@ -9,7 +9,7 @@ import stripImage from "../../../../assets/strip.webp";
 
 import { optimizeCloudinaryUrl } from "../../../../utils/productUtils";
 
-export default function ProductCard({ product, priority }) {
+export default function ProductCard({ product, priority, className = "" }) {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const isAdmin = user?.role === "admin";
@@ -64,51 +64,57 @@ export default function ProductCard({ product, priority }) {
   };
 
   return (
-    <div
-      className={`flex flex-col justify-between h-full p-4 rounded-xl duration-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-xl ${product.requires_prescription || product.IsRoshetta ? "border-2 border-red-500 shadow-[0_0_6px_rgba(220,53,69,0.8)]" : "border border-transparent dark:border-gray-700"}`}
+   <div
+      className={`flex flex-col justify-between h-full p-3 rounded-xl duration-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-lg ${
+        product.requires_prescription || product.IsRoshetta
+          ? "border border-red-500 shadow-[0_0_4px_rgba(220,53,69,0.5)]"
+          : "border border-gray-100 dark:border-gray-700"
+      } ${className}`}
     >
       <Link
         to={`/product/${product._id}`}
-        className="md:h-50 mb-4 p-4 rounded-xl bg-white shadow-sm border border-gray-100 dark:border-gray-700 flex justify-center items-center"
+        className="h-32 sm:h-36 mb-3 p-2 rounded-lg bg-white border border-gray-50 dark:border-gray-700 flex justify-center items-center overflow-hidden"
       >
         <img
           src={optimizedImage}
           alt={product.name}
           className="max-w-full max-h-full object-contain"
           loading={priority ? "eager" : "lazy"}
-          fetchpriority={priority ? "high" : "auto"}
+          fetchPriority={priority ? "high" : "auto"}
           decoding="async"
         />
       </Link>
 
-      <div className="flex flex-col flex-grow justify-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+      <div className="flex flex-col grow justify-center">
+        <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 font-medium">
           {formatPieces(stock)} pieces in stock
         </p>
-        <h4 className="font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 hover:text-green-600 transition-colors">
+
+        <h4 className="font-bold text-sm text-gray-900 dark:text-white mb-1 line-clamp-2 hover:text-green-600 transition-colors">
           <Link to={`/product/${product._id}`}>{product.name}</Link>
         </h4>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
+
+        <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-2 line-clamp-1">
           {description}
         </p>
 
         {(product.requires_prescription || product.IsRoshetta) && (
-          <p className="text-red-600 dark:text-red-400 text-sm font-bold mb-2">
+          <p className="text-red-600 dark:text-red-400 text-[11px] font-bold mb-2">
             Needs Prescription
           </p>
         )}
 
-        <div className="flex justify-between items-center mt-auto pt-2">
-          <p className="text-2xl font-black text-gray-900 dark:text-white">
+        <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-50 dark:border-gray-700">
+          <p className="text-md font-black text-gray-900 dark:text-white">
             ${product.price}
           </p>
 
           {!isAdmin && (
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               {hasStrips && (
                 <button
                   aria-label={`Add one strip of ${product.name} to cart`}
-                  className="w-11 h-11 rounded-full bg-green-700 hover:bg-green-800 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
+                  className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-green-700 hover:bg-green-800 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
                   disabled={
                     outOfStock ||
                     isAdding ||
@@ -119,21 +125,21 @@ export default function ProductCard({ product, priority }) {
                 >
                   {isAdding && addingUnit === "strip" ? (
                     <Loader2
-                      className="w-5 h-5 text-white animate-spin"
+                      className="w-4 h-4 text-white animate-spin"
                       aria-hidden="true"
                     />
                   ) : (
                     <img
                       src={stripImage}
                       alt="strip icon"
-                      className="w-8 h-8 object-contain"
+                      className="w-5 h-5 md:w-8 md:h-8 object-contain"
                     />
                   )}
                 </button>
               )}
               <button
                 aria-label={`Add one box of ${product.name} to cart`}
-                className="w-11 h-11 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center"
+                className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center transition-colors"
                 disabled={
                   outOfStock ||
                   isAdding ||
@@ -144,11 +150,11 @@ export default function ProductCard({ product, priority }) {
               >
                 {isAdding && addingUnit === "box" ? (
                   <Loader2
-                    className="w-5 h-5 animate-spin"
+                    className="w-4 h-4 animate-spin"
                     aria-hidden="true"
                   />
                 ) : (
-                  <ShoppingCart className="w-5 h-5" aria-hidden="true" />
+                  <ShoppingCart className="w-4 h-4 md:w-6 md:h-6" aria-hidden="true" />
                 )}
               </button>
             </div>
@@ -157,20 +163,20 @@ export default function ProductCard({ product, priority }) {
       </div>
 
       {isAdmin && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex gap-2">
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex gap-2">
           <button
             onClick={() => navigate(`/admin/edit-product/${product._id}`)}
-            className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg text-sm font-bold transition-colors"
+            className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-1.5 rounded-md text-xs font-bold transition-colors"
           >
             Edit
           </button>
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white py-2 rounded-lg text-sm font-bold transition-colors flex justify-center items-center"
+            className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white py-1.5 rounded-md text-xs font-bold transition-colors flex justify-center items-center"
           >
             {isDeleting ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-3 h-3 animate-spin" />
             ) : (
               "Delete"
             )}
