@@ -70,8 +70,12 @@ export const GetAllProductsController = async (req, res, next) => {
 
     if (req.query.categoryName) {
       const categoryDoc = await Category.findOne({
-        name: req.query.categoryName,
+        $or: [
+          { name: { $regex: new RegExp(`^${req.query.categoryName}$`, "i") } },
+          { slug: req.query.categoryName },
+        ],
       });
+
       if (categoryDoc) {
         filters.category = categoryDoc._id;
       } else {
