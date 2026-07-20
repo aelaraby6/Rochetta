@@ -1,8 +1,21 @@
 import { Router } from "express";
 import { authMiddleware } from "../../middleware/auth.middlware.js";
-import { GetUserProfileController, UpdateAvatarController, UpdateProfileController } from "../../controllers/User/user.controller.js";
+import { checkRole } from "../../middleware/check_roles.middleware.js";
+import {
+    GetUserProfileController,
+    UpdateAvatarController,
+    UpdateUserController,
+    CreateUserController,
+    GetAllUsersController,
+    DeleteUserController,
+    ToggleUserActiveController,
+} from "../../controllers/User/user.controller.js";
 import { processImage, uploadSingle } from "../../middleware/upload.middleware.js";
-import { updateProfileSchema } from "../../validations/User/user.validation.js";
+import {
+    updateProfileSchema,
+    createUserSchema,
+    toggleActiveSchema,
+} from "../../validations/User/user.validation.js";
 import { validate } from "../../middleware/validate.middleware.js";
 
 const router = Router();
@@ -11,16 +24,44 @@ router.use(authMiddleware);
 
 router.get("/me", GetUserProfileController);
 
-router.patch("/update-avatar",
-    uploadSingle("avatar"),
-    processImage({ width: 300, height: 300 }),
-    UpdateAvatarController);
-
 router.patch(
-    "/update-profile",
+    "/update-profile/:id",
     validate(updateProfileSchema),
-    UpdateProfileController
+    UpdateUserController
 );
 
+router.patch(
+    "/update-avatar",
+    uploadSingle("avatar"),
+    processImage({ width: 300, height: 300 }),
+    UpdateAvatarController
+);
+
+
+router.post(
+    "/create",
+    checkRole("super_admin"),
+    validate(createUserSchema),
+    CreateUserController
+);
+
+router.get(
+    "/",
+    checkRole("super_admin", "admin"),
+    GetAllUsersController
+);
+
+router.delete(
+    "/:id",
+    checkRole("super_admin", "admin"),
+    DeleteUserController
+);
+
+router.patch(
+    "/:id/status",
+    checkRole("super_admin", "admin"),
+    validate(toggleActiveSchema),
+    ToggleUserActiveController
+);
 
 export { router as UserRouter };

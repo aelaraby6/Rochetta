@@ -1,4 +1,9 @@
-export const ROLES = ["user", "admin"];
+export const ROLES = [
+  "user",
+  "courier",
+  "admin",
+  "super_admin",
+];
 
 export const DEFAULT_ROLE = "user";
 

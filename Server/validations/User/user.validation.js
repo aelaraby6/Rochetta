@@ -1,4 +1,6 @@
 import Joi from "joi";
+import { ROLES } from "../../utils/constants.js";
+
 
 export const updateProfileSchema = Joi.object({
     name: Joi.string()
@@ -65,3 +67,25 @@ export const updateProfileSchema = Joi.object({
     .messages({
         "object.min": "At least one field must be provided",
     });
+
+
+
+export const createUserSchema = Joi.object({
+    name: Joi.string().trim().min(2).max(50).required(),
+
+    email: Joi.string().email().lowercase().trim().required(),
+
+    password: Joi.string().min(8).required().messages({
+        "string.min": "Password must be at least 8 characters",
+    }),
+
+    role: Joi.string().valid(...ROLES).required().messages({
+        "any.only": "Invalid role",
+    }),
+
+    phone: Joi.string().trim().pattern(/^[0-9]{10,15}$/),
+});
+
+export const toggleActiveSchema = Joi.object({
+    is_active: Joi.boolean().required(),
+});
