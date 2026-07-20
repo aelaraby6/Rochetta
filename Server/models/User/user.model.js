@@ -56,18 +56,18 @@ const userSchema = new mongoose.Schema(
       city: { type: String },
       street: { type: String }
     },
-  is_deleted: {
-  type: Boolean,
-  default: false,
-},
-  is_active: {
-  type: Boolean,
-  default: true,
-},
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
+    is_active: {
+      type: Boolean,
+      default: true,
+    },
   },
-{
-  timestamps: true
-}
+  {
+    timestamps: true
+  }
 );
 
 
