@@ -12,7 +12,7 @@ import {
   Pill,
   Loader2,
 } from "lucide-react";
-import { useGetCategoriesQuery } from "../../../features/products/store/productsApi";
+import { useGetCategoriesQuery } from "../../products/store/productsApi";
 
 const schema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),

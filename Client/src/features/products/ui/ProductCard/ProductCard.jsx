@@ -104,17 +104,17 @@ export default function ProductCard({ product, priority, className = "" }) {
           </p>
         )}
 
-        <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-50 dark:border-gray-700">
+        <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-50 dark:border-gray-700 gap-1">
           <p className="text-md font-black text-gray-900 dark:text-white">
             ${product.price}
           </p>
 
           {!isAdmin && (
-            <div className="flex gap-1.5">
+            <div className="flex gap-1">
               {hasStrips && (
                 <button
                   aria-label={`Add one strip of ${product.name} to cart`}
-                  className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-green-700 hover:bg-green-800 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
+                  className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-green-700 hover:bg-green-800 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
                   disabled={
                     outOfStock ||
                     isAdding ||
@@ -132,14 +132,14 @@ export default function ProductCard({ product, priority, className = "" }) {
                     <img
                       src={stripImage}
                       alt="strip icon"
-                      className="w-5 h-5 md:w-8 md:h-8 object-contain"
+                      className="w-5 h-5 md:w-7 md:h-7 object-contain"
                     />
                   )}
                 </button>
               )}
               <button
                 aria-label={`Add one box of ${product.name} to cart`}
-                className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center transition-colors"
+                className="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center transition-colors"
                 disabled={
                   outOfStock ||
                   isAdding ||
@@ -154,7 +154,7 @@ export default function ProductCard({ product, priority, className = "" }) {
                     aria-hidden="true"
                   />
                 ) : (
-                  <ShoppingCart className="w-4 h-4 md:w-6 md:h-6" aria-hidden="true" />
+                  <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" aria-hidden="true" />
                 )}
               </button>
             </div>
@@ -165,7 +165,7 @@ export default function ProductCard({ product, priority, className = "" }) {
       {isAdmin && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex gap-2">
           <button
-            onClick={() => navigate(`/admin/edit-product/${product._id}`)}
+            onClick={() => navigate(`/dashboard/products/edit/${product._id}`)}
             className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-1.5 rounded-md text-xs font-bold transition-colors"
           >
             Edit
