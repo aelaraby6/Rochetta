@@ -8,6 +8,7 @@ import {
   Activity,
   X,
   TrendingUp,
+
 } from "lucide-react";
 
 const navSections = [
@@ -19,6 +20,12 @@ const navSections = [
         icon: LayoutDashboard,
         path: "/dashboard",
         end: true,
+      },
+      {
+        label: "Users",
+        icon: Users,
+        path: "/dashboard/users",
+        end: false,
       },
       {
         label: "Products",
@@ -43,7 +50,6 @@ const navSections = [
         path: "/dashboard/orders",
         end: false,
       },
-      { label: "Customers", icon: Users, path: "/dashboard/users", end: false },
       {
         label: "Analytics",
         icon: TrendingUp,

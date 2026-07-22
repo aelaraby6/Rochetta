@@ -26,6 +26,7 @@ export default function DynamicTable({
   onPageChange,
   emptyMessage = "No records found.",
   emptyIcon: EmptyIcon = Package,
+  onRowClick,
 }) {
   const alignClass = (align) => {
     if (align === "center") return "text-center";
@@ -37,7 +38,6 @@ export default function DynamicTable({
     <div className="w-full">
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1e1e1e] shadow-sm">
         <table className="w-full text-sm">
-          {/* ─── Header ─── */}
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50/80 dark:bg-[#252525]">
               {columns.map((col) => (
@@ -51,7 +51,6 @@ export default function DynamicTable({
             </tr>
           </thead>
 
-          {/* ─── Body ─── */}
           <tbody className="divide-y divide-gray-100 dark:divide-gray-800/60">
             {isLoading ? (
               <SkeletonRows columns={columns} count={6} />
@@ -69,10 +68,11 @@ export default function DynamicTable({
                 </td>
               </tr>
             ) : (
-              data.map((row, rowIndex) => (
+              data.map((row) => (
                 <tr
-                  key={row[rowKey] ?? rowIndex}
-                  className="group hover:bg-green-50/40 dark:hover:bg-green-900/5 transition-colors duration-150"
+                  key={row[rowKey]}
+                  onClick={() => onRowClick && onRowClick(row)}
+                  className={`hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
                 >
                   {columns.map((col) => (
                     <td
@@ -81,7 +81,7 @@ export default function DynamicTable({
                     >
                       {col.render
                         ? col.render(row[col.key], row)
-                        : row[col.key] ?? "—"}
+                        : (row[col.key] ?? "—")}
                     </td>
                   ))}
                 </tr>
@@ -91,7 +91,6 @@ export default function DynamicTable({
         </table>
       </div>
 
-      {/* ─── Pagination ─── */}
       {!isLoading && totalPages > 1 && (
         <Pagination
           currentPage={currentPage}

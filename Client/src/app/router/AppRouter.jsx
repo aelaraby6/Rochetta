@@ -17,6 +17,10 @@ import Policy from "../../pages/Policy";
 // Admin Dashboard
 import AdminRoute from "./AdminRoute";
 import DashboardLayout from "../../features/admin/components/DashboardLayout";
+import UsersPage from "../../features/admin/users/pages/UsersPage";
+import AddUserPage from "../../features/admin/users/pages/AddUserPage";
+import EditUserPage from "../../features/admin/users/pages/EditUserPage";
+import UserDetailPage from "../../features/admin/users/pages/UserDetailPage";
 
 import LandingPage from "../../pages/Home/landingPage";
 
@@ -102,9 +106,10 @@ export default function AppRouter() {
         <Route
           path="/dashboard"
           element={
-            <AdminRoute>
-              <DashboardLayout />
-            </AdminRoute>
+            // <AdminRoute>
+            <DashboardLayout />
+
+            /* </AdminRoute> */
           }
         >
           <Route
@@ -122,10 +127,11 @@ export default function AppRouter() {
             path="orders"
             element={<DashboardPlaceholder title="Orders Management" />}
           />
-          <Route
-            path="users"
-            element={<DashboardPlaceholder title="Users Management" />}
-          />
+          <Route path="users" element={<UsersPage />} />
+
+          <Route path="users/add" element={<AddUserPage />} />
+          <Route path="users/edit/:id" element={<EditUserPage />} />
+          <Route path="users/:id" element={<UserDetailPage />} />
         </Route>
 
         <Route path="policy" element={<Policy />} />
