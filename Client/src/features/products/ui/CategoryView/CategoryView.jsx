@@ -90,7 +90,7 @@ useEffect(() => {
 
           {isAdmin && (
             <Link
-              to="/admin/add-product"
+              to="/dashboard/products/add"
               className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2"
             >
               <PlusCircle className="w-5 h-5" /> Add New Product

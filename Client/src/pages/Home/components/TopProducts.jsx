@@ -1,11 +1,13 @@
 import { RefreshCcw } from "lucide-react";
 import { useGetProductsQuery } from "../../../features/products/store/productsApi";
 import ProductCard from "../../../features/products/ui/ProductCard/ProductCard";
+
 export default function TopProducts() {
   const { data: productsData, isLoading } = useGetProductsQuery({
-    limit: 4,
+    limit: 12,
     top_selling: true,
   });
+
   const productsToShow = productsData?.data || [];
 
   return (
@@ -19,17 +21,25 @@ export default function TopProducts() {
           <RefreshCcw className="w-6 h-6 animate-spin" /> Loading products...
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
+        // snap for swipe
+        <div
+          className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 
+                     [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        >
           {productsToShow.length > 0 ? (
             productsToShow.map((product) => (
-              <ProductCard
+              <div
                 key={product._id}
-                product={product}
-                className="w-full max-w-85 mx-auto"
-              />
+                className="snap-start shrink-0 w-[75%] sm:w-[45%] md:w-[30%] lg:w-[20%]"
+              >
+                <ProductCard
+                  product={product}
+                  className="w-full h-full mx-auto"
+                />
+              </div>
             ))
           ) : (
-            <div className="col-span-full text-center text-gray-500 py-10 text-xl font-semibold">
+            <div className="w-full text-center text-gray-500 py-10 text-xl font-semibold">
               No products found.
             </div>
           )}
