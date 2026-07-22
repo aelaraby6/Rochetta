@@ -1,7 +1,9 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
+import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProfileRoute";
 import GlobalLoader from "../../components/ui/GlobalLoader";
+
+// Profile
 import ProfileLayout from "../../features/profile/ui/components/ProfileLayout";
 import PersonalInfo from "../../features/profile/ui/pages/PersonalInfo";
 import AddressBook from "../../features/profile/ui/pages/AddressBook";
@@ -9,12 +11,16 @@ import PaymentMethods from "../../features/profile/ui/pages/PaymentMethods";
 import OrderHistory from "../../features/profile/ui/pages/OrderHistory";
 import MyPrescriptions from "../../features/profile/ui/pages/MyPrescriptions";
 import Wishlist from "../../features/profile/ui/pages/Wishlist";
-import Policy from "../../pages/Policy";
 import BuyItAgain from "../../features/profile/ui/pages/BuyItAgain";
-import { Navigate } from "react-router-dom";
+import Policy from "../../pages/Policy";
+
+// Admin Dashboard
+import AdminRoute from "./AdminRoute";
+import DashboardLayout from "../../features/admin/components/DashboardLayout";
 
 import LandingPage from "../../pages/Home/landingPage";
 
+// Lazy-loaded pages
 const Cart = lazy(() => import("../../features/cart/ui/Cart"));
 const ProductDetails = lazy(
   () => import("../../features/products/ui/ProductDetails/ProductDetails"),
@@ -25,12 +31,34 @@ const CategoryView = lazy(
 const Login = lazy(() => import("../../features/auth/ui/Login"));
 const Signup = lazy(() => import("../../features/auth/ui/Signup"));
 const NotFound = lazy(() => import("../../pages/Errors/NotFound"));
-const AdminAddProduct = lazy(
-  () => import("../../features/admin/AddProduct/AdminAddProduct"),
+
+// Admin pages (lazy)
+const ProductsPage = lazy(
+  () => import("../../features/admin/products/ProductsPage"),
 );
-const AdminEditProduct = lazy(
-  () => import("../../features/admin/EditProduct/AdminEditProduct"),
+const AddProductPage = lazy(
+  () => import("../../features/admin/products/AddProductPage"),
 );
+const EditProductPage = lazy(
+  () => import("../../features/admin/products/EditProductPage"),
+);
+
+// Placeholder for future dashboard pages
+function DashboardPlaceholder({ title }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
+        <span className="text-3xl">🚧</span>
+      </div>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        {title}
+      </h2>
+      <p className="text-gray-500 dark:text-gray-400">
+        This page will be built in the upcoming steps.
+      </p>
+    </div>
+  );
+}
 
 export default function AppRouter() {
   return (
@@ -61,7 +89,6 @@ export default function AppRouter() {
           }
         >
           <Route index element={<Navigate to="orders" replace />} />
-
           <Route path="orders" element={<OrderHistory />} />
           <Route path="personal-info" element={<PersonalInfo />} />
           <Route path="address-book" element={<AddressBook />} />
@@ -71,22 +98,35 @@ export default function AppRouter() {
           <Route path="buy-again" element={<BuyItAgain />} />
         </Route>
 
+        {/* ═══ Admin Dashboard ═══ */}
         <Route
-          path="/admin/add-product"
+          path="/dashboard"
           element={
-            <ProtectedRoute>
-              <AdminAddProduct />
-            </ProtectedRoute>
+            <AdminRoute>
+              <DashboardLayout />
+            </AdminRoute>
           }
-        />
-        <Route
-          path="/admin/edit-product/:id"
-          element={
-            <ProtectedRoute>
-              <AdminEditProduct />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route
+            index
+            element={<DashboardPlaceholder title="Dashboard Overview" />}
+          />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="products/add" element={<AddProductPage />} />
+          <Route path="products/edit/:id" element={<EditProductPage />} />
+          <Route
+            path="categories"
+            element={<DashboardPlaceholder title="Categories Management" />}
+          />
+          <Route
+            path="orders"
+            element={<DashboardPlaceholder title="Orders Management" />}
+          />
+          <Route
+            path="users"
+            element={<DashboardPlaceholder title="Users Management" />}
+          />
+        </Route>
 
         <Route path="policy" element={<Policy />} />
 
