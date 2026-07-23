@@ -185,11 +185,13 @@ export const CreateUserController = async (req, res, next) => {
     if (creatorRole === "admin" && role === "super_admin") {
       throw new ForbiddenError("Admins are not allowed to create super_admin accounts");
     }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
       name,
       email,
-      password, 
+      password: hashedPassword,
       phone,
       role: role || "user",
     });

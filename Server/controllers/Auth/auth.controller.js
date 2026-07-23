@@ -8,12 +8,10 @@ import {
 import nodemailer from "nodemailer";
 import { getWelcomeTemplate } from "../../utils/email.js"
 
-
 const formatUserResponse = (user) => {
-  const { name, email } = user.toObject();
-  return { name, email };
+  const { _id, name, email, role } = user.toObject();
+  return { _id, name, email, role };
 };
-
 
 // Register
 export const RegisterController = async (req, res, next) => {
