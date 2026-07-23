@@ -106,10 +106,10 @@ export default function AppRouter() {
         <Route
           path="/dashboard"
           element={
-            // <AdminRoute>
+            <AdminRoute>
             <DashboardLayout />
 
-            /* </AdminRoute> */
+             </AdminRoute> 
           }
         >
           <Route
