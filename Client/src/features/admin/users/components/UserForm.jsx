@@ -1,14 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 
-const AVAILABLE_ROLES = [
-  { value: "user", label: "User" },
-  { value: "courier", label: "Courier" },
-  { value: "admin", label: "Admin" },
-];
+export default function UserForm({ onSubmit, isLoading }) {
+  const currentUser = useSelector((state) => state.auth.user);
 
-export default function UserForm({ onSubmit, isLoading, initialData = null }) {
-  const isEditMode = !!initialData;
+  const baseRoles = [
+    { value: "user", label: "User" },
+    { value: "courier", label: "Courier" },
+    { value: "admin", label: "Admin" },
+  ];
+
+  const AVAILABLE_ROLES =
+    currentUser?.role === "super_admin"
+      ? [...baseRoles, { value: "super_admin", label: "Super Admin" }]
+      : baseRoles;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,18 +24,6 @@ export default function UserForm({ onSubmit, isLoading, initialData = null }) {
     role: "user",
   });
 
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        name: initialData.name || "",
-        email: initialData.email || "",
-        password: "",
-        phone: initialData.phone || "",
-        role: initialData.role || "user",
-      });
-    }
-  }, [initialData]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -37,13 +31,7 @@ export default function UserForm({ onSubmit, isLoading, initialData = null }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const submitData = { ...formData };
-
-    if (isEditMode && !submitData.password) {
-      delete submitData.password;
-    }
-
-    onSubmit(submitData);
+    onSubmit({ ...formData });
   };
 
   return (
@@ -85,20 +73,15 @@ export default function UserForm({ onSubmit, isLoading, initialData = null }) {
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center justify-between">
             <span>Password</span>
-            {isEditMode && (
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">
-                (Leave blank to keep current)
-              </span>
-            )}
           </label>
           <input
-            required={!isEditMode}
+            required
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             minLength={8}
-            placeholder={isEditMode ? "••••••••" : "Enter a strong password"}
+            placeholder="Enter a strong password"
             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
           />
         </div>
@@ -140,10 +123,10 @@ export default function UserForm({ onSubmit, isLoading, initialData = null }) {
         <button
           type="submit"
           disabled={isLoading}
-          className="inline-flex items-center justify-center min-w-[140px] gap-2 bg-[#165938] hover:bg-[#114229] text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="inline-flex items-center justify-center min-w-35 gap-2 bg-[#165938] hover:bg-[#114229] text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {isLoading ? "Saving..." : isEditMode ? "Update User" : "Create User"}
+          {isLoading ? "Creating..." : "Create User"}
         </button>
       </div>
     </form>

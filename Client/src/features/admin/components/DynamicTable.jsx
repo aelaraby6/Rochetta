@@ -1,21 +1,7 @@
 import { Package } from "lucide-react";
 import Pagination from "../../../components/ui/Pagination";
 
-/**
- * DynamicTable — A generic, reusable table component for the admin dashboard.
- *
- * @param {Array}    columns       - Column config: [{ key, label, render?, align? }]
- *                                   `render(value, row)` is optional custom renderer.
- *                                   `align` can be "left" (default), "center", or "right".
- * @param {Array}    data          - Array of row objects.
- * @param {string}   rowKey        - Property name to use as the React key (default: "_id").
- * @param {boolean}  isLoading     - Show skeleton rows while fetching.
- * @param {number}   currentPage   - Current page number for Pagination.
- * @param {number}   totalPages    - Total pages for Pagination.
- * @param {Function} onPageChange  - Callback when a page is clicked.
- * @param {string}   emptyMessage  - Message shown when data is empty.
- * @param {React.ElementType} emptyIcon - Lucide icon component for the empty state.
- */
+
 export default function DynamicTable({
   columns = [],
   data = [],

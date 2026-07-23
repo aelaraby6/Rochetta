@@ -8,7 +8,7 @@ export default function AdminRoute({ children }) {
   const location = useLocation();
   const hasToasted = useRef(false);
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = ["admin", "super_admin"].includes(user?.role);
 
   useEffect(() => {
     if (isAuthenticated && !isAdmin && !hasToasted.current) {

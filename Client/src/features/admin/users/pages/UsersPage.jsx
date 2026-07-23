@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Users, Trash2, PlusCircle, Search, Filter } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import DynamicTable from "../../components/DynamicTable";
+import { useDebounce } from "../../../../hooks/useDebounce";
 import {
   useGetUsersQuery,
   useToggleUserStatusMutation,
@@ -12,21 +14,15 @@ import toast from "react-hot-toast";
 
 export default function UsersPage() {
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.user);
+
   const [page, setPage] = useState(1);
   const limit = 10;
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 500);
   const [roleFilter, setRoleFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-      setPage(1);
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
 
   const handleRoleFilterChange = (e) => {
     setRoleFilter(e.target.value);
@@ -48,8 +44,7 @@ export default function UsersPage() {
 
   const [toggleStatus] = useToggleUserStatusMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const [updateUserRole, { isLoading: isUpdatingRole }] =
-    useUpdateUserRoleMutation();
+  const [updateUserRole, { isLoading: isUpdatingRole }] = useUpdateUserRoleMutation();
 
   const usersData = data?.data || [];
   const pagination = data?.pagination || { totalPages: 1 };
@@ -125,13 +120,16 @@ export default function UsersPage() {
           <select
             value={val}
             onChange={(e) => handleRoleChange(e, row._id)}
-            disabled={isUpdatingRole}
+            disabled={
+              isUpdatingRole ||
+              (row.role === "super_admin" && currentUser?.role !== "super_admin")
+            }
             className="text-sm font-medium px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none cursor-pointer"
           >
             <option value="user">User</option>
             <option value="courier">Courier</option>
             <option value="admin">Admin</option>
-            {val === "super_admin" && (
+            {(val === "super_admin" || currentUser?.role === "super_admin") && (
               <option value="super_admin">Super Admin</option>
             )}
           </select>
@@ -150,6 +148,7 @@ export default function UsersPage() {
               className="sr-only peer"
               checked={val}
               onChange={() => handleToggle(row)}
+              disabled={row.role === "super_admin" && currentUser?.role !== "super_admin"}
             />
             <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
           </label>
@@ -206,7 +205,10 @@ export default function UsersPage() {
             type="text"
             placeholder="Search by name..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage(1);
+            }}
             className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
           />
         </div>
@@ -223,6 +225,9 @@ export default function UsersPage() {
               <option value="user">User</option>
               <option value="courier">Courier</option>
               <option value="admin">Admin</option>
+              {currentUser?.role === "super_admin" && (
+                <option value="super_admin">Super Admin</option>
+              )}
             </select>
           </div>
 
