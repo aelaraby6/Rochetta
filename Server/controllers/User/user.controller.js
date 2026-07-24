@@ -3,6 +3,27 @@ import User from "../../models/User/user.model.js";
 import cloudinary from "../../config/cloudinary.js";
 import bcrypt from "bcrypt";
 
+
+
+export const GetUserByIdController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id).select("-password -__v").lean();
+
+    if (!user) {
+      throw new NotFoundError("User not found"); 
+    }
+
+    res.status(200).json({
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const GetUserProfileController = async (req, res, next) => {
   try {
     const userId = req.user._id;
@@ -123,29 +144,66 @@ export const UpdateUserController = async (req, res, next) => {
 };
 
 
+export const UpdateUserRoleController = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    const requesterRole = req.user.role;
+
+    const targetUser = await User.findById(id);
+    if (!targetUser) throw new NotFoundError("User not found");
+
+    if (targetUser.role === "super_admin") {
+      throw new ForbiddenError("Cannot modify a super admin's role");
+    }
+
+    if (requesterRole === "admin" && role === "super_admin") {
+      throw new ForbiddenError("Admins cannot assign super_admin role");
+    }
+
+    targetUser.role = role;
+    await targetUser.save();
+
+    res.status(200).json({
+      message: "User role updated successfully",
+      data: {
+        _id: targetUser._id,
+        role: targetUser.role
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const CreateUserController = async (req, res, next) => {
   try {
-    const { name, email, password, role, phone } = req.body;
+    const creatorRole = req.user.role;
+    const { name, email, password, phone, role } = req.body;
 
-    const existingUser = await User.findOne({ email }).lean();
+    if (creatorRole === "admin" && role === "super_admin") {
+      throw new ForbiddenError("Admins are not allowed to create super_admin accounts");
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    if (existingUser) throw new BadRequestError("Email already in use");
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
+    const newUser = new User({
       name,
       email,
       password: hashedPassword,
-      role,
       phone,
+      role: role || "user",
     });
 
-    const { password: _pw, __v, ...userData } = newUser.toObject();
+    await newUser.save();
+
+    const userResponse = newUser.toObject();
+    delete userResponse.password;
 
     res.status(201).json({
       message: "User created successfully",
-      data: userData,
+      data: userResponse,
     });
   } catch (error) {
     next(error);

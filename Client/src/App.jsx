@@ -23,9 +23,10 @@ export default function App() {
     }
   }, [darkMode]);
 
-  const hideNavbarPaths = ["/login", "/signup", "/dashboard", "/dashboard/products", "/dashboard/categories", "/dashboard/orders", "/dashboard/users", "/dashboard/analytics"];
-  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
   const isDashboard = location.pathname.startsWith("/dashboard");
+  const authPaths = ["/login", "/signup"];
+
+  const shouldHideNavbar = isDashboard || authPaths.includes(location.pathname);
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -42,7 +43,7 @@ export default function App() {
         className={`grow w-full flex flex-col ${!shouldHideNavbar ? "pt-28" : ""}`}
       >
         <AppRouter />
-        {!shouldHideNavbar && !isDashboard && <Footer />}
+        {!shouldHideNavbar && <Footer />}
       </main>
     </div>
   );

@@ -2,19 +2,24 @@ import { Router } from "express";
 import { authMiddleware } from "../../middleware/auth.middlware.js";
 import { checkRole } from "../../middleware/check_roles.middleware.js";
 import {
-    GetUserProfileController,
-    UpdateAvatarController,
-    UpdateUserController,
-    CreateUserController,
-    GetAllUsersController,
-    DeleteUserController,
-    ToggleUserActiveController,
+  GetUserProfileController,
+  UpdateAvatarController,
+  UpdateUserController,
+  CreateUserController,
+  GetAllUsersController,
+  DeleteUserController,
+  ToggleUserActiveController,
+  GetUserByIdController,
+  UpdateUserRoleController,
 } from "../../controllers/User/user.controller.js";
-import { processImage, uploadSingle } from "../../middleware/upload.middleware.js";
 import {
-    updateProfileSchema,
-    createUserSchema,
-    toggleActiveSchema,
+  processImage,
+  uploadSingle,
+} from "../../middleware/upload.middleware.js";
+import {
+  updateProfileSchema,
+  createUserSchema,
+  toggleActiveSchema,
 } from "../../validations/User/user.validation.js";
 import { validate } from "../../middleware/validate.middleware.js";
 
@@ -25,43 +30,42 @@ router.use(authMiddleware);
 router.get("/me", GetUserProfileController);
 
 router.patch(
-    "/update-profile/:id",
-    validate(updateProfileSchema),
-    UpdateUserController
+  "/update-profile/:id",
+  validate(updateProfileSchema),
+  UpdateUserController,
 );
 
 router.patch(
-    "/update-avatar",
-    uploadSingle("avatar"),
-    processImage({ width: 300, height: 300 }),
-    UpdateAvatarController
+  "/update-avatar",
+  uploadSingle("avatar"),
+  processImage({ width: 300, height: 300 }),
+  UpdateAvatarController,
 );
-
 
 router.post(
-    "/create",
-    checkRole("super_admin"),
-    validate(createUserSchema),
-    CreateUserController
+  "/create",
+  checkRole("super_admin", "admin"),
+  validate(createUserSchema),
+  CreateUserController,
 );
 
-router.get(
-    "/",
-    checkRole("super_admin", "admin"),
-    GetAllUsersController
-);
+router.get("/:id", checkRole("super_admin", "admin"), GetUserByIdController);
 
-router.delete(
-    "/:id",
-    checkRole("super_admin", "admin"),
-    DeleteUserController
+router.get("/", checkRole("super_admin", "admin"), GetAllUsersController);
+
+router.delete("/:id", checkRole("super_admin", "admin"), DeleteUserController);
+
+router.patch(
+  "/:id/status",
+  checkRole("super_admin", "admin"),
+  validate(toggleActiveSchema),
+  ToggleUserActiveController,
 );
 
 router.patch(
-    "/:id/status",
-    checkRole("super_admin", "admin"),
-    validate(toggleActiveSchema),
-    ToggleUserActiveController
+  "/:id/role",
+  checkRole("super_admin", "admin"),
+  UpdateUserRoleController,
 );
 
 export { router as UserRouter };

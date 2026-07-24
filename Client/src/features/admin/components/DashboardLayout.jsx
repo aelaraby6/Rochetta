@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Menu, Mail, Bell, User } from "lucide-react";
+import { useSelector } from "react-redux"; 
 import Sidebar from "./Sidebar";
 
 export default function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { user } = useSelector((state) => state.auth);
 
   return (
     <div className="flex h-screen bg-[#f4f7f6] dark:bg-[#121212] overflow-hidden">
@@ -37,11 +40,11 @@ export default function DashboardLayout() {
                 <User className="w-6 h-6 text-green-700" />
               </div>
               <div className="hidden sm:flex flex-col">
-                <span className="text-sm font-bold text-gray-900 dark:text-white">
-                  Abdelrahman
+                <span className="text-sm font-bold text-gray-900 dark:text-white capitalize">
+                  {user?.name}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  test@gmail.com
+                  {user?.email}
                 </span>
               </div>
             </div>
