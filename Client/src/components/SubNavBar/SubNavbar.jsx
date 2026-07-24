@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useGetCategoriesQuery } from "../../features/products/store/productsApi";
+import { useGetCategoriesQuery } from "../../features/admin/categories/api/categoriesApi";
 
 export default function SubNavbar() {
   const { data, isLoading } = useGetCategoriesQuery();
