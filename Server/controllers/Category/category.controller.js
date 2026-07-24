@@ -56,15 +56,42 @@ export const createCategoryController = async (req, res, next) => {
 
 export const getAllCategoriesController = async (req, res, next) => {
   try {
-    const categories = await Category.find({
+    console.log("Query Params Received:", req.query);
+    const { search, page = 1, limit = 10 } = req.query;
+
+    const filter = {
       is_active: true,
-      is_deleted: false
-    }).select("-__v -is_active -is_deleted");
+      is_deleted: false,
+    };
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const limitNumber = parseInt(limit);
+
+    const totalItems = await Category.countDocuments(filter);
+    const totalPages = Math.ceil(totalItems / limitNumber);
+
+    const categories = await Category.find(filter)
+      .select("-__v -is_active -is_deleted")
+      .skip(skip)
+      .limit(limitNumber)
+      .sort({ createdAt: -1 });
 
     res.json({
       message: "Categories fetched successfully",
-      total: categories.length,
       data: categories,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: parseInt(page),
+        limit: limitNumber,
+      },
     });
   } catch (error) {
     next(error);

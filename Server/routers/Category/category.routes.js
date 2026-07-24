@@ -19,7 +19,7 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["admin", "super_admin"]),
   uploadSingle("img"),
   processImage({}),
   validate(createCategorySchema),
@@ -29,14 +29,14 @@ router.post(
 router.delete(
   "/:id",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["admin", "super_admin"]),
   deleteCategoryController
 );
 
 router.patch(
   "/:id",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["admin", "super_admin"]),
   uploadSingle("img"),
   processImage({}),
   validate(updateCategorySchema),
