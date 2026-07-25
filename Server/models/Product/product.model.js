@@ -31,6 +31,11 @@ const productSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
+    num_reviews: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     stock: {
       type: Number,
       required: true,
@@ -50,6 +55,11 @@ const productSchema = new mongoose.Schema(
       min: 0,
     },
     top_selling: { type: Boolean, default: false },
+
+    is_active: {
+      type: Boolean,
+      default: true,
+    },
     is_deleted: {
       type: Boolean,
       default: false,
