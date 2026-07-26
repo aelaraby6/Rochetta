@@ -76,9 +76,9 @@ export const getWelcomeTemplate = (name) => `
   </table>
 </body>
 </html>
-\`;
+`;
 
-export const getOrderConfirmationTemplate = (name, order) => \`
+export const getOrderConfirmationTemplate = (name, order) => `
 <!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,sans-serif;">
@@ -98,13 +98,13 @@ export const getOrderConfirmationTemplate = (name, order) => \`
           <!-- Body -->
           <tr>
             <td style="padding:40px 30px;">
-              <h2 style="color:#1a6b3c;">Thank you for your order, \${name}! 📦</h2>
+              <h2 style="color:#1a6b3c;">Thank you for your order, ${name}! 📦</h2>
               <p style="color:#555;line-height:1.6;">
                 We've received your order and are processing it. Below are your order details:
               </p>
-              <p style="color:#555;line-height:1.6;"><strong>Order ID:</strong> \${order._id}</p>
-              <p style="color:#555;line-height:1.6;"><strong>Total Amount:</strong> \$\${order.total.toFixed(2)}</p>
-              <p style="color:#555;line-height:1.6;"><strong>Delivery Address:</strong> \${order.address.street}, \${order.address.city}</p>
+              <p style="color:#555;line-height:1.6;"><strong>Order ID:</strong> ${order._id}</p>
+              <p style="color:#555;line-height:1.6;"><strong>Total Amount:</strong> $${order.total.toFixed(2)}</p>
+              <p style="color:#555;line-height:1.6;"><strong>Delivery Address:</strong> ${order.address.street}, ${order.address.city}</p>
               
               <h3 style="color:#1a6b3c;margin-top:20px;">Items Ordered</h3>
               <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
@@ -116,13 +116,13 @@ export const getOrderConfirmationTemplate = (name, order) => \`
                   </tr>
                 </thead>
                 <tbody>
-                  \${order.items.map(item => \`
+                  ${order.items.map(item => `
                     <tr>
-                      <td style="border-bottom:1px solid #eee;padding:8px;">\${item.product.name}</td>
-                      <td align="center" style="border-bottom:1px solid #eee;padding:8px;">\${item.quantity}</td>
-                      <td align="right" style="border-bottom:1px solid #eee;padding:8px;">\$\${(item.price * item.quantity).toFixed(2)}</td>
+                      <td style="border-bottom:1px solid #eee;padding:8px;">${item.product.name}</td>
+                      <td align="center" style="border-bottom:1px solid #eee;padding:8px;">${item.quantity}</td>
+                      <td align="right" style="border-bottom:1px solid #eee;padding:8px;">$${(item.price * item.quantity).toFixed(2)}</td>
                     </tr>
-                  \`).join('')}
+                  `).join('')}
                 </tbody>
               </table>
 
@@ -150,4 +150,4 @@ export const getOrderConfirmationTemplate = (name, order) => \`
   </table>
 </body>
 </html>
-\`;
+`;

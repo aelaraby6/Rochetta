@@ -172,7 +172,7 @@ export const CancelOrderController = async (req, res, next) => {
     order.status = "canceled";
     order.is_deleted = true;
 
-    await order.save({ session });
+    await order.save({ session, validateBeforeSave: false });
 
     await session.commitTransaction();
     session.endSession();
@@ -189,7 +189,7 @@ export const CancelOrderController = async (req, res, next) => {
   }
 };
 
-// Get All Orders (Admin)
+// Get All Orders 
 export const GetAllOrdersAdminController = async (req, res, next) => {
   try {
     const { status, minTotal, maxTotal, startDate, endDate, search } = req.query;
@@ -277,7 +277,7 @@ export const GetAllOrdersAdminController = async (req, res, next) => {
   }
 };
 
-// Get Order by ID (Admin)
+// Get Order by ID 
 export const GetOrderByIdAdminController = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -299,7 +299,7 @@ export const GetOrderByIdAdminController = async (req, res, next) => {
   }
 };
 
-// Update Order Status (Admin)
+// Update Order Status 
 export const UpdateOrderStatusAdminController = async (req, res, next) => {
   const session = await mongoose.startSession();
   try {
@@ -339,7 +339,7 @@ export const UpdateOrderStatusAdminController = async (req, res, next) => {
     }
 
     order.status = status;
-    await order.save({ session });
+    await order.save({ session, validateBeforeSave: false });
 
     await session.commitTransaction();
     session.endSession();
