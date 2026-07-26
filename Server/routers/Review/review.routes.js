@@ -12,16 +12,18 @@ import {
   updateReviewController,
   deleteReviewController,
 } from "../../controllers/Review/review.controller.js";
+import { checkRole } from "../../middleware/check_roles.middleware.js";
 
 const router = Router();
 
-// Public/User get routes
-router.get("/", getAllReviewsController);
-router.get("/:id", getOneReviewController);
+router.use(authMiddleware);
 
-// Authenticated routes
-router.post("/", authMiddleware, validate(createReviewSchema), createReviewController);
-router.patch("/:id", authMiddleware, validate(updateReviewSchema), updateReviewController);
-router.delete("/:id", authMiddleware, deleteReviewController);
+
+router.get("/", checkRole(["admin", "super_admin"]), getAllReviewsController);
+router.get("/:id", checkRole(["admin", "super_admin"]), getOneReviewController);
+
+router.post("/", validate(createReviewSchema), createReviewController);
+router.patch("/:id", validate(updateReviewSchema), updateReviewController);
+router.delete("/:id", deleteReviewController);
 
 export { router as ReviewRouter };
