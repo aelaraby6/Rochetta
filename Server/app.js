@@ -11,6 +11,7 @@ import { ApiRouter } from "./routers/index.js";
 import { notFoundMiddleware } from "./middleware/not_found.middleware.js";
 import { swaggerUi, swaggerSpec } from "./utils/swagger.js";
 import cookieParser from "cookie-parser";
+import groq from "./config/groq.js";
 
 const app = express();
 
@@ -46,7 +47,7 @@ app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// Hide docs in production
+
 if (process.env.NODE_ENV !== "production") {
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
