@@ -11,7 +11,6 @@ import { ApiRouter } from "./routers/index.js";
 import { notFoundMiddleware } from "./middleware/not_found.middleware.js";
 import { swaggerUi, swaggerSpec } from "./utils/swagger.js";
 import cookieParser from "cookie-parser";
-import groq from "./config/groq.js";
 
 const app = express();
 
