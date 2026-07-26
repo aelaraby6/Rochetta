@@ -76,4 +76,78 @@ export const getWelcomeTemplate = (name) => `
   </table>
 </body>
 </html>
-`;
+\`;
+
+export const getOrderConfirmationTemplate = (name, order) => \`
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#1a6b3c;padding:30px;text-align:center;">
+              <h1 style="color:#ffffff;margin:0;font-size:32px;">Rochetta</h1>
+              <p style="color:#a8d5b5;margin:5px 0 0;">Order Confirmation</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px 30px;">
+              <h2 style="color:#1a6b3c;">Thank you for your order, \${name}! 📦</h2>
+              <p style="color:#555;line-height:1.6;">
+                We've received your order and are processing it. Below are your order details:
+              </p>
+              <p style="color:#555;line-height:1.6;"><strong>Order ID:</strong> \${order._id}</p>
+              <p style="color:#555;line-height:1.6;"><strong>Total Amount:</strong> \$\${order.total.toFixed(2)}</p>
+              <p style="color:#555;line-height:1.6;"><strong>Delivery Address:</strong> \${order.address.street}, \${order.address.city}</p>
+              
+              <h3 style="color:#1a6b3c;margin-top:20px;">Items Ordered</h3>
+              <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
+                <thead>
+                  <tr style="background:#f0f9f4;color:#1a6b3c;">
+                    <th align="left" style="border-bottom:2px solid #a8d5b5;padding:8px;">Item</th>
+                    <th align="center" style="border-bottom:2px solid #a8d5b5;padding:8px;">Qty</th>
+                    <th align="right" style="border-bottom:2px solid #a8d5b5;padding:8px;">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  \${order.items.map(item => \`
+                    <tr>
+                      <td style="border-bottom:1px solid #eee;padding:8px;">\${item.product.name}</td>
+                      <td align="center" style="border-bottom:1px solid #eee;padding:8px;">\${item.quantity}</td>
+                      <td align="right" style="border-bottom:1px solid #eee;padding:8px;">\$\${(item.price * item.quantity).toFixed(2)}</td>
+                    </tr>
+                  \`).join('')}
+                </tbody>
+              </table>
+
+              <!-- CTA Button -->
+              <div style="text-align:center;margin:30px 0;">
+                <a href="#" style="background-color:#1a6b3c;color:#ffffff;padding:14px 40px;border-radius:8px;text-decoration:none;font-size:16px;font-weight:bold;">
+                  Track Order
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f9f9f9;padding:20px;text-align:center;border-top:1px solid #eee;">
+              <p style="color:#999;font-size:12px;margin:0;">
+                © 2025 Rochetta. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+\`;
