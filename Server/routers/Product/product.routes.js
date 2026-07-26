@@ -17,7 +17,7 @@ import {
 
 const router = Router();
 
-// Admin Routes
+
 router.post(
   "/",
   authMiddleware,
@@ -37,12 +37,11 @@ router.patch(
   "/:id",
   authMiddleware,
   checkRole(["admin"]),
-  uploadSingle("image"), //new
+  uploadSingle("image"), 
   validate(UpdateProductSchema),
   updateProductController
 );
 
-// User Routes
 router.get("/", GetAllProductsController);
 router.get("/:id", GetOneProductController);
 

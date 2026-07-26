@@ -6,8 +6,8 @@ import { validateObjectId } from "../../utils/validateObjectId.js";
 const updateProductRating = async (productId) => {
   const reviews = await Review.find({ product: productId });
   const numReviews = reviews.length;
-  const avgRating = numReviews > 0 
-    ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / numReviews).toFixed(1)) 
+  const avgRating = numReviews > 0
+    ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / numReviews).toFixed(1))
     : 0;
 
   await Product.findByIdAndUpdate(productId, {
@@ -19,16 +19,19 @@ const updateProductRating = async (productId) => {
 export const createReviewController = async (req, res, next) => {
   try {
     const { product, rating, comment } = req.body;
+
     const userId = req.user._id;
 
     validateObjectId(product, "product id");
 
-    const productExists = await Product.findOne({ _id: product, is_deleted: false });
+    const productExists = await Product.findOne({ _id: product, is_deleted: false, is_active: true });
+
     if (!productExists) {
       throw new NotFoundError("Product not found");
     }
 
-    const existingReview = await Review.findOne({ product, user: userId });
+    const existingReview = await Review.findOne({ product, user: userId, is_deleted: false });
+
     if (existingReview) {
       throw new ConflictError("You have already reviewed this product");
     }
@@ -59,17 +62,18 @@ export const getAllReviewsController = async (req, res, next) => {
 
     const filters = {};
 
-    // 1. Direct filters by ID
+    // Direct filters by ID
     if (product) {
       validateObjectId(product, "product id");
       filters.product = product;
     }
+
     if (user) {
       validateObjectId(user, "user id");
       filters.user = user;
     }
 
-    // 2. Filter by rating
+    // Filter by rating
     if (rating !== undefined) {
       const ratingNum = Number(rating);
       if (!isNaN(ratingNum) && ratingNum >= 1 && ratingNum <= 5) {
@@ -77,13 +81,15 @@ export const getAllReviewsController = async (req, res, next) => {
       }
     }
 
-    // 3. Filter by product name (case-insensitive substring)
+    // Filter by product name
     if (productName) {
+
       const matchingProducts = await Product.find({
         name: { $regex: productName, $options: "i" }
       }).select("_id");
+
       const productIds = matchingProducts.map(p => p._id);
-      
+
       if (filters.product) {
         filters.product = { $and: [filters.product, { $in: productIds }] };
       } else {
@@ -91,7 +97,7 @@ export const getAllReviewsController = async (req, res, next) => {
       }
     }
 
-    // 4. Filter by user name (case-insensitive substring)
+    // Filter by user name
     if (userName) {
       const matchingUsers = await User.find({
         name: { $regex: userName, $options: "i" }
@@ -105,7 +111,7 @@ export const getAllReviewsController = async (req, res, next) => {
       }
     }
 
-    // 5. General search (matches product name, user name, or comment text)
+    // General search 
     if (search) {
       const matchingProducts = await Product.find({
         name: { $regex: search, $options: "i" }
@@ -191,6 +197,7 @@ export const updateReviewController = async (req, res, next) => {
     validateObjectId(id, "review id");
 
     const review = await Review.findById(id);
+    
     if (!review) {
       throw new NotFoundError("Review not found");
     }
