@@ -15,7 +15,6 @@ import { createCategorySchema, updateCategorySchema } from "../../validations/Ca
 
 const router = Router();
 
-// Admin Routes
 router.post(
   "/",
   authMiddleware,
@@ -43,7 +42,6 @@ router.patch(
   updateCategoryController
 );
 
-// User Routes
 router.get("/", getAllCategoriesController);
 router.get("/slug/:slug", getCategoryBySlugController); 
 router.get("/:id", getOneCategoryController);

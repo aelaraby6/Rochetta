@@ -52,6 +52,11 @@ export const CreateProductSchema = Joi.object({
     "number.base": "Strip_count must be a number",
     "number.min": "Strip_count cannot be negative",
   }),
+
+  strips_per_box: Joi.number().min(0).default(0).messages({
+    "number.base": "Strips per box must be a number",
+    "number.min": "Strips per box cannot be negative",
+  }),
 });
 
 export const UpdateProductSchema = Joi.object({
@@ -99,6 +104,11 @@ export const UpdateProductSchema = Joi.object({
   strip_count: Joi.number().min(0).messages({
     "number.base": "Strip_count must be a number",
     "number.min": "Strip_count cannot be negative",
+  }),
+
+  strips_per_box: Joi.number().min(0).messages({
+    "number.base": "Strips per box must be a number",
+    "number.min": "Strips per box cannot be negative",
   }),
 })
   .min(1)

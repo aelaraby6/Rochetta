@@ -1,5 +1,6 @@
 import Product from "../../models/Product/product.model.js";
 import { Category } from "../../models/Category/category.model.js";
+import Review from "../../models/Review/review.model.js";
 import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 import { validateObjectId } from "../../utils/validateObjectId.js";
 import cloudinary from "../../config/cloudinary.js";
@@ -12,6 +13,7 @@ export const createProductController = async (req, res, next) => {
     if (!req.file) throw new BadRequestError("Product image is required");
 
     if (!data.category) throw new BadRequestError("Category is required");
+
     validateObjectId(data.category, "category id");
 
     const categoryExists = await Category.findById(data.category);
@@ -60,15 +62,26 @@ export const GetAllProductsController = async (req, res, next) => {
 
     const filters = { is_deleted: false };
 
-    if (req.query.name) {
+
+    if (req.query.search) {
+      filters.$or = [
+        { name: { $regex: req.query.search, $options: "i" } },
+        { description: { $regex: req.query.search, $options: "i" } },
+      ];
+    } else if (req.query.name) {
       filters.name = { $regex: req.query.name, $options: "i" };
     }
 
+    // Top selling filter
     if (req.query.top_selling !== undefined) {
       filters.top_selling = req.query.top_selling === "true";
     }
 
-    if (req.query.categoryName) {
+    // Category filtering 
+    if (req.query.category) {
+      validateObjectId(req.query.category, "category id");
+      filters.category = req.query.category;
+    } else if (req.query.categoryName) {
       const categoryDoc = await Category.findOne({
         $or: [
           { name: { $regex: new RegExp(`^${req.query.categoryName}$`, "i") } },
@@ -81,29 +94,77 @@ export const GetAllProductsController = async (req, res, next) => {
       } else {
         return res.json({
           message: "Products fetched successfully",
-          page,
-          total: 0,
-          totalPages: 0,
           data: [],
+          pagination: {
+            totalItems: 0,
+            totalPages: 0,
+            currentPage: page,
+            limit,
+            hasNextPage: false,
+            hasPrevPage: false,
+          },
         });
       }
     }
 
-    const products = await Product.find(filters)
-      .skip(skip)
-      .limit(limit)
-      .sort({ [sortBy]: sortOrder })
-      .select("-is_deleted -__v")
-      .populate("category");
+    // Price range filtering
+    if (req.query.minPrice || req.query.maxPrice) {
+      filters.price = {};
+      if (req.query.minPrice) {
+        filters.price.$gte = Number(req.query.minPrice);
+      }
+      if (req.query.maxPrice) {
+        filters.price.$lte = Number(req.query.maxPrice);
+      }
+    }
 
-    const total = await Product.countDocuments(filters);
+    // Prescription requirement filter
+    if (req.query.requires_prescription !== undefined) {
+      filters.requires_prescription = req.query.requires_prescription === "true";
+    }
+
+    // Has strips filter
+    if (req.query.has_strips !== undefined) {
+      filters.has_strips = req.query.has_strips === "true";
+    }
+
+    // Stock status filter
+    if (req.query.inStock !== undefined) {
+      if (req.query.inStock === "true") {
+        filters.stock = { $gt: 0 };
+      } else if (req.query.inStock === "false") {
+        filters.stock = 0;
+      }
+    }
+
+    // Minimum rating filter
+    if (req.query.minRating) {
+      filters.rating = { $gte: Number(req.query.minRating) };
+    }
+
+
+    const [products, total] = await Promise.all([
+      Product.find(filters)
+        .skip(skip)
+        .limit(limit)
+        .sort({ [sortBy]: sortOrder })
+        .select("-is_deleted -__v")
+        .populate("category")
+        .lean(),
+      Product.countDocuments(filters),
+    ]);
 
     res.json({
       message: "Products fetched successfully",
-      page,
-      total,
-      totalPages: Math.ceil(total / limit),
       data: products,
+      pagination: {
+        totalItems: total,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        limit,
+        hasNextPage: page * limit < total,
+        hasPrevPage: page > 1,
+      },
     });
   } catch (error) {
     next(error);
@@ -117,9 +178,16 @@ export const GetOneProductController = async (req, res, next) => {
 
     const product = await Product.findOne({ _id: id, is_deleted: false })
       .select("-is_deleted -__v")
-      .populate("category");
+      .populate("category")
+      .lean();
 
     if (!product) throw new NotFoundError("Product not found");
+
+    const reviews = await Review.find({ product: id })
+      .populate("user", "name avatar")
+      .lean();
+
+    product.reviews = reviews;
 
     res.json({
       message: "Product fetched successfully",
@@ -181,10 +249,11 @@ export const updateProductController = async (req, res, next) => {
     if (!body || Object.keys(body).length === 0)
       throw new BadRequestError("Update data is required");
 
-    // convert numeric/string fields if needed (optional)
     if (body.price) body.price = Number(body.price);
     if (body.stock) body.stock = Number(body.stock);
     if (body.strip_count) body.strip_count = Number(body.strip_count);
+
+    if (body.strips_per_box) body.strips_per_box = Number(body.strips_per_box);
     if (typeof body.has_strips !== "undefined")
       body.has_strips = body.has_strips === "true" || body.has_strips === true;
     if (typeof body.requires_prescription !== "undefined")

@@ -31,6 +31,11 @@ const productSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
+    num_reviews: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     stock: {
       type: Number,
       required: true,
@@ -49,7 +54,17 @@ const productSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    strips_per_box: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     top_selling: { type: Boolean, default: false },
+
+    is_active: {
+      type: Boolean,
+      default: true,
+    },
     is_deleted: {
       type: Boolean,
       default: false,
@@ -59,6 +74,10 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+productSchema.index({ is_deleted: 1, is_active: 1 });
+productSchema.index({ category: 1, is_deleted: 1 });
+productSchema.index({ top_selling: 1 });
 
 const Product = mongoose.model("Product", productSchema);
 
