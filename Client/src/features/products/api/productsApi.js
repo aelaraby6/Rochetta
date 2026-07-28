@@ -7,13 +7,32 @@ export const productsApi = apiSlice.injectEndpoints({
         limit = 10,
         page = 1,
         top_selling,
-        categoryName,
+        categoryName, 
         search,
+        sortPrice,
+        minRating,
+        is_active,
       } = {}) => {
         const params = new URLSearchParams({ limit, page });
+        
         if (top_selling) params.append("top_selling", "true");
-        if (categoryName) params.append("categoryName", categoryName);
-        if (search) params.append("name", search);
+        
+        if (categoryName && categoryName !== "") {
+           params.append("categoryName", categoryName); 
+        }
+        
+        if (search) params.append("name", search); 
+        
+        if (is_active !== undefined && is_active !== "") {
+           params.append("is_active", is_active);
+        }
+        
+        if (sortPrice) {
+          params.append("sort", "price");
+          params.append("order", sortPrice); 
+        }
+        
+        if (minRating) params.append("minRating", minRating);
 
         return `/products?${params.toString()}`;
       },
