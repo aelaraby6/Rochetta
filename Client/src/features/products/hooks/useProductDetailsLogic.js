@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { useGetProductByIdQuery } from "../store/productsApi";
+import { useGetProductByIdQuery } from "../api/productsApi";
 import { useAddToCartMutation } from "../../cart/store/cartApi";
 import { optimizeCloudinaryUrl } from "../../../utils/productUtils";
 
@@ -22,15 +22,29 @@ export function useProductDetailsLogic() {
 
   const product = response?.data;
 
-  const stock =
-    product?.stock !== undefined
-      ? product.stock.toFixed(2)
-      : product?.pieces?.toFixed(2) || 0;
+  const baseStock =
+    product?.stock !== undefined ? product.stock : product?.pieces || 0;
   const description = product?.description || product?.desc || "";
-  const outOfStock = stock <= 0;
   const isRoshetta = product?.requires_prescription || product?.IsRoshetta;
+
   const hasStrips = product?.has_strips || product?.stripsPerBox > 0;
-  const stripsPerBox = product?.strip_count || product?.stripsPerBox || 1;
+  const stripsPerBox =
+    product?.strips_per_box ||
+    product?.strip_count ||
+    product?.stripsPerBox ||
+    1;
+
+  const outOfStock = baseStock === 0;
+
+  let displayStock = `${baseStock} items`;
+  if (hasStrips && stripsPerBox > 0) {
+    const boxes = Math.floor(baseStock / stripsPerBox);
+    const remainingStrips = baseStock % stripsPerBox;
+    displayStock =
+      remainingStrips > 0
+        ? `${boxes} Boxes & ${remainingStrips} Strips`
+        : `${boxes} Boxes`;
+  }
 
   const optimizedImage = product
     ? optimizeCloudinaryUrl(product.image) || "/placeholder.png"
@@ -42,10 +56,12 @@ export function useProductDetailsLogic() {
       return;
     }
     setAddingUnit(unit);
+
     let qtyToSend = 1;
-    if (unit === "strip" && hasStrips && stripsPerBox > 0) {
-      qtyToSend = Number((1 / Math.max(1, stripsPerBox)).toFixed(2));
+    if (hasStrips && stripsPerBox > 0) {
+      qtyToSend = unit === "box" ? stripsPerBox : 1;
     }
+
     try {
       await addToCart({ productId: product._id, quantity: qtyToSend }).unwrap();
       toast.success("Item added to cart!");
@@ -60,7 +76,7 @@ export function useProductDetailsLogic() {
     product,
     isFetching,
     isError,
-    stock,
+    stock: displayStock,
     description,
     outOfStock,
     isRoshetta,
@@ -72,3 +88,4 @@ export function useProductDetailsLogic() {
     navigate,
   };
 }
+  

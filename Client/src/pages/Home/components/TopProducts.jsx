@@ -1,5 +1,5 @@
 import { RefreshCcw } from "lucide-react";
-import { useGetProductsQuery } from "../../../features/products/store/productsApi";
+import { useGetProductsQuery } from "../../../features/products/api/productsApi";
 import ProductCard from "../../../features/products/ui/ProductCard/ProductCard";
 
 export default function TopProducts() {
