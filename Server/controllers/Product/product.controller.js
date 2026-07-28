@@ -5,6 +5,7 @@ import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 import { validateObjectId } from "../../utils/validateObjectId.js";
 import cloudinary from "../../config/cloudinary.js";
 import streamifier from "streamifier";
+import { checkAndNotifyLowStock } from "../../services/notification.service.js";
 
 export const createProductController = async (req, res, next) => {
   try {
@@ -37,6 +38,11 @@ export const createProductController = async (req, res, next) => {
 
     await newProduct.save();
     await newProduct.populate("category");
+
+    // Check if stock is low on creation
+    checkAndNotifyLowStock(newProduct).catch((err) =>
+      console.error("Low stock check error on product creation:", err.message)
+    );
 
     res.status(201).json({
       message: "Product created successfully",
@@ -286,6 +292,11 @@ export const updateProductController = async (req, res, next) => {
       .populate("category");
 
     if (!product) throw new NotFoundError("Product not found");
+
+    // Check if stock is low on update
+    checkAndNotifyLowStock(product).catch((err) =>
+      console.error("Low stock check error on product update:", err.message)
+    );
 
     res.json({
       message: "Product updated successfully",

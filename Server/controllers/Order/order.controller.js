@@ -6,6 +6,7 @@ import Product from "../../models/Product/product.model.js";
 import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import { getOrderConfirmationTemplate } from "../../utils/email.js";
+import { checkAndNotifyLowStock } from "../../services/notification.service.js";
 
 export const CreateOrderController = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -58,6 +59,7 @@ export const CreateOrderController = async (req, res, next) => {
       { session }
     );
 
+    const updatedProducts = [];
     for (const item of items) {
       const updatedProduct = await Product.findOneAndUpdate(
         { _id: item.product, stock: { $gte: item.quantity } },
@@ -67,6 +69,7 @@ export const CreateOrderController = async (req, res, next) => {
       if (!updatedProduct) {
         throw new ConflictError("Stock became insufficient during transaction processing");
       }
+      updatedProducts.push(updatedProduct);
     }
 
     const cart = await Cart.findOne({ user: userId, is_deleted: false });
@@ -78,6 +81,13 @@ export const CreateOrderController = async (req, res, next) => {
 
     await session.commitTransaction();
     session.endSession();
+
+    // Check and notify low stock for products after successful checkout transaction
+    for (const prod of updatedProducts) {
+      checkAndNotifyLowStock(prod).catch((err) =>
+        console.error("Low stock check error from order placement:", err.message)
+      );
+    }
 
     const user = await User.findById(userId);
 
