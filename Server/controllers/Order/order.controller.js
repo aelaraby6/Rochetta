@@ -4,9 +4,8 @@ import { Order } from "../../models/Order/order.model.js";
 import User from "../../models/User/user.model.js";
 import Product from "../../models/Product/product.model.js";
 import mongoose from "mongoose";
-import nodemailer from "nodemailer";
-import { getOrderConfirmationTemplate } from "../../utils/email.js";
 import { checkAndNotifyLowStock } from "../../services/notification.service.js";
+import { sendOrderConfirmationEmail } from "../../services/email.service.js";
 
 export const CreateOrderController = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -92,24 +91,10 @@ export const CreateOrderController = async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (user && user.email) {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
       const populatedOrder = await Order.findById(newOrder._id).populate("items.product", "name price");
-
-      transporter.sendMail({
-        from: `"Rochetta 💊" <${process.env.EMAIL_USER}>`,
-        to: user.email,
-        subject: "Order Confirmation - Rochetta",
-        html: getOrderConfirmationTemplate(user.name, populatedOrder),
-      }).catch((err) => {
-        console.error("Order confirmation email failed:", err.message);
-      });
+      if (populatedOrder) {
+        sendOrderConfirmationEmail(user.email, user.name, populatedOrder);
+      }
     }
 
     return res.status(201).json({

@@ -5,8 +5,7 @@ import {
   ComparePassword,
   hashPassword,
 } from "../../services/password.service.js";
-import nodemailer from "nodemailer";
-import { getWelcomeTemplate } from "../../utils/email.js"
+import { sendWelcomeEmail } from "../../services/email.service.js";
 
 const formatUserResponse = (user) => {
   const { _id, name, email, role } = user.toObject();
@@ -55,22 +54,7 @@ export const RegisterController = async (req, res, next) => {
     });
 
     // Send welcome email
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    transporter.sendMail({
-      from: `"Rochetta 💊" <${process.env.EMAIL_USER}>`,
-      to: savedUser.email,
-      subject: "Welcome to Rochetta!",
-      html: getWelcomeTemplate(savedUser.name),
-    }).catch((err) => {
-      console.error("Welcome email failed:", err.message);
-    });
+    sendWelcomeEmail(savedUser.email, savedUser.name);
 
     return res.status(201).json({
       message: existingUser?.is_deleted
