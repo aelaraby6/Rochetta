@@ -3,6 +3,7 @@ import { useProductDetailsLogic } from "../../hooks/useProductDetailsLogic";
 import ProductGallery from "./components/ProductGallery";
 import ProductInfo from "./components/ProductInfo";
 import ProductActions from "./components/ProductActions";
+import ReviewsSection from "./components/ReviewsSection";
 
 export default function ProductDetails() {
   const {
@@ -43,9 +44,11 @@ export default function ProductDetails() {
     );
   }
 
+  const currentProductId = product?._id
+
   return (
     <div className="max-w-6xl mx-auto mt-28 px-4 sm:px-6 lg:px-8 mb-20 text-black dark:text-white transition-colors duration-300">
-      <div className="flex flex-col md:flex-row gap-10 bg-white dark:bg-[#2c2c2c] p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
+      <div className="flex flex-col md:flex-row gap-10 bg-white dark:bg-[#2c2c2c] p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 mb-10">
         <ProductGallery
           optimizedImage={optimizedImage}
           productName={product.name}
@@ -73,6 +76,8 @@ export default function ProductDetails() {
           />
         </div>
       </div>
+
+      <ReviewsSection productId={currentProductId} />
     </div>
   );
 }

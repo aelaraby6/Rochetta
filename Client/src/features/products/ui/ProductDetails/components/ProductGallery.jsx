@@ -6,7 +6,7 @@ export default function ProductGallery({ optimizedImage, productName }) {
         alt={productName}
         className="max-h-[320px] w-auto object-contain"
         loading="eager"
-        fetchpriority="high"
+        fetchPriority="high"
         decoding="async"
       />
     </div>
