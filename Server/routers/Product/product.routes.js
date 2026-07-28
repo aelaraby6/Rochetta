@@ -21,7 +21,7 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["admin", "super_admin"]),
   uploadSingle("image"),
   validate(CreateProductSchema),
   createProductController
@@ -30,13 +30,13 @@ router.post(
 router.delete(
   "/:id",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["admin", "super_admin"]),
   DeleteProductController
 );
 router.patch(
   "/:id",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["admin", "super_admin"]),
   uploadSingle("image"), 
   validate(UpdateProductSchema),
   updateProductController

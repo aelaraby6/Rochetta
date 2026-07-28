@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { PRODUCT_CATEGORIES } from "../../utils/constants.js";
 
 export const CreateProductSchema = Joi.object({
   name: Joi.string().min(1).max(200).required().messages({
@@ -24,14 +23,6 @@ export const CreateProductSchema = Joi.object({
     "any.required": "Price is required",
   }),
 
-  // category: Joi.string()
-  //   .valid(...PRODUCT_CATEGORIES)
-  //   .required()
-  //   .messages({
-  //     "any.only":
-  //       "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
-  //     "any.required": "Category is required",
-  //   }),
   category: Joi.string().hex().length(24).required(),
 
   stock: Joi.number().min(0).required().messages({
@@ -57,6 +48,10 @@ export const CreateProductSchema = Joi.object({
     "number.base": "Strips per box must be a number",
     "number.min": "Strips per box cannot be negative",
   }),
+
+  is_active: Joi.boolean().default(true).messages({
+    "boolean.base": "is_active must be true or false",
+  }),
 });
 
 export const UpdateProductSchema = Joi.object({
@@ -79,14 +74,7 @@ export const UpdateProductSchema = Joi.object({
     "number.min": "Price cannot be negative",
   }),
 
-  // category: Joi.string()
-  //   .valid(...PRODUCT_CATEGORIES)
-  //   .messages({
-  //     "any.only":
-  //       "Category must be one of: Pain Relief, Cold and Flu, Diabetes Care, First Aid",
-  //   }),
-
-  category: Joi.string().hex().length(24).required(),
+  category: Joi.string().hex().length(24),
 
   stock: Joi.number().min(0).messages({
     "number.base": "Stock must be a number",
@@ -109,6 +97,10 @@ export const UpdateProductSchema = Joi.object({
   strips_per_box: Joi.number().min(0).messages({
     "number.base": "Strips per box must be a number",
     "number.min": "Strips per box cannot be negative",
+  }),
+
+  is_active: Joi.boolean().messages({
+    "boolean.base": "is_active must be true or false",
   }),
 })
   .min(1)

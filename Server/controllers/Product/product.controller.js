@@ -60,8 +60,10 @@ export const GetAllProductsController = async (req, res, next) => {
     if (isNaN(limit) || limit < 1 || limit > 100)
       throw new BadRequestError("Limit must be between 1 and 100");
 
+    // to be replaced with this  "const filters = { is_deleted: false, is_active: true };" c
+    // after adding is_active field to all products in the database
+    // to make the reviews work too
     const filters = { is_deleted: false };
-
 
     if (req.query.search) {
       filters.$or = [
@@ -77,7 +79,15 @@ export const GetAllProductsController = async (req, res, next) => {
       filters.top_selling = req.query.top_selling === "true";
     }
 
-    // Category filtering 
+    if (req.query.is_active !== undefined) {
+      if (req.query.is_active === "false") {
+        filters.is_active = { $ne: true };
+      } else {
+        filters.is_active = true;
+      }
+    }
+
+    // Category filtering
     if (req.query.category) {
       validateObjectId(req.query.category, "category id");
       filters.category = req.query.category;
@@ -120,7 +130,8 @@ export const GetAllProductsController = async (req, res, next) => {
 
     // Prescription requirement filter
     if (req.query.requires_prescription !== undefined) {
-      filters.requires_prescription = req.query.requires_prescription === "true";
+      filters.requires_prescription =
+        req.query.requires_prescription === "true";
     }
 
     // Has strips filter
@@ -141,7 +152,6 @@ export const GetAllProductsController = async (req, res, next) => {
     if (req.query.minRating) {
       filters.rating = { $gte: Number(req.query.minRating) };
     }
-
 
     const [products, total] = await Promise.all([
       Product.find(filters)
