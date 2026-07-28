@@ -71,7 +71,7 @@ export default function ProfileLayout() {
                     alt={`${user.name || "User"}'s avatar`}
                     className="w-full h-full object-cover"
                     loading="eager"
-                    fetchpriority="high"
+                    fetchPriority="high"
                   />
                 ) : (
                   <User className="w-12 h-12" aria-hidden="true" />
