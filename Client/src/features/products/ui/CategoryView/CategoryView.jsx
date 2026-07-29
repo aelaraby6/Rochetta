@@ -75,7 +75,7 @@ export default function CategoryView() {
 
   const handleFilterInteraction = () => {
     if (!hasShownToast) {
-      toast("Please search for a specific disease or medicine", {
+      toast("Please search for a specific disease or medicine to filter on them", {
         icon: "💡",
         duration: 5000,
         style: {

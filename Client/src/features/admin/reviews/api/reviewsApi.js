@@ -1,7 +1,21 @@
-import { apiSlice } from "../../../app/store/apiSlice";
+import { apiSlice } from "../../../../app/store/apiSlice";
 
 export const reviewsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getReviews: builder.query({
+      query: (params) => ({
+        url: "/reviews",
+        params,
+      }),
+      providesTags: (result) =>
+        result?.data
+          ? [
+              ...result.data.map(({ _id }) => ({ type: "Review", id: _id })),
+              { type: "Review", id: "LIST" },
+            ]
+          : [{ type: "Review", id: "LIST" }],
+    }),
+
     getProductReviews: builder.query({
       query: (productId) => `/reviews?product=${productId}`,
       providesTags: (result, error, productId) => [
@@ -23,6 +37,7 @@ export const reviewsApi = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, { product }) => [
         { type: "Review", id: product },
         "Product",
+        "Review",
       ],
     }),
 
@@ -35,6 +50,7 @@ export const reviewsApi = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, { productId }) => [
         { type: "Review", id: productId },
         "Product",
+        "Review",
       ],
     }),
 
@@ -49,6 +65,7 @@ export const reviewsApi = apiSlice.injectEndpoints({
 });
 
 export const {
+  useGetReviewsQuery,
   useGetProductReviewsQuery,
   useGetReviewByIdQuery,
   useAddReviewMutation,
