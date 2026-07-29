@@ -53,8 +53,9 @@ const UsersPage = lazy(
 const CategoriesPage = lazy(
   () => import("../../features/admin/categories/pages/CategoriesPage"),
 );
-const OrdersPage = lazy(
-  () => import("../../features/admin/order/OrdersPage"),
+const OrdersPage = lazy(() => import("../../features/admin/order/OrdersPage"));
+const ReviewsPage = lazy(
+  () => import("../../features/admin/reviews/pages/ReviewsPage"),
 );
 
 function DashboardPlaceholder({ title }) {
@@ -74,23 +75,23 @@ function DashboardPlaceholder({ title }) {
 }
 
 const RootRedirect = () => {
-  const user = useSelector((state) => state.auth.user);
-  if (user && (user.role === "admin" || user.role === "super_admin")) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  // const user = useSelector((state) => state.auth.user);
+  // if (user && (user.role === "admin" || user.role === "super_admin")) {
+  //   return <Navigate to="/dashboard" replace />;
+  // }
   return <LandingPage />;
 };
 
-const AuthRedirect = ({ children }) => {
-  const user = useSelector((state) => state.auth.user);
-  if (user && (user.role === "admin" || user.role === "super_admin")) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  if (user && user.role === "user") {
-    return <Navigate to="/" replace />;
-  }
-  return children;
-};
+// const AuthRedirect = ({ children }) => {
+//   const user = useSelector((state) => state.auth.user);
+//   if (user && (user.role === "admin" || user.role === "super_admin")) {
+//     return <Navigate to="/dashboard" replace />;
+//   }
+//   if (user && user.role === "user") {
+//     return <Navigate to="/" replace />;
+//   }
+//   return children;
+// };
 
 export default function AppRouter() {
   return (
@@ -104,17 +105,17 @@ export default function AppRouter() {
         <Route
           path="/signup"
           element={
-            <AuthRedirect>
-              <Signup />
-            </AuthRedirect>
+            // <AuthRedirect>
+            <Signup />
+            /* </AuthRedirect> */
           }
         />
         <Route
           path="/login"
           element={
-            <AuthRedirect>
-              <Login />
-            </AuthRedirect>
+            // <AuthRedirect>
+            <Login />
+            /* </AuthRedirect> */
           }
         />
 
@@ -161,6 +162,7 @@ export default function AppRouter() {
           <Route path="orders" element={<OrdersPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="categories" element={<CategoriesPage />} />
+          <Route path="reviews" element={<ReviewsPage />} />
         </Route>
 
         <Route path="policy" element={<Policy />} />
