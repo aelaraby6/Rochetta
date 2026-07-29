@@ -8,6 +8,7 @@ import { CategoryRouter } from "./Category/category.routes.js";
 import { ReviewRouter } from "./Review/review.routes.js";
 import { ChatRouter } from "./Chat/chat.routes.js";
 import { NotificationRouter } from "./Notification/notification.routes.js";
+import { DashboardRouter } from "./Dashboard/dashboard.routes.js";
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use("/categories", CategoryRouter);
 router.use("/reviews", ReviewRouter);
 router.use("/chat", ChatRouter);
 router.use("/notifications", NotificationRouter);
+router.use("/dashboard", DashboardRouter);
 
 export { router as ApiRouter };
