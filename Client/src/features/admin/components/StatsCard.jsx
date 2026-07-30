@@ -72,6 +72,7 @@ const colorMap = {
 export default function StatsCard({
   title,
   value,
+  icon: Icon,
   trend,
   trendLabel = "from last month",
   color = "green",

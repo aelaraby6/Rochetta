@@ -11,25 +11,25 @@ export default function OverviewTab({ stats, historical, forecast, trend }) {
           title="Total Revenue"
           value={`${stats.totalRevenue?.toLocaleString()} EGP`}
           icon={Coins}
-          color="forest"
+          color="brand"
         />
         <StatsCard
           title="Total Orders"
           value={stats.totalOrders}
           icon={ShoppingBag}
-          color="forest"
+          color="brand"
         />
         <StatsCard
           title="Total Products"
           value={stats.totalProducts}
           icon={Package}
-          color="forest"
+          color="brand"
         />
         <StatsCard
           title="Total Customers"
           value={stats.totalUsers}
           icon={Users}
-          color="forest"
+          color="brand"
         />
       </div>
 

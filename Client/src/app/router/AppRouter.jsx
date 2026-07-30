@@ -58,7 +58,7 @@ const ReviewsPage = lazy(
   () => import("../../features/admin/reviews/pages/ReviewsPage"),
 );
 const DashboardPage = lazy(
-  () => import("../../features/admin/dashboard/DashboardPage"),
+  () => import("../../features/admin/dashboard/pages/DashboardPage"),
 );
 
 function DashboardPlaceholder({ title }) {
