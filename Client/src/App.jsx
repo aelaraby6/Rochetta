@@ -7,6 +7,7 @@ import Navbar from "./components/NavBar/Header";
 import SubNavbar from "./components/SubNavBar/SubNavbar";
 import AppRouter from "./app/router/AppRouter";
 import Footer from "./components/Footer/footer";
+import ChatBotWidget from "./features/chatbot/components/ChatBotWidget";
 
 export default function App() {
   const { darkMode } = useSelector((state) => state.ui);
@@ -45,6 +46,8 @@ export default function App() {
         <AppRouter />
         {!shouldHideNavbar && <Footer />}
       </main>
+
+      {!shouldHideNavbar && <ChatBotWidget />}
     </div>
   );
 }
