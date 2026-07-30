@@ -1,24 +1,35 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Loader2, Star, User } from "lucide-react";
+import { Loader2, Star, User, Edit2, Trash2, X, Check } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   useGetProductReviewsQuery,
   useAddReviewMutation,
-} from "../../../../reviews/api/reviewsApi";
+  useUpdateReviewMutation,
+  useDeleteReviewMutation,
+} from "../../../../admin/reviews/api/reviewsApi";
 
 export default function ReviewsSection({ productId }) {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, user: currentUser } = useSelector(
+    (state) => state.auth,
+  );
 
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+
+  const [editingId, setEditingId] = useState(null);
+  const [editRating, setEditRating] = useState(5);
+  const [editComment, setEditComment] = useState("");
 
   const {
     data: reviewsResponse,
     isLoading,
     isError,
   } = useGetProductReviewsQuery(productId);
+
   const [addReview, { isLoading: isAdding }] = useAddReviewMutation();
+  const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation();
+  const [deleteReview] = useDeleteReviewMutation();
 
   const reviews = reviewsResponse?.data || [];
 
@@ -31,7 +42,7 @@ export default function ReviewsSection({ productId }) {
 
     try {
       await addReview({
-        product: productId, 
+        product: productId,
         rating,
         comment,
       }).unwrap();
@@ -39,8 +50,48 @@ export default function ReviewsSection({ productId }) {
       toast.success("Review added successfully");
       setComment("");
       setRating(5);
-    } catch (err) {
-      toast.error(err?.data?.message || "Failed to add review");
+    } catch (e) {
+      toast.error("Failed to add review you have already submitted." );
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete your review?")) {
+      try {
+        await deleteReview(id).unwrap();
+        toast.success("Review deleted successfully");
+      } catch (error) {
+        toast.error(error?.data?.message || "Failed to delete review");
+      }
+    }
+  };
+
+  const handleStartEdit = (review) => {
+    setEditingId(review._id);
+    setEditRating(review.rating);
+    setEditComment(review.comment);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditRating(5);
+    setEditComment("");
+  };
+
+  const handleUpdate = async (id) => {
+    if (!editComment.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+    try {
+      await updateReview({
+        id,
+        data: { rating: editRating, comment: editComment },
+      }).unwrap();
+      toast.success("Review updated successfully");
+      handleCancelEdit();
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to update review");
     }
   };
 
@@ -128,37 +179,104 @@ export default function ReviewsSection({ productId }) {
                     className="w-12 h-12 rounded-full object-cover border border-gray-200"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
                     <User className="w-6 h-6 text-gray-500 dark:text-gray-400" />
                   </div>
                 )}
 
-                <div className="flex-1">
+                <div className="flex-1 w-full">
                   <div className="flex justify-between items-start mb-1">
                     <h5 className="font-bold text-gray-900 dark:text-white">
                       {review.user?.name || "Unknown User"}
                     </h5>
-                    <span className="text-xs text-gray-500">
-                      {new Date(review.createdAt).toLocaleDateString()}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </span>
+                      {currentUser?._id === review.user?._id &&
+                        editingId !== review._id && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleStartEdit(review)}
+                              className="text-gray-400 hover:text-blue-500 transition-colors"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(review._id)}
+                              className="text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                    </div>
                   </div>
 
-                  <div className="flex gap-1 mb-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`w-4 h-4 ${
-                          star <= review.rating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300 dark:text-gray-600"
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                    {review.comment}
-                  </p>
+                  {editingId === review._id ? (
+                    <div className="mt-3 bg-gray-50 dark:bg-[#252525] p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-1 mb-3">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            type="button"
+                            key={star}
+                            onClick={() => setEditRating(star)}
+                            className={`transition-colors ${
+                              star <= editRating
+                                ? "text-yellow-400"
+                                : "text-gray-300 dark:text-gray-600"
+                            }`}
+                          >
+                            <Star className="w-5 h-5 fill-current" />
+                          </button>
+                        ))}
+                      </div>
+                      <textarea
+                        className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1e1e1e] focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none mb-3 text-sm"
+                        rows="2"
+                        value={editComment}
+                        onChange={(e) => setEditComment(e.target.value)}
+                      ></textarea>
+                      <div className="flex items-center gap-2 justify-end">
+                        <button
+                          onClick={handleCancelEdit}
+                          className="p-2 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(review._id)}
+                          disabled={isUpdating}
+                          className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:bg-gray-400"
+                        >
+                          {isUpdating ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Check className="w-4 h-4" />
+                          )}
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex gap-1 mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= review.rating
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300 dark:text-gray-600"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                        {review.comment}
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import Review from "../../models/Review/review.model.js";
 import Product from "../../models/Product/product.model.js";
+import User from "../../models/User/user.model.js";
 import { BadRequestError, NotFoundError, ForbiddenError, ConflictError } from "../../utils/errors.js";
 import { validateObjectId } from "../../utils/validateObjectId.js";
 

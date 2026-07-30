@@ -51,9 +51,9 @@ const navSections = [
         end: false,
       },
       {
-        label: "Analytics",
+        label: "reviews",
         icon: TrendingUp,
-        path: "/dashboard/analytics",
+        path: "/dashboard/reviews",
         end: false,
       },
     ],
