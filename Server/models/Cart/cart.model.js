@@ -6,7 +6,7 @@ const cartSchema = new mongoose.Schema(
       {
         product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
         quantity: { type: Number, required: true },
-        unit: { type: String, enum: ["box", "strip"], default: "box" },//new
+        unit: { type: String, enum: ["box", "strip"], default: "box" }, 
         price: { type: Number, required: true },
       },
     ],
@@ -17,6 +17,11 @@ const cartSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
+);
+
+cartSchema.index(
+  { user: 1 },
+  { unique: true, partialFilterExpression: { is_deleted: false } }
 );
 
 export const Cart = mongoose.model("cart", cartSchema);
