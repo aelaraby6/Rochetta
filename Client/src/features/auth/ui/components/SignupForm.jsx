@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { User, Mail, Lock, Loader2, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useSignupMutation } from "../../store/authApi";
 import { setCredentials } from "../../store/authSlice";
 
@@ -30,6 +30,8 @@ export default function SignupForm() {
   const dispatch = useDispatch();
   const [signupMutation, { isLoading }] = useSignupMutation();
   const [globalError, setGlobalError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -110,11 +112,22 @@ export default function SignupForm() {
             <Lock className="h-5 w-5 text-gray-400" />
           </div>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             {...register("password")}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
+            className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
             placeholder="Create a password"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
         </div>
         {errors.password && (
           <p className="text-red-500 text-xs mt-1 font-semibold">
@@ -132,11 +145,22 @@ export default function SignupForm() {
             <Lock className="h-5 w-5 text-gray-400" />
           </div>
           <input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             {...register("confirmPassword")}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
+            className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
             placeholder="Confirm your password"
           />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+          >
+            {showConfirmPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
         </div>
         {errors.confirmPassword && (
           <p className="text-red-500 text-xs mt-1 font-semibold">

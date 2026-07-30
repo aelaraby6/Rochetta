@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Package } from "lucide-react";
 import Pagination from "../../../components/ui/Pagination";
 

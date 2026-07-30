@@ -1,0 +1,124 @@
+import { useState } from "react";
+import {
+  LayoutDashboard,
+  Brain,
+  Boxes,
+  Loader2,
+} from "lucide-react";
+import {
+  useGetDashboardStatsQuery,
+  useGetRevenueForecastQuery,
+  useGetCustomerSegmentsQuery,
+  useGetProductBundlesQuery,
+  useGetInventoryAnalysisQuery,
+} from "../api/dashboardApi";
+import OverviewTab from "../components/OverviewTab";
+import AITab from "../components/AITab";
+import InventoryTab from "../components/InventoryTab";
+
+export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Fetch all dashboard data
+  const { data: statsData, isLoading: statsLoading } = useGetDashboardStatsQuery();
+  const { data: forecastData, isLoading: forecastLoading } = useGetRevenueForecastQuery();
+  const { data: segmentsData, isLoading: segmentsLoading } = useGetCustomerSegmentsQuery();
+  const { data: bundlesData, isLoading: bundlesLoading } = useGetProductBundlesQuery();
+  const { data: inventoryData, isLoading: inventoryLoading } = useGetInventoryAnalysisQuery();
+
+  const isAnyLoading =
+    statsLoading ||
+    forecastLoading ||
+    segmentsLoading ||
+    bundlesLoading ||
+    inventoryLoading;
+
+  if (isAnyLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="w-12 h-12 text-[#165938] animate-spin mb-4" />
+        <p className="text-gray-500 dark:text-gray-400 font-medium">
+          Running analytics algorithms and loading dashboard...
+        </p>
+      </div>
+    );
+  }
+
+  const stats = statsData?.stats || {};
+  const historical = forecastData?.historical || [];
+  const forecast = forecastData?.forecast || [];
+  const trend = forecastData?.trend || {};
+  const clusters = segmentsData?.clusters || [];
+  const userAssignments = segmentsData?.userAssignments || [];
+  const bundles = bundlesData?.rules || [];
+  const inventoryProducts = inventoryData?.products || [];
+
+  return (
+    <div className="space-y-8 animate-fade-in">
+      {/* Top Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            Dashboard Overview
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Real-time business performance analytics & AI insights
+          </p>
+        </div>
+
+        {/* Tab Buttons */}
+        <div className="flex bg-gray-100 dark:bg-[#1e1e1e] p-1 rounded-xl border border-gray-200 dark:border-gray-800">
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              activeTab === "overview"
+                ? "bg-white dark:bg-[#2c2c2c] text-[#165938] dark:text-green-400 shadow-sm"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab("ai")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              activeTab === "ai"
+                ? "bg-white dark:bg-[#2c2c2c] text-[#165938] dark:text-green-400 shadow-sm"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            }`}
+          >
+            <Brain className="w-4 h-4" />
+            AI Insights
+          </button>
+          <button
+            onClick={() => setActiveTab("inventory")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+              activeTab === "inventory"
+                ? "bg-white dark:bg-[#2c2c2c] text-[#165938] dark:text-green-400 shadow-sm"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            }`}
+          >
+            <Boxes className="w-4 h-4" />
+            Inventory Velocity
+          </button>
+        </div>
+      </div>
+
+      {/* Main Tab Views */}
+      {activeTab === "overview" && (
+        <OverviewTab
+          stats={stats}
+          historical={historical}
+          forecast={forecast}
+          trend={trend}
+        />
+      )}
+
+      {activeTab === "ai" && (
+        <AITab clusters={clusters} userAssignments={userAssignments} bundles={bundles} />
+      )}
+
+      {activeTab === "inventory" && <InventoryTab products={inventoryProducts} />}
+    </div>
+  );
+}
