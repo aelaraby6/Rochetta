@@ -57,6 +57,9 @@ const OrdersPage = lazy(() => import("../../features/admin/order/OrdersPage"));
 const ReviewsPage = lazy(
   () => import("../../features/admin/reviews/pages/ReviewsPage"),
 );
+const DashboardPage = lazy(
+  () => import("../../features/admin/dashboard/DashboardPage"),
+);
 
 function DashboardPlaceholder({ title }) {
   return (
@@ -156,7 +159,7 @@ export default function AppRouter() {
         >
           <Route
             index
-            element={<DashboardPlaceholder title="Dashboard Overview" />}
+            element={<DashboardPage />}
           />
           <Route path="products" element={<ProductsPage />} />
           <Route path="orders" element={<OrdersPage />} />

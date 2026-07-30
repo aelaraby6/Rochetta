@@ -28,7 +28,7 @@ const colorMap = {
     accent: "from-amber-500 to-orange-600",
   },
   rose: {
-    bg: "bg-rose-100 dark:bg-rose-900/30",
+    bg: "bg-rose-100 dark:bg-rose-950/30",
     icon: "text-rose-600 dark:text-rose-400",
     accent: "from-rose-500 to-pink-600",
   },
@@ -37,12 +37,41 @@ const colorMap = {
     icon: "text-violet-600 dark:text-violet-400",
     accent: "from-violet-500 to-purple-600",
   },
+  forest: {
+    bg: "bg-green-100/80 dark:bg-green-950/20",
+    icon: "text-[#165938] dark:text-green-400",
+    accent: "from-[#165938] to-emerald-700",
+  },
+  emerald: {
+    bg: "bg-emerald-100 dark:bg-emerald-950/30",
+    icon: "text-emerald-600 dark:text-emerald-400",
+    accent: "from-emerald-500 to-teal-600",
+  },
+  teal: {
+    bg: "bg-teal-100 dark:bg-teal-950/30",
+    icon: "text-teal-600 dark:text-teal-400",
+    accent: "from-teal-500 to-cyan-600",
+  },
+  mint: {
+    bg: "bg-emerald-50 dark:bg-emerald-950/15",
+    icon: "text-emerald-500 dark:text-emerald-300",
+    accent: "from-emerald-400 to-teal-500",
+  },
+  lime: {
+    bg: "bg-lime-50 dark:bg-lime-950/15",
+    icon: "text-lime-600 dark:text-lime-450",
+    accent: "from-lime-500 to-emerald-500",
+  },
+  brand: {
+    bg: "bg-[#339174]/10 dark:bg-[#339174]/20",
+    icon: "text-[#339174] dark:text-[#339174]/90",
+    accent: "from-[#339174] to-[#2b7c62]",
+  },
 };
 
 export default function StatsCard({
   title,
   value,
-  icon: Icon,
   trend,
   trendLabel = "from last month",
   color = "green",
@@ -83,9 +112,8 @@ export default function StatsCard({
             <TrendingDown className="w-4 h-4 text-rose-500" />
           )}
           <span
-            className={`text-sm font-semibold ${
-              isPositive ? "text-green-600 dark:text-green-400" : "text-rose-600 dark:text-rose-400"
-            }`}
+            className={`text-sm font-semibold ${isPositive ? "text-green-600 dark:text-green-400" : "text-rose-600 dark:text-rose-400"
+              }`}
           >
             {isPositive ? "+" : ""}
             {trend}%
