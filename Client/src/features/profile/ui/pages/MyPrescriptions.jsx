@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileText, Clock, CheckCircle, XCircle } from "lucide-react";
 
 export default function MyPrescriptions() {
-  const [prescriptions, setPrescriptions] = useState([
+  const [prescriptions] = useState([
     {
       _id: "RX-982374",
       date: "2026-03-08T10:30:00Z",

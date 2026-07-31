@@ -18,10 +18,10 @@ export function useOrderHistoryLogic() {
   const [timeFilter, setTimeFilter] = useState("6_months");
   const [cancellingId, setCancellingId] = useState(null);
 
-  const orders = response?.orders || [];
+  const orders = response?.orders;
 
   const filteredOrders = useMemo(() => {
-    let result = [...orders];
+    let result = orders ? [...orders] : [];
 
     if (statusFilter !== "all") {
       result = result.filter((order) => order.status === statusFilter);

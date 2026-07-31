@@ -8,7 +8,7 @@ const dbconnect = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB Connected Successfully");
   } catch (err) {
-    throw new Error("Database Connection Failed: " + err.message);
+    throw new Error("Database Connection Failed: " + err.message, { cause: err });
   }
 };
 export default dbconnect;

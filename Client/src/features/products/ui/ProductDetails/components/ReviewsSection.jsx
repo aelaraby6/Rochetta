@@ -50,7 +50,7 @@ export default function ReviewsSection({ productId }) {
       toast.success("Review added successfully");
       setComment("");
       setRating(5);
-    } catch (e) {
+    } catch {
       toast.error("Failed to add review you have already submitted." );
     }
   };
