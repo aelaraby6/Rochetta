@@ -15,7 +15,7 @@ export default function SplashScreen({ onFinish }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // 1. Pulsing animation for the main logo container
+    // Pulsing animation for the main logo container
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
@@ -31,14 +31,14 @@ export default function SplashScreen({ onFinish }) {
       ])
     ).start();
 
-    // 2. Fade in for the text and indicator
+    // Fade in for the text and indicator
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
       useNativeDriver: true,
     }).start();
 
-    // 3. Auto-finish after 3.5 seconds
+    // Auto-finish after 3.5 seconds
     const timer = setTimeout(() => {
       onFinish();
     }, 3500);
@@ -47,7 +47,7 @@ export default function SplashScreen({ onFinish }) {
   }, [pulseAnim, fadeAnim, onFinish]);
 
   return (
-   <View style={styles.container}>
+    <View style={styles.container}>
       <StatusBar backgroundColor={colors.forestGreen} barStyle="light-content" />
 
       {/* Deep forest green background overlay */}
