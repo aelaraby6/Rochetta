@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import ProtectedRoute from "./ProfileRoute";
 import AdminRoute from "./AdminRoute";
 import GlobalLoader from "../../components/ui/GlobalLoader";

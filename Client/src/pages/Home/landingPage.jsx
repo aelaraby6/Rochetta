@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 
 import HeroSection from "./components/HeroSection";
 import FeatureCards from "./components/FeatureCards";
-import globalLoader from "../../components/ui/GlobalLoader";
+import GlobalLoader from "../../components/ui/GlobalLoader";
 const PromoBanners = lazy(() => import("./components/PromoBanners"));
 const TopProducts = lazy(() => import("./components/TopProducts"));
 const SpecialOffers = lazy(() => import("./components/SpecialOffers"));
@@ -15,7 +15,7 @@ export default function LandingPage() {
       <HeroSection />
       <FeatureCards />
 
-      <Suspense fallback={<globalLoader/>}>
+      <Suspense fallback={<GlobalLoader/>}>
         <PromoBanners />
         <TopProducts />
         <SpecialOffers />

@@ -72,6 +72,7 @@ const colorMap = {
 export default function StatsCard({
   title,
   value,
+  // eslint-disable-next-line no-unused-vars
   icon: Icon,
   trend,
   trendLabel = "from last month",

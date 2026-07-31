@@ -19,7 +19,7 @@ const ChatInput = () => {
 
     try {
       await sendMessage(currentMsg).unwrap();
-    } catch (err) {
+    } catch {
       setMessage(currentMsg);
     }
   };

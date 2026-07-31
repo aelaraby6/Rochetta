@@ -6,6 +6,7 @@ import {
   hashPassword,
 } from "../../services/password.service.js";
 import { sendWelcomeEmail } from "../../services/email.service.js";
+import { DEFAULT_ROLE } from "../../utils/constants.js";
 
 const formatUserResponse = (user) => {
   const { _id, name, email, role } = user.toObject();

@@ -40,7 +40,7 @@ export const performLinearRegression = (points, forecastCount = 7) => {
   const correlation = corrDenominator !== 0 ? corrNumerator / corrDenominator : 0;
 
   // Determine trend interpretation
-  let trendType = "Stable";
+  let trendType;
   if (correlation > 0.6) trendType = "Strong Upward Trend";
   else if (correlation > 0.2) trendType = "Moderate Upward Trend";
   else if (correlation < -0.6) trendType = "Strong Downward Trend";
