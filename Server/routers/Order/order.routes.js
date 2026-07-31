@@ -7,12 +7,16 @@ import {
   CancelOrderController,
   GetAllOrdersAdminController,
   GetOrderByIdAdminController,
-  UpdateOrderStatusAdminController
+  UpdateOrderStatusAdminController,
+  PaymobWebhookController
 } from "../../controllers/Order/order.controller.js";
 import { validate } from "../../middleware/validate.middleware.js";
 import { CreateOrderSchema, UpdateOrderStatusSchema } from "../../validations/Order/order.validation.js";
 
 const router = Router();
+
+// Paymob webhook is called externally by Paymob (no user authentication JWT)
+router.post("/webhook/paymob", PaymobWebhookController);
 
 router.use(authMiddleware);
 

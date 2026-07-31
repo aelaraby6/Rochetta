@@ -36,6 +36,23 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
       index: true,
     },
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "card"],
+      default: "COD",
+      index: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+      index: true,
+    },
+    paymobOrderId: {
+      type: String,
+      default: null,
+      index: true,
+    },
     address: {
       street: { type: String, required: true },
       city: { type: String, required: true },
