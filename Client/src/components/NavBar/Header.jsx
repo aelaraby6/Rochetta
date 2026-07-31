@@ -2,8 +2,12 @@ import { Link } from "react-router-dom";
 import SearchBar from "./components/SearchBar";
 import DesktopNav from "./components/DesktopNav";
 import MobileMenu from "./components/MobileMenu";
+import NotificationDropdown from "../../features/notifications/components/NotificationDropdown";
+import { useSelector } from "react-redux";
 
 export default function Header() {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-green-700 dark:bg-green-900 text-white shadow-md transition-colors duration-300">
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -20,8 +24,15 @@ export default function Header() {
             <SearchBar id="desktop-search" />
           </div>
 
-          <DesktopNav />
-          <MobileMenu />
+          <div className="flex items-center gap-3">
+            {isAuthenticated && (
+              <div className="text-white">
+                <NotificationDropdown />
+              </div>
+            )}
+            <DesktopNav />
+            <MobileMenu />
+          </div>
         </div>
       </div>
     </nav>

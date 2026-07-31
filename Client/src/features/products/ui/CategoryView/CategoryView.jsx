@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { Loader2, SlidersHorizontal } from "lucide-react";
 import toast from "react-hot-toast";
 import { useGetCategoryBySlugQuery } from "../../../admin/categories/api/categoriesApi";
 import { useGetProductsQuery } from "../../api/productsApi";
@@ -15,7 +15,6 @@ export default function CategoryView() {
   const dispatch = useDispatch();
 
   const { searchTerm } = useSelector((state) => state.ui);
-
   const [hasShownToast, setHasShownToast] = useState(false);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export default function CategoryView() {
     {
       limit: ITEMS_PER_PAGE,
       page: currentPage,
-      categoryName: currentCategory?.name, 
+      categoryName: currentCategory?.name,
       search: searchTerm,
       sortPrice,
       minRating,
@@ -53,6 +52,7 @@ export default function CategoryView() {
 
   const products = productsResponse?.data || [];
   const totalPages = productsResponse?.pagination?.totalPages || 1;
+
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       const newParams = new URLSearchParams(searchParams);
@@ -75,15 +75,18 @@ export default function CategoryView() {
 
   const handleFilterInteraction = () => {
     if (!hasShownToast) {
-      toast("Please search for a specific disease or medicine to filter on them", {
-        icon: "💡",
-        duration: 5000,
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
+      toast(
+        "Please search for a specific disease or medicine to filter on them",
+        {
+          icon: "💡",
+          duration: 5000,
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
         },
-      });
+      );
       setHasShownToast(true);
     }
   };
@@ -105,69 +108,99 @@ export default function CategoryView() {
   }
 
   return (
-    <div className="flex justify-center items-center px-4 w-full">
-      <div className="w-full mt-20 mb-10 p-8 rounded-2xl bg-white dark:bg-[#2c2c2c] text-black dark:text-[#f1f1f1] shadow-lg">
-        {/* Header & Filters */}
-        <div className="mb-8 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
-          <div className="flex-1">
-            <h2 className="font-bold text-2xl mb-3 border-l-4 border-green-500 pl-3 capitalize">
-              {currentCategory.name}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-              {currentCategory.description}
-            </p>
-          </div>
+    <div className="w-full px-4 sm:px-6 lg:px-8 mt-24 mb-12 max-w-screen-2xl mx-auto">
+      <div className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-800">
+        <h2 className="font-bold text-3xl md:text-4xl mb-3 capitalize text-gray-900 dark:text-white border-l-4 border-green-500 pl-4">
+          {currentCategory.name}
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 text-lg max-w-3xl pl-4">
+          {currentCategory.description}
+        </p>
+      </div>
 
-          {/* Filters Container */}
+      <div className="flex flex-col lg:flex-row gap-8">
+        <aside className="w-full lg:w-64 shrink-0">
           <div
-            className="flex flex-wrap items-center gap-3 w-full xl:w-auto"
+            className="bg-white dark:bg-[#2c2c2c] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 sticky top-24"
             onClick={handleFilterInteraction}
           >
-            <select
-              value={sortPrice}
-              onChange={(e) => handleFilterChange("sortPrice", e.target.value)}
-              className="px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
-            >
-              <option value="">Price: Default</option>
-              <option value="asc">Price: Low to High</option>
-              <option value="desc">Price: High to Low</option>
-            </select>
+            <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
+              <SlidersHorizontal className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                Filters
+              </h3>
+            </div>
 
-            <select
-              value={minRating}
-              onChange={(e) => handleFilterChange("minRating", e.target.value)}
-              className="px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
-            >
-              <option value="">Rating: All</option>
-              <option value="4">4+ Stars</option>
-              <option value="3">3+ Stars</option>
-            </select>
-          </div>
-        </div>
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-gray-900 dark:text-gray-200 uppercase tracking-wider">
+                  Sort By Price
+                </label>
+                <select
+                  value={sortPrice}
+                  onChange={(e) =>
+                    handleFilterChange("sortPrice", e.target.value)
+                  }
+                  className="w-full px-4 py-3 rounded-xl text-sm font-medium border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer text-gray-700 dark:text-gray-200"
+                >
+                  <option value="">Relevance</option>
+                  <option value="asc">Low to High</option>
+                  <option value="desc">High to Low</option>
+                </select>
+              </div>
 
-        {/* Products Grid */}
-        {isProductsLoading ? (
-          <div className="flex justify-center items-center h-64 text-green-600">
-            <Loader2 className="w-10 h-10 animate-spin" />
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-gray-900 dark:text-gray-200 uppercase tracking-wider">
+                  Minimum Rating
+                </label>
+                <select
+                  value={minRating}
+                  onChange={(e) =>
+                    handleFilterChange("minRating", e.target.value)
+                  }
+                  className="w-full px-4 py-3 rounded-xl text-sm font-medium border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer text-gray-700 dark:text-gray-200"
+                >
+                  <option value="">All Ratings</option>
+                  <option value="4">4+ Stars</option>
+                  <option value="3">3+ Stars</option>
+                </select>
+              </div>
+            </div>
           </div>
-        ) : isProductsError ? (
-          <div className="text-red-500 text-center mt-10 text-xl font-bold">
-            Error loading products.
-          </div>
-        ) : (
-          <div
-            className={`transition-opacity duration-300 ${
-              isFetching ? "opacity-50" : "opacity-100"
-            }`}
-          >
-            <ProductList products={products} />
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        )}
+        </aside>
+
+        <main className="flex-1">
+          {isProductsLoading ? (
+            <div className="flex justify-center items-center h-64 text-green-600">
+              <Loader2 className="w-10 h-10 animate-spin" />
+            </div>
+          ) : isProductsError ? (
+            <div className="text-red-500 text-center mt-10 text-xl font-bold bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl">
+              Error loading products. Please try again later.
+            </div>
+          ) : (
+            <div
+              className={`transition-opacity duration-300 ${
+                isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
+              }`}
+            >
+              <div className="mb-6 text-sm text-gray-500 dark:text-gray-400">
+                Showing {products.length} products
+              </div>
+              <ProductList products={products} />
+
+              {totalPages > 1 && (
+                <div className="mt-10 flex justify-center">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
