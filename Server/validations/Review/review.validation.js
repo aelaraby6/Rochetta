@@ -29,6 +29,7 @@ export const updateReviewSchema = Joi.object({
     "string.base": "Comment must be a string",
     "string.max": "Comment must be at most 1000 characters",
   }),
+  isTopReview: Joi.boolean().optional(),
 })
   .min(1)
   .messages({

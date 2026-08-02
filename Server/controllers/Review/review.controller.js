@@ -1,20 +1,46 @@
 import Review from "../../models/Review/review.model.js";
 import Product from "../../models/Product/product.model.js";
 import User from "../../models/User/user.model.js";
-import { BadRequestError, NotFoundError, ForbiddenError, ConflictError } from "../../utils/errors.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  ForbiddenError,
+  ConflictError,
+} from "../../utils/errors.js";
 import { validateObjectId } from "../../utils/validateObjectId.js";
 
 const updateProductRating = async (productId) => {
   const reviews = await Review.find({ product: productId });
   const numReviews = reviews.length;
-  const avgRating = numReviews > 0
-    ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / numReviews).toFixed(1))
-    : 0;
+  const avgRating =
+    numReviews > 0
+      ? Number(
+          (reviews.reduce((sum, r) => sum + r.rating, 0) / numReviews).toFixed(
+            1,
+          ),
+        )
+      : 0;
 
   await Product.findByIdAndUpdate(productId, {
     rating: avgRating,
     num_reviews: numReviews,
   });
+};
+
+export const getTopReviewsController = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({ isTopReview: true })
+      .populate("user", "name avatar")
+      .limit(6)
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "Top reviews fetched successfully",
+      data: reviews,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createReviewController = async (req, res, next) => {
@@ -25,13 +51,21 @@ export const createReviewController = async (req, res, next) => {
 
     validateObjectId(product, "product id");
 
-    const productExists = await Product.findOne({ _id: product, is_deleted: false, is_active: true });
+    const productExists = await Product.findOne({
+      _id: product,
+      is_deleted: false,
+      is_active: true,
+    });
 
     if (!productExists) {
       throw new NotFoundError("Product not found");
     }
 
-    const existingReview = await Review.findOne({ product, user: userId, is_deleted: false });
+    const existingReview = await Review.findOne({
+      product,
+      user: userId,
+      is_deleted: false,
+    });
 
     if (existingReview) {
       throw new ConflictError("You have already reviewed this product");
@@ -59,7 +93,16 @@ export const createReviewController = async (req, res, next) => {
 
 export const getAllReviewsController = async (req, res, next) => {
   try {
-    const { product, user, productName, userName, search, rating, page = 1, limit = 10 } = req.query;
+    const {
+      product,
+      user,
+      productName,
+      userName,
+      search,
+      rating,
+      page = 1,
+      limit = 10,
+    } = req.query;
 
     const filters = {};
 
@@ -84,12 +127,11 @@ export const getAllReviewsController = async (req, res, next) => {
 
     // Filter by product name
     if (productName) {
-
       const matchingProducts = await Product.find({
-        name: { $regex: productName, $options: "i" }
+        name: { $regex: productName, $options: "i" },
       }).select("_id");
 
-      const productIds = matchingProducts.map(p => p._id);
+      const productIds = matchingProducts.map((p) => p._id);
 
       if (filters.product) {
         filters.product = { $and: [filters.product, { $in: productIds }] };
@@ -101,9 +143,9 @@ export const getAllReviewsController = async (req, res, next) => {
     // Filter by user name
     if (userName) {
       const matchingUsers = await User.find({
-        name: { $regex: userName, $options: "i" }
+        name: { $regex: userName, $options: "i" },
       }).select("_id");
-      const userIds = matchingUsers.map(u => u._id);
+      const userIds = matchingUsers.map((u) => u._id);
 
       if (filters.user) {
         filters.user = { $and: [filters.user, { $in: userIds }] };
@@ -112,22 +154,22 @@ export const getAllReviewsController = async (req, res, next) => {
       }
     }
 
-    // General search 
+    // General search
     if (search) {
       const matchingProducts = await Product.find({
-        name: { $regex: search, $options: "i" }
+        name: { $regex: search, $options: "i" },
       }).select("_id");
-      const productIds = matchingProducts.map(p => p._id);
+      const productIds = matchingProducts.map((p) => p._id);
 
       const matchingUsers = await User.find({
-        name: { $regex: search, $options: "i" }
+        name: { $regex: search, $options: "i" },
       }).select("_id");
-      const userIds = matchingUsers.map(u => u._id);
+      const userIds = matchingUsers.map((u) => u._id);
 
       filters.$or = [
         { comment: { $regex: search, $options: "i" } },
         { product: { $in: productIds } },
-        { user: { $in: userIds } }
+        { user: { $in: userIds } },
       ];
     }
 
@@ -192,23 +234,33 @@ export const getOneReviewController = async (req, res, next) => {
 export const updateReviewController = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { rating, comment } = req.body;
+    const { rating, comment, isTopReview } = req.body;
     const userId = req.user._id;
+    const userRole = req.user.role;
 
     validateObjectId(id, "review id");
 
     const review = await Review.findById(id);
-    
+
     if (!review) {
       throw new NotFoundError("Review not found");
     }
 
-    if (review.user.toString() !== userId.toString()) {
+    const isOwner = review.user.toString() === userId.toString();
+    const isAdmin = ["admin", "super_admin"].includes(userRole);
+
+    if (!isOwner && !isAdmin) {
       throw new ForbiddenError("You are not authorized to update this review");
     }
 
-    if (rating !== undefined) review.rating = rating;
-    if (comment !== undefined) review.comment = comment;
+    if (isOwner) {
+      if (rating !== undefined) review.rating = rating;
+      if (comment !== undefined) review.comment = comment;
+    }
+
+    if (isAdmin && isTopReview !== undefined) {
+      review.isTopReview = isTopReview;
+    }
 
     await review.save();
     await updateProductRating(review.product);

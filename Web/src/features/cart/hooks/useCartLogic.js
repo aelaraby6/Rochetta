@@ -1,27 +1,25 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import {
   useGetCartQuery,
   useRemoveFromCartMutation,
   useClearCartMutation,
-  useCreateOrderMutation,
   useAddToCartMutation,
   useUpdateCartItemMutation,
 } from "../store/cartApi";
+import { useCreateOrderMutation } from "../../orders/store/ordersApi";
 
 export const useCartLogic = () => {
-  const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(
     undefined,
     {
       skip: !isAuthenticated,
-    }
+    },
   );
-  
+
   const [removeFromCart] = useRemoveFromCartMutation();
   const [clearCart, { isLoading: isClearingCart }] = useClearCartMutation();
   const [createOrder, { isLoading: isOrdering }] = useCreateOrderMutation();
@@ -38,14 +36,40 @@ export const useCartLogic = () => {
     return acc + price * qty;
   }, 0);
 
-  const handleCreateOrder = async () => {
+  const handleCreateOrder = async (checkoutFormData) => {
+    const formattedItems = cartItems.map((item) => ({
+      product: item.product?._id || item._id,
+      quantity: item.quantity ?? item.NOI ?? 1,
+    }));
+
+    const payload = {
+      items: formattedItems,
+      address: {
+        street: checkoutFormData.street,
+        city: checkoutFormData.city,
+        phone: checkoutFormData.phone,
+      },
+      paymentMethod: checkoutFormData.paymentMethod,
+    };
+
     try {
-      await createOrder({ address: "Default Address" }).unwrap();
-      await clearCart().unwrap();
-      toast.success("Order created successfully!");
-      navigate("/profile");
-    } catch (err) {
-      toast.error(err.data?.message || "Failed to create order");
+      const response = await createOrder(payload).unwrap();
+
+      if (response.checkoutUrl) {
+        toast.loading("Redirecting to secure payment...", { duration: 1500 });
+        
+        setTimeout(() => {
+          window.location.href = response.checkoutUrl;
+        }, 800);
+      } else {
+        toast.success("Order created successfully!");
+        clearCart();
+      }
+    } catch (error) {
+      console.error("Create Order Error:", error);
+      toast.error(
+        error?.data?.message || "Failed to create order. Please try again."
+      );
     }
   };
 
