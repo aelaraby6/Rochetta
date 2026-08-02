@@ -108,7 +108,7 @@ export default function CategoryView() {
   }
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 mt-24 mb-12 max-w-screen-2xl mx-auto">
+    <div className="w-full px-4 sm:px-6 lg:px-8 mt-10 mb-12 max-w-screen-2xl mx-auto">
       <div className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-800">
         <h2 className="font-bold text-3xl md:text-4xl mb-3 capitalize text-gray-900 dark:text-white border-l-4 border-green-500 pl-4">
           {currentCategory.name}

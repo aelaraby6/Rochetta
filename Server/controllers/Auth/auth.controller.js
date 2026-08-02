@@ -9,8 +9,8 @@ import { sendWelcomeEmail } from "../../services/email.service.js";
 import { DEFAULT_ROLE } from "../../utils/constants.js";
 
 const formatUserResponse = (user) => {
-  const { _id, name, email, role } = user.toObject();
-  return { _id, name, email, role };
+  const { _id, name, email, role, avatar } = user.toObject();
+  return { _id, name, email, role, avatar };
 };
 
 // Register
@@ -43,6 +43,7 @@ export const RegisterController = async (req, res, next) => {
         name,
         email: normalizedEmail,
         password: hashedPassword,
+        avatar: null,
       });
 
     const token = generateToken(savedUser._id, savedUser.role);
