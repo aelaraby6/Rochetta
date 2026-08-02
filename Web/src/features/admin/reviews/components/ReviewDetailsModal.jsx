@@ -1,22 +1,51 @@
-import { X, Star, Loader2 } from "lucide-react";
-import { useGetReviewByIdQuery } from "../api/reviewsApi";
+import { X, Star, Loader2, Award } from "lucide-react";
+import {
+  useGetReviewByIdQuery,
+  useUpdateReviewMutation,
+} from "../api/reviewsApi";
+import toast from "react-hot-toast";
 
 export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
   const { data, isLoading } = useGetReviewByIdQuery(reviewId, {
     skip: !reviewId,
   });
 
+  const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation();
+
   if (!isOpen) return null;
 
   const review = data?.data;
+
+  const handleToggleTop = async () => {
+    try {
+      await updateReview({
+        id: reviewId,
+        isTopReview: !review.isTopReview,
+      }).unwrap();
+      toast.success(
+        review.isTopReview
+          ? "Removed from top reviews"
+          : "Added to top reviews",
+      );
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to update status");
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col">
         <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            Review Details
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Review Details
+            </h2>
+            {review?.isTopReview && (
+              <span className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">
+                <Award className="w-3 h-3" /> Top
+              </span>
+            )}
+          </div>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -54,10 +83,7 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
 
               <div className="flex items-center gap-4">
                 <img
-                  src={
-                    review.user.avatar ||
-                    `https://ui-avatars.com/api/?name=${review.user.name}`
-                  }
+                  src={review.user.avatar || null}
                   alt={review.user.name}
                   className="w-12 h-12 object-cover rounded-full border-2 border-gray-200 dark:border-gray-700"
                 />
@@ -94,10 +120,28 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
           )}
         </div>
 
-        <div className="p-5 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+        <div className="p-5 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-[#252525]/50">
+          {review && (
+            <button
+              onClick={handleToggleTop}
+              disabled={isUpdating}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                review.isTopReview
+                  ? "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50"
+                  : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 dark:bg-[#1e1e1e] dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+              }`}
+            >
+              {isUpdating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Award className="w-4 h-4" />
+              )}
+              {review.isTopReview ? "Remove from Top" : "Make Top Review"}
+            </button>
+          )}
           <button
             onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition-colors"
+            className="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition-colors ml-auto"
           >
             Close
           </button>

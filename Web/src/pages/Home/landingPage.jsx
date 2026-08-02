@@ -6,6 +6,7 @@ import GlobalLoader from "../../components/ui/GlobalLoader";
 const PromoBanners = lazy(() => import("./components/PromoBanners"));
 const TopProducts = lazy(() => import("./components/TopProducts"));
 const SpecialOffers = lazy(() => import("./components/SpecialOffers"));
+const ShopCategories = lazy(() => import("./components/ShopCategories"));
 const Testimonials = lazy(() => import("./components/Testimonials"));
 const FAQAccordion = lazy(() => import("./components/FAQAccordion"));
 
@@ -15,10 +16,11 @@ export default function LandingPage() {
       <HeroSection />
       <FeatureCards />
 
-      <Suspense fallback={<GlobalLoader/>}>
+      <Suspense fallback={<GlobalLoader />}>
         <PromoBanners />
         <TopProducts />
         <SpecialOffers />
+        <ShopCategories />
         <Testimonials />
         <FAQAccordion />
       </Suspense>
