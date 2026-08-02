@@ -13,7 +13,19 @@ export const ordersApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Order", "Product"],
     }),
+    createOrder: builder.mutation({
+      query: (orderData) => ({
+        url: "/order/create-order",
+        method: "POST",
+        body: orderData,
+      }),
+      invalidatesTags: ["Cart", "Product"],
+    }),
   }),
 });
 
-export const { useGetOrdersQuery, useCancelOrderMutation } = ordersApi;
+export const {
+  useGetOrdersQuery,
+  useCancelOrderMutation,
+  useCreateOrderMutation,
+} = ordersApi;
