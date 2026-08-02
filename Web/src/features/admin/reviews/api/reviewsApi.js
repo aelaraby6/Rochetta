@@ -15,6 +15,10 @@ export const reviewsApi = apiSlice.injectEndpoints({
             ]
           : [{ type: "Review", id: "LIST" }],
     }),
+    getTopReviews: builder.query({
+      query: () => "/reviews/top",
+      providesTags: ["Review"],
+    }),
 
     getProductReviews: builder.query({
       query: (productId) => `/reviews?product=${productId}`,
@@ -42,15 +46,14 @@ export const reviewsApi = apiSlice.injectEndpoints({
     }),
 
     updateReview: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, ...patch }) => ({
         url: `/reviews/${id}`,
         method: "PATCH",
-        body: data,
+        body: patch,
       }),
-      invalidatesTags: (result, error, { productId }) => [
-        { type: "Review", id: productId },
-        "Product",
-        "Review",
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Review", id },
+        { type: "Review", id: "LIST" },
       ],
     }),
 
@@ -67,6 +70,7 @@ export const reviewsApi = apiSlice.injectEndpoints({
 export const {
   useGetReviewsQuery,
   useGetProductReviewsQuery,
+  useGetTopReviewsQuery,
   useGetReviewByIdQuery,
   useAddReviewMutation,
   useUpdateReviewMutation,
