@@ -121,7 +121,7 @@ export default function CategoryView() {
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="w-full lg:w-64 shrink-0">
           <div
-            className="bg-white dark:bg-[#2c2c2c] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 sticky top-24"
+            className="bg-white dark:bg-[#2c2c2c] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 sticky top-35"
             onClick={handleFilterInteraction}
           >
             <div className="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">

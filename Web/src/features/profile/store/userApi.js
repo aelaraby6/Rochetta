@@ -1,22 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// userApi.js
+import { apiSlice } from "../../../app/store/apiSlice"; 
 
-export const userApi = createApi({
-  reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/user",
-    credentials: "include",
-  }),
-  tagTypes: ["User"],
+export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMe: builder.query({
-      query: () => "/me",
+      query: () => "/user/me",
       providesTags: ["User"],
     }),
 
     updateAvatar: builder.mutation({
       query: (formData) => ({
-        url: "/update-avatar",
-        method: "PATCH", 
+        url: "/user/update-avatar",
+        method: "PATCH",
         body: formData,
       }),
       invalidatesTags: ["User"],
@@ -24,13 +19,14 @@ export const userApi = createApi({
 
     updateProfile: builder.mutation({
       query: (profileData) => ({
-        url: "/update-profile",
+        url: "/user/update-profile",
         method: "PATCH",
         body: profileData,
       }),
       invalidatesTags: ["User"],
     }),
   }),
+  overrideExisting: false,
 });
 
 export const {
