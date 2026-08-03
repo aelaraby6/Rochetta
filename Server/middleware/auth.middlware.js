@@ -4,7 +4,11 @@ import { UnAuthorizedError } from "../utils/errors.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    const token = req.cookies?.token;
+    let token = req.cookies?.token;
+
+    if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
 
     if (!token) {
       throw new UnAuthorizedError("Token not provided");
