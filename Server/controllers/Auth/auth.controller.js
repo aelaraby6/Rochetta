@@ -63,6 +63,7 @@ export const RegisterController = async (req, res, next) => {
         ? "Account reactivated successfully"
         : "Registered successfully",
       data: formatUserResponse(savedUser),
+      token,
     });
   } catch (error) {
     next(error);
@@ -99,6 +100,7 @@ export const LoginController = async (req, res, next) => {
     return res.status(200).json({
       message: "Logged in successfully",
       data: formatUserResponse(user),
+      token,
     });
   } catch (error) {
     next(error);
