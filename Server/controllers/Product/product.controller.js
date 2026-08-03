@@ -41,7 +41,7 @@ export const createProductController = async (req, res, next) => {
 
     // Check if stock is low on creation
     checkAndNotifyLowStock(newProduct).catch((err) =>
-      console.error("Low stock check error on product creation:", err.message)
+      console.error("Low stock check error on product creation:", err.message),
     );
 
     res.status(201).json({
@@ -66,10 +66,7 @@ export const GetAllProductsController = async (req, res, next) => {
     if (isNaN(limit) || limit < 1 || limit > 100)
       throw new BadRequestError("Limit must be between 1 and 100");
 
-    // to be replaced with this  "const filters = { is_deleted: false, is_active: true };" c
-    // after adding is_active field to all products in the database
-    // to make the reviews work too
-    const filters = { is_deleted: false };
+    const filters = { is_deleted: false, is_active: true };
 
     if (req.query.search) {
       filters.$or = [
@@ -295,7 +292,7 @@ export const updateProductController = async (req, res, next) => {
 
     // Check if stock is low on update
     checkAndNotifyLowStock(product).catch((err) =>
-      console.error("Low stock check error on product update:", err.message)
+      console.error("Low stock check error on product update:", err.message),
     );
 
     res.json({
