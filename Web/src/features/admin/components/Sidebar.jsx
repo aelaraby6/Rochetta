@@ -62,14 +62,14 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
       <aside
         className={[
           "fixed top-0 bottom-0 left-0 z-50 flex flex-col w-64",
-          "bg-[#165938] shadow-2xl",
+          "bg-(--color-primary-700) shadow-2xl",
           "transition-transform duration-300 ease-in-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         ].join(" ")}
       >
         <div className="flex items-center gap-3 px-6 h-24 shrink-0 border-b border-white/10">
           <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md">
-            <Activity className="w-6 h-6 text-[#165938]" />
+            <Activity className="w-6 h-6 text-(--color-primary-700)" />
           </div>
           <span className="text-2xl font-bold text-white tracking-wide">
             Rochetta

@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  LayoutDashboard,
-  Brain,
-  Boxes,
-  Loader2,
-} from "lucide-react";
+import { LayoutDashboard, Brain, Boxes, Loader2 } from "lucide-react";
 import {
   useGetDashboardStatsQuery,
   useGetRevenueForecastQuery,
@@ -20,11 +15,16 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview");
 
   // Fetch all dashboard data
-  const { data: statsData, isLoading: statsLoading } = useGetDashboardStatsQuery();
-  const { data: forecastData, isLoading: forecastLoading } = useGetRevenueForecastQuery();
-  const { data: segmentsData, isLoading: segmentsLoading } = useGetCustomerSegmentsQuery();
-  const { data: bundlesData, isLoading: bundlesLoading } = useGetProductBundlesQuery();
-  const { data: inventoryData, isLoading: inventoryLoading } = useGetInventoryAnalysisQuery();
+  const { data: statsData, isLoading: statsLoading } =
+    useGetDashboardStatsQuery();
+  const { data: forecastData, isLoading: forecastLoading } =
+    useGetRevenueForecastQuery();
+  const { data: segmentsData, isLoading: segmentsLoading } =
+    useGetCustomerSegmentsQuery();
+  const { data: bundlesData, isLoading: bundlesLoading } =
+    useGetProductBundlesQuery();
+  const { data: inventoryData, isLoading: inventoryLoading } =
+    useGetInventoryAnalysisQuery();
 
   const isAnyLoading =
     statsLoading ||
@@ -36,8 +36,8 @@ export default function DashboardPage() {
   if (isAnyLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="w-12 h-12 text-[#165938] animate-spin mb-4" />
-        <p className="text-gray-500 dark:text-gray-400 font-medium">
+        <Loader2 className="w-12 h-12 text-(--color-primary-700) animate-spin mb-4" />
+        <p className="text-(--color-text-secondary) dark:text-gray-400 font-medium">
           Running analytics algorithms and loading dashboard...
         </p>
       </div>
@@ -58,22 +58,22 @@ export default function DashboardPage() {
       {/* Top Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold text-(--color-text-primary) dark:text-white tracking-tight">
             Dashboard Overview
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-(--color-text-secondary) dark:text-gray-400 mt-1">
             Real-time business performance analytics & AI insights
           </p>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex bg-gray-100 dark:bg-[#1e1e1e] p-1 rounded-xl border border-gray-200 dark:border-gray-800">
+        <div className="flex bg-(--color-surface-muted) dark:bg-(--color-panel-dark) p-1 rounded-xl border border-(--color-border-base) dark:border-gray-800">
           <button
             onClick={() => setActiveTab("overview")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               activeTab === "overview"
-                ? "bg-white dark:bg-[#2c2c2c] text-[#165938] dark:text-green-400 shadow-sm"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                ? "bg-(--color-surface-card) dark:bg-[#2c2c2c] text-(--color-primary-700) dark:text-green-400 shadow-sm"
+                : "text-(--color-text-secondary) dark:text-gray-400 hover:text-(--color-text-primary) dark:hover:text-white"
             }`}
           >
             <LayoutDashboard className="w-4 h-4" />
@@ -83,8 +83,8 @@ export default function DashboardPage() {
             onClick={() => setActiveTab("ai")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               activeTab === "ai"
-                ? "bg-white dark:bg-[#2c2c2c] text-[#165938] dark:text-green-400 shadow-sm"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                ? "bg-(--color-surface-card) dark:bg-[#2c2c2c] text-(--color-primary-700) dark:text-green-400 shadow-sm"
+                : "text-(--color-text-secondary) dark:text-gray-400 hover:text-(--color-text-primary) dark:hover:text-white"
             }`}
           >
             <Brain className="w-4 h-4" />
@@ -94,8 +94,8 @@ export default function DashboardPage() {
             onClick={() => setActiveTab("inventory")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
               activeTab === "inventory"
-                ? "bg-white dark:bg-[#2c2c2c] text-[#165938] dark:text-green-400 shadow-sm"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                ? "bg-(--color-surface-card) dark:bg-[#2c2c2c] text-(--color-primary-700) dark:text-green-400 shadow-sm"
+                : "text-(--color-text-secondary) dark:text-gray-400 hover:text-(--color-text-primary) dark:hover:text-white"
             }`}
           >
             <Boxes className="w-4 h-4" />
@@ -115,10 +115,16 @@ export default function DashboardPage() {
       )}
 
       {activeTab === "ai" && (
-        <AITab clusters={clusters} userAssignments={userAssignments} bundles={bundles} />
+        <AITab
+          clusters={clusters}
+          userAssignments={userAssignments}
+          bundles={bundles}
+        />
       )}
 
-      {activeTab === "inventory" && <InventoryTab products={inventoryProducts} />}
+      {activeTab === "inventory" && (
+        <InventoryTab products={inventoryProducts} />
+      )}
     </div>
   );
 }

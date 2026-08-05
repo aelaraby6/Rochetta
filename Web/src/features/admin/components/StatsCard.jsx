@@ -1,16 +1,5 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
 
-/**
- * StatsCard — A reusable metric card for the dashboard overview.
- *
- * @param {string}             title     - Card label (e.g. "Total Products")
- * @param {string|number}      value     - Main metric value
- * @param {React.ElementType}  icon      - Lucide icon component
- * @param {number}             trend     - Percentage change (positive = up, negative = down). Optional.
- * @param {string}             trendLabel- Label for the trend (e.g. "from last month"). Optional.
- * @param {string}             color     - Accent color key: "green" | "blue" | "amber" | "rose" | "violet"
- */
-
 const colorMap = {
   green: {
     bg: "bg-green-100 dark:bg-green-900/30",
@@ -39,8 +28,8 @@ const colorMap = {
   },
   forest: {
     bg: "bg-green-100/80 dark:bg-green-950/20",
-    icon: "text-[#165938] dark:text-green-400",
-    accent: "from-[#165938] to-emerald-700",
+    icon: "text-(--color-primary-700) dark:text-green-400",
+    accent: "from-(--color-primary-700) to-emerald-700",
   },
   emerald: {
     bg: "bg-emerald-100 dark:bg-emerald-950/30",
@@ -63,9 +52,9 @@ const colorMap = {
     accent: "from-lime-500 to-emerald-500",
   },
   brand: {
-    bg: "bg-[#339174]/10 dark:bg-[#339174]/20",
-    icon: "text-[#339174] dark:text-[#339174]/90",
-    accent: "from-[#339174] to-[#2b7c62]",
+    bg: "bg-(--color-primary-600)/10 dark:bg-(--color-primary-600)/20",
+    icon: "text-(--color-primary-600) dark:text-(--color-primary-600)/90",
+    accent: "from-(--color-primary-600) to-(--color-primary-800)",
   },
 };
 
@@ -83,18 +72,17 @@ export default function StatsCard({
   const hasTrend = trend !== undefined && trend !== null;
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1e1e1e] p-5 shadow-sm hover:shadow-md transition-shadow duration-300 group">
-      {/* Subtle gradient accent bar at top */}
+    <div className="relative overflow-hidden rounded-xl border border-(--color-border-base) dark:border-(--color-border-subtle) bg-(--color-surface-card) dark:bg-(--color-panel-dark) p-5 shadow-sm hover:shadow-md transition-shadow duration-300 group">
       <div
         className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${palette.accent} opacity-80`}
       />
 
       <div className="flex items-start justify-between mb-3 pt-1">
         <div>
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+          <p className="text-sm font-medium text-(--color-text-secondary) dark:text-gray-400 mb-1">
             {title}
           </p>
-          <p className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <p className="text-3xl font-extrabold text-(--color-text-primary) dark:text-white tracking-tight">
             {value}
           </p>
         </div>
@@ -114,8 +102,7 @@ export default function StatsCard({
             <TrendingDown className="w-4 h-4 text-rose-500" />
           )}
           <span
-            className={`text-sm font-semibold ${isPositive ? "text-green-600 dark:text-green-400" : "text-rose-600 dark:text-rose-400"
-              }`}
+            className={`text-sm font-semibold ${isPositive ? "text-green-600 dark:text-green-400" : "text-rose-600 dark:text-rose-400"}`}
           >
             {isPositive ? "+" : ""}
             {trend}%

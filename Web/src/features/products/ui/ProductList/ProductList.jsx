@@ -10,9 +10,11 @@ export default function ProductList({ products = [] }) {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-          <span className="text-4xl mb-3" aria-hidden="true">📦</span>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="flex flex-col items-center justify-center py-16 text-(--color-text-secondary) dark:text-gray-400 bg-(--color-surface-card) dark:bg-gray-800 rounded-xl border border-(--color-border-base) dark:border-gray-700">
+          <span className="text-4xl mb-3" aria-hidden="true">
+            📦
+          </span>
+          <p className="text-lg font-bold text-(--color-text-primary) dark:text-white">
             No products found
           </p>
           <p className="text-sm mt-1">

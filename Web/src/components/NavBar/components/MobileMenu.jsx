@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import { toggleTheme } from "../../../features/uiSlice/uiSlice";
 import CartBadge from "./CartBadge";
 import SearchBar from "./SearchBar";
+import Button from "../../../components/ui/Button";
 
 export default function MobileMenu() {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ export default function MobileMenu() {
       </div>
 
       {isOpen && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-green-800 dark:bg-green-950 px-4 pt-4 pb-6 space-y-4 border-t border-green-600 dark:border-green-800 shadow-xl z-40">
+        <div className="md:hidden absolute top-16 left-0 w-full bg-(--color-primary-800) dark:bg-(--color-primary-950) px-4 pt-4 pb-6 space-y-4 border-t border-(--color-primary-600) dark:border-(--color-primary-900) shadow-xl z-40">
           <SearchBar id="mobile-search" />
 
           <div className="flex flex-col gap-4 pt-2">
@@ -48,7 +49,7 @@ export default function MobileMenu() {
                 dispatch(toggleTheme());
                 setIsOpen(false);
               }}
-              className="text-left text-green-200 font-medium text-lg"
+              className="text-left text-(--color-primary-200) font-medium text-lg"
             >
               Toggle {darkMode ? "Light" : "Dark"} Mode
             </button>
@@ -70,13 +71,17 @@ export default function MobileMenu() {
                 >
                   Login
                 </Link>
-                <Link
+                <Button
+                  as={Link}
                   to="/signup"
-                  className="text-green-800 bg-white inline-block text-center py-2 rounded-lg font-bold text-lg"
+                  variant="solid"
+                  size="md"
+                  fullWidth
+                  className="bg-white text-(--color-primary-800) hover:bg-gray-100 text-center font-bold text-lg"
                   onClick={() => setIsOpen(false)}
                 >
                   Signup
-                </Link>
+                </Button>
               </>
             )}
           </div>

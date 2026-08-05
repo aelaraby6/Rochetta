@@ -16,6 +16,8 @@ import {
 } from "../api/reviewsApi";
 import toast from "react-hot-toast";
 import ReviewDetailsModal from "../components/ReviewDetailsModal";
+import Input from "../../../../components/ui/Input";
+import Button from "../../../../components/ui/Button";
 
 export default function ReviewsPage() {
   const [page, setPage] = useState(1);
@@ -68,7 +70,7 @@ export default function ReviewsPage() {
       key: "product",
       label: "Product",
       render: (_, row) => (
-        <span className="font-semibold text-gray-900 dark:text-white">
+        <span className="font-semibold text-(--color-text-primary) dark:text-white">
           {row.product?.name || "N/A"}
         </span>
       ),
@@ -77,7 +79,7 @@ export default function ReviewsPage() {
       key: "user",
       label: "Reviewer",
       render: (_, row) => (
-        <span className="text-sm text-gray-700 dark:text-gray-300">
+        <span className="text-sm text-(--color-text-body) dark:text-gray-300">
           {row.user?.name || "Unknown"}
         </span>
       ),
@@ -88,7 +90,7 @@ export default function ReviewsPage() {
       render: (val) => (
         <div className="flex items-center gap-1 text-amber-500">
           <Star className="w-4 h-4 fill-current" />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <span className="text-sm font-medium text-(--color-text-body) dark:text-gray-300">
             {val}
           </span>
         </div>
@@ -98,7 +100,7 @@ export default function ReviewsPage() {
       key: "comment",
       label: "Comment",
       render: (val) => (
-        <span className="text-sm text-gray-500 truncate max-w-[200px] inline-block">
+        <span className="text-sm text-(--color-text-secondary) truncate max-w-[200px] inline-block">
           {val}
         </span>
       ),
@@ -112,7 +114,7 @@ export default function ReviewsPage() {
           className={`px-2.5 py-1 text-xs font-medium rounded-full ${
             val
               ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-              : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+              : "bg-(--color-surface-muted) text-(--color-text-secondary) dark:bg-gray-800 dark:text-gray-400"
           }`}
         >
           {val ? "Top" : "Normal"}
@@ -125,23 +127,29 @@ export default function ReviewsPage() {
       align: "right",
       render: (_, row) => (
         <div className="flex items-center justify-end gap-2">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={(e) => handleToggleTop(row._id, row.isTopReview, e)}
             title={row.isTopReview ? "Remove from Top" : "Make Top Review"}
             className={`p-2 rounded-lg transition-colors ${
               row.isTopReview
                 ? "text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20"
-                : "text-gray-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+                : "text-(--color-text-muted) hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20"
             }`}
+            aria-label="Toggle Top Review"
           >
             <Award className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={(e) => handleDelete(row._id, e)}
-            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="p-2 text-(--color-text-muted) hover:text-(--color-danger-600) hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            aria-label="Delete Review"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       ),
     },
@@ -151,19 +159,18 @@ export default function ReviewsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-(--color-text-primary) dark:text-white">
             Reviews Management
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-(--color-text-secondary) dark:text-gray-400 mt-1">
             Monitor and manage product reviews from your customers.
           </p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row items-center gap-4">
+      <div className="bg-(--color-surface-card) dark:bg-(--color-panel-dark) p-4 rounded-xl shadow-sm border border-(--color-border-base) dark:border-gray-800 flex flex-col sm:flex-row items-center gap-4">
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
+          <Input
             type="text"
             placeholder="Search by product or user..."
             value={searchQuery}
@@ -171,20 +178,21 @@ export default function ReviewsPage() {
               setSearchQuery(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
+            icon={<Search className="w-4 h-4 text-(--color-text-muted)" />}
+            className="border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525]"
           />
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-40">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--color-text-muted) z-10 pointer-events-none" />
             <select
               value={ratingFilter}
               onChange={(e) => {
                 setRatingFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all cursor-pointer appearance-none"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all cursor-pointer appearance-none text-sm"
             >
               <option value="">All Ratings</option>
               <option value="5">5 Stars</option>

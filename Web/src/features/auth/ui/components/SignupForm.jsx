@@ -4,9 +4,11 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { User, Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useSignupMutation } from "../../store/authApi";
 import { setCredentials } from "../../store/authSlice";
+import Input from "../../../../components/ui/Input";
+import Button from "../../../../components/ui/Button";
 
 const signupSchema = z
   .object({
@@ -60,134 +62,101 @@ export default function SignupForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-1 text-sm">
-          Name
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <User className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            {...register("name")}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
-            placeholder="Enter your full name"
-          />
-        </div>
-        {errors.name && (
-          <p className="text-red-500 text-xs mt-1 font-semibold">
-            {errors.name.message}
-          </p>
-        )}
+        <Input
+          label="Name"
+          type="text"
+          {...register("name")}
+          error={errors.name?.message}
+          icon={<User className="h-5 w-5 text-(--color-text-muted)" />}
+          placeholder="Enter your full name"
+          className="bg-(--color-surface-input) dark:bg-[#2c2c2c]"
+        />
       </div>
 
       <div>
-        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-1 text-sm">
-          Email Address
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="email"
-            {...register("email")}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
-            placeholder="Enter your email"
-          />
-        </div>
-        {errors.email && (
-          <p className="text-red-500 text-xs mt-1 font-semibold">
-            {errors.email.message}
-          </p>
-        )}
+        <Input
+          label="Email Address"
+          type="email"
+          {...register("email")}
+          error={errors.email?.message}
+          icon={<Mail className="h-5 w-5 text-(--color-text-muted)" />}
+          placeholder="Enter your email"
+          className="bg-(--color-surface-input) dark:bg-[#2c2c2c]"
+        />
       </div>
 
       <div>
-        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-1 text-sm">
-          Password
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type={showPassword ? "text" : "password"}
-            {...register("password")}
-            className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
-            placeholder="Create a password"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-          >
-            {showPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-        {errors.password && (
-          <p className="text-red-500 text-xs mt-1 font-semibold">
-            {errors.password.message}
-          </p>
-        )}
+        <Input
+          label="Password"
+          type={showPassword ? "text" : "password"}
+          {...register("password")}
+          error={errors.password?.message}
+          icon={<Lock className="h-5 w-5 text-(--color-text-muted)" />}
+          placeholder="Create a password"
+          className="bg-(--color-surface-input) dark:bg-[#2c2c2c]"
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-(--color-text-muted) hover:text-(--color-primary-600) dark:hover:text-green-400 transition-colors focus:outline-none"
+              aria-label="Toggle password visibility"
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+          }
+        />
       </div>
 
       <div>
-        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-1 text-sm">
-          Confirm Password
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            {...register("confirmPassword")}
-            className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-[#2c2c2c] text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
-            placeholder="Confirm your password"
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-          >
-            {showConfirmPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-xs mt-1 font-semibold">
-            {errors.confirmPassword.message}
-          </p>
-        )}
+        <Input
+          label="Confirm Password"
+          type={showConfirmPassword ? "text" : "password"}
+          {...register("confirmPassword")}
+          error={errors.confirmPassword?.message}
+          icon={<Lock className="h-5 w-5 text-(--color-text-muted)" />}
+          placeholder="Confirm your password"
+          className="bg-(--color-surface-input) dark:bg-[#2c2c2c]"
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="text-(--color-text-muted) hover:text-(--color-primary-600) dark:hover:text-green-400 transition-colors focus:outline-none"
+              aria-label="Toggle confirm password visibility"
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+          }
+        />
       </div>
 
       {globalError && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg text-center font-semibold text-sm">
+        <div className="p-3 bg-(--color-danger-50) dark:bg-(--color-danger-900) border border-(--color-danger-200) dark:border-red-800 text-(--color-danger-600) dark:text-(--color-danger-400) rounded-lg text-center font-semibold text-sm">
           {globalError}
         </div>
       )}
 
-      <button
+      <Button
         type="submit"
-        disabled={isLoading}
-        className="w-full mt-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-md"
+        variant="solid"
+        size="lg"
+        fullWidth
+        isLoading={isLoading}
+        className="w-full mt-2 bg-(--color-primary-600) hover:bg-(--color-primary-700) shadow-md"
       >
-        {isLoading ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
+        {!isLoading && (
           <>
             Create Account <ArrowRight className="w-5 h-5" />
           </>
         )}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -1,19 +1,13 @@
 import { Link } from "react-router-dom";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { Facebook, Twitter, Instagram, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#084235] dark:bg-[#052820] text-white pt-10 pb-5 mt-auto w-full border-t border-green-900/30">
+    <footer className="bg-(--color-primary-900) dark:bg-(--color-primary-950) text-white pt-10 pb-5 mt-auto w-full border-t border-green-900/30">
       <div className="w-full px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
-            <h4 className="font-['Pacifico'] text-3xl text-[#f4a460] mb-4 tracking-wide">
+            <h4 className="font-['Pacifico'] text-3xl text-(--color-warning-400) mb-4 tracking-wide">
               Rochetta
             </h4>
             <p className="text-gray-300 text-sm leading-relaxed max-w-sm">
@@ -30,7 +24,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/"
-                  className="text-gray-300 hover:text-[#f4a460] hover:underline font-medium"
+                  className="text-gray-300 hover:text-(--color-warning-400) hover:underline font-medium"
                 >
                   Home
                 </Link>
@@ -38,7 +32,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/cart"
-                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                  className="text-gray-300 hover:text-(--color-warning-400) hover:underline transition-colors font-medium"
                 >
                   Cart
                 </Link>
@@ -46,7 +40,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/profile"
-                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium"
+                  className="text-gray-300 hover:text-(--color-warning-400) hover:underline transition-colors font-medium"
                 >
                   Profile
                 </Link>
@@ -54,9 +48,9 @@ export default function Footer() {
               <li>
                 <Link
                   to="/policy"
-                  className="text-gray-300 hover:text-[#f4a460] hover:underline transition-colors font-medium flex items-center justify-center md:justify-start gap-1.5"
+                  className="text-gray-300 hover:text-(--color-warning-400) hover:underline transition-colors font-medium flex items-center justify-center md:justify-start gap-1.5"
                 >
-                   Terms & Policy
+                  Terms & Policy
                 </Link>
               </li>
             </ul>
@@ -68,11 +62,17 @@ export default function Footer() {
             </h2>
             <div className="space-y-3 text-gray-300 text-sm w-full">
               <div className="flex items-center gap-3 justify-center md:justify-start">
-                <Mail className="w-5 h-5 text-[#f4a460]" aria-hidden="true" />
+                <Mail
+                  className="w-5 h-5 text-(--color-warning-400)"
+                  aria-hidden="true"
+                />
                 <span>support@rochetta.com</span>
               </div>
               <div className="flex items-center gap-3 justify-center md:justify-start">
-                <Phone className="w-5 h-5 text-[#f4a460]" aria-hidden="true" />
+                <Phone
+                  className="w-5 h-5 text-(--color-warning-400)"
+                  aria-hidden="true"
+                />
                 <span dir="ltr">+20 100 123 4567</span>
               </div>
             </div>
@@ -81,21 +81,21 @@ export default function Footer() {
               <a
                 href="#"
                 aria-label="Visit our Facebook page"
-                className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
+                className="text-gray-300 hover:text-(--color-warning-400) transition-all transform hover:scale-110"
               >
                 <Facebook className="w-6 h-6" aria-hidden="true" />
               </a>
               <a
                 href="#"
                 aria-label="Visit our Twitter page"
-                className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
+                className="text-gray-300 hover:text-(--color-warning-400) transition-all transform hover:scale-110"
               >
                 <Twitter className="w-6 h-6" aria-hidden="true" />
               </a>
               <a
                 href="#"
                 aria-label="Visit our Instagram page"
-                className="text-gray-300 hover:text-[#f4a460] transition-all transform hover:scale-110"
+                className="text-gray-300 hover:text-(--color-warning-400) transition-all transform hover:scale-110"
               >
                 <Instagram className="w-6 h-6" aria-hidden="true" />
               </a>

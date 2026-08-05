@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useAddToCartMutation } from "../../../cart/store/cartApi";
 import stripImage from "../../../../assets/strip.webp";
 import { optimizeCloudinaryUrl } from "../../../../utils/productUtils";
+import Button from "../../../../components/ui/Button";
 
 export default function ProductCard({ product, priority, className = "" }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -61,15 +62,15 @@ export default function ProductCard({ product, priority, className = "" }) {
 
   return (
     <div
-      className={`flex flex-col justify-between h-full p-3 rounded-xl duration-300 bg-white dark:bg-gray-800 shadow-sm hover:shadow-lg ${
+      className={`flex flex-col justify-between h-full p-3 rounded-xl duration-300 bg-(--color-surface-card) dark:bg-gray-800 shadow-sm hover:shadow-lg ${
         product.requires_prescription || product.IsRoshetta
-          ? "border border-red-500 shadow-[0_0_4px_rgba(220,53,69,0.5)]"
-          : "border border-gray-100 dark:border-gray-700"
+          ? "border border-(--color-danger-500) shadow-[0_0_4px_rgba(220,53,69,0.5)]"
+          : "border border-(--color-border-base) dark:border-gray-700"
       } ${className}`}
     >
       <Link
         to={`/product/${product._id}`}
-        className="h-32 sm:h-36 mb-3 p-2 rounded-lg bg-white border border-gray-50 dark:border-gray-700 flex justify-center items-center overflow-hidden"
+        className="h-32 sm:h-36 mb-3 p-2 rounded-lg bg-(--color-surface-card) border border-(--color-border-base) dark:border-gray-700 flex justify-center items-center overflow-hidden"
       >
         <img
           src={optimizedImage}
@@ -82,11 +83,11 @@ export default function ProductCard({ product, priority, className = "" }) {
       </Link>
 
       <div className="flex flex-col grow justify-center">
-        <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1 font-medium">
+        <p className="text-[11px] text-(--color-text-secondary) dark:text-gray-400 mb-1 font-medium">
           {displayStock} in stock
         </p>
 
-        <h4 className="font-bold text-sm text-gray-900 dark:text-white mb-1 line-clamp-2 hover:text-green-600 transition-colors">
+        <h4 className="font-bold text-sm text-(--color-text-primary) dark:text-white mb-1 line-clamp-2 hover:text-(--color-primary-600) transition-colors">
           <Link to={`/product/${product._id}`}>{product.name}</Link>
         </h4>
 
@@ -103,31 +104,33 @@ export default function ProductCard({ product, priority, className = "" }) {
               />
             ))}
           </div>
-          <span className="text-[10px] text-gray-500 dark:text-gray-400">
+          <span className="text-[10px] text-(--color-text-secondary) dark:text-gray-400">
             ({reviewsCount})
           </span>
         </div>
 
-        <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-2 line-clamp-1">
+        <p className="text-[11px] text-(--color-text-secondary) dark:text-gray-400 mb-2 line-clamp-1">
           {description}
         </p>
 
         {(product.requires_prescription || product.IsRoshetta) && (
-          <p className="text-red-600 dark:text-red-400 text-[11px] font-bold mb-2">
+          <p className="text-(--color-danger-600) dark:text-red-400 text-[11px] font-bold mb-2">
             Needs Prescription
           </p>
         )}
 
-        <div className="flex justify-between items-center mt-auto pt-2 border-t border-gray-50 dark:border-gray-700 gap-1">
-          <p className="text-md font-black text-gray-900 dark:text-white">
+        <div className="flex justify-between items-center mt-auto pt-2 border-t border-(--color-border-base) dark:border-gray-700 gap-1">
+          <p className="text-md font-black text-(--color-text-primary) dark:text-white">
             ${product.price}
           </p>
 
           <div className="flex gap-1">
             {hasStrips && (
-              <button
+              <Button
+                variant="solid"
+                size="icon"
                 aria-label={`Add one strip of ${product.name} to cart`}
-                className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-green-700 hover:bg-green-800 disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
+                className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-(--color-primary-700) hover:bg-(--color-primary-800) disabled:bg-gray-400 flex justify-center items-center transition-transform active:scale-95"
                 disabled={
                   outOfStock ||
                   isAdding ||
@@ -149,11 +152,13 @@ export default function ProductCard({ product, priority, className = "" }) {
                     className="w-5 h-5 md:w-7 md:h-7 object-contain"
                   />
                 )}
-              </button>
+              </Button>
             )}
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               aria-label={`Add one box of ${product.name} to cart`}
-              className="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center transition-colors"
+              className="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-(--color-primary-700) text-(--color-primary-700) hover:bg-(--color-primary-700) hover:text-white disabled:border-gray-400 disabled:text-gray-400 active:scale-95 flex justify-center items-center transition-colors"
               disabled={
                 outOfStock ||
                 isAdding ||
@@ -171,7 +176,7 @@ export default function ProductCard({ product, priority, className = "" }) {
                   aria-hidden="true"
                 />
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

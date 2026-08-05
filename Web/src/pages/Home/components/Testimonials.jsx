@@ -9,7 +9,7 @@ export default function Testimonials() {
   if (isLoading) {
     return (
       <div className="w-full bg-gray-100 dark:bg-[#1a1a1a] py-32 flex justify-center items-center">
-        <Loader2 className="w-10 h-10 animate-spin text-green-600" />
+        <Loader2 className="w-10 h-10 animate-spin text-(--color-primary-600)" />
       </div>
     );
   }
@@ -21,7 +21,7 @@ export default function Testimonials() {
   return (
     <div className="w-full bg-gray-100 dark:bg-[#1a1a1a] py-16 transition-colors duration-300">
       <div className="w-full max-w-7xl mx-auto">
-        <h3 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-4 px-4">
+        <h3 className="text-3xl font-bold text-center text-(--color-text-primary) dark:text-white mb-4 px-4">
           What Our Clients Say
         </h3>
 
@@ -29,18 +29,18 @@ export default function Testimonials() {
           {reviews.map((review) => (
             <div
               key={review._id}
-              className="flex-none w-[85%] sm:w-[350px] snap-center bg-white dark:bg-[#252525] p-8 rounded-2xl text-center shadow-sm border border-gray-100 dark:border-gray-800 relative pt-14 mt-12 flex flex-col h-auto"
+              className="flex-none w-[85%] sm:w-[350px] snap-center bg-(--color-surface-card) dark:bg-[#252525] p-8 rounded-2xl text-center shadow-sm border border-(--color-border-base) dark:border-gray-800 relative pt-14 mt-12 flex flex-col h-auto"
             >
               <img
                 src={review.user?.avatar || "/default-avatar.png"}
                 alt={`Client ${review.user?.name}`}
                 loading="lazy"
-                className="w-24 h-24 rounded-full object-cover absolute -top-12 left-1/2 transform -translate-x-1/2 border-4 border-white dark:border-[#252525] shadow-md bg-white dark:bg-[#252525]"
+                className="w-24 h-24 rounded-full object-cover absolute -top-12 left-1/2 transform -translate-x-1/2 border-4 border-white dark:border-[#252525] shadow-md bg-(--color-surface-card) dark:bg-[#252525]"
               />
-              <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-3">
+              <h4 className="font-bold text-lg text-(--color-text-primary) dark:text-white mb-3">
                 {review.user?.name || "Anonymous User"}
               </h4>
-              <p className="text-gray-600 dark:text-gray-400 italic mb-4 leading-relaxed flex-grow line-clamp-4">
+              <p className="text-(--color-text-secondary) dark:text-gray-400 italic mb-4 leading-relaxed flex-grow line-clamp-4">
                 "{review.comment}"
               </p>
               <div

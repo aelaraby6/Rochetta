@@ -2,7 +2,6 @@
 import { Package } from "lucide-react";
 import Pagination from "../../../components/ui/Pagination";
 
-
 export default function DynamicTable({
   columns = [],
   data = [],
@@ -23,14 +22,14 @@ export default function DynamicTable({
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1e1e1e] shadow-sm">
+      <div className="overflow-x-auto rounded-xl border border-(--color-border-base) dark:border-(--color-border-subtle) bg-(--color-surface-card) dark:bg-(--color-panel-dark) shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50/80 dark:bg-[#252525]">
+            <tr className="border-b border-(--color-border-base) dark:border-(--color-border-subtle) bg-(--color-surface-page)/80 dark:bg-[#252525]">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 ${alignClass(col.align)}`}
+                  className={`px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-(--color-text-secondary) dark:text-gray-400 ${alignClass(col.align)}`}
                 >
                   {col.label}
                 </th>
@@ -45,10 +44,10 @@ export default function DynamicTable({
               <tr>
                 <td colSpan={columns.length} className="py-16">
                   <div className="flex flex-col items-center justify-center text-center">
-                    <div className="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-                      <EmptyIcon className="w-7 h-7 text-gray-400 dark:text-gray-600" />
+                    <div className="w-14 h-14 rounded-2xl bg-(--color-surface-muted) dark:bg-gray-800 flex items-center justify-center mb-4">
+                      <EmptyIcon className="w-7 h-7 text-(--color-text-muted) dark:text-gray-600" />
                     </div>
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">
+                    <p className="text-(--color-text-secondary) dark:text-gray-400 font-medium">
                       {emptyMessage}
                     </p>
                   </div>
@@ -64,7 +63,7 @@ export default function DynamicTable({
                   {columns.map((col) => (
                     <td
                       key={col.key}
-                      className={`px-5 py-4 text-gray-700 dark:text-gray-300 font-medium ${alignClass(col.align)}`}
+                      className={`px-5 py-4 text-(--color-text-body) dark:text-gray-300 font-medium ${alignClass(col.align)}`}
                     >
                       {col.render
                         ? col.render(row[col.key], row)

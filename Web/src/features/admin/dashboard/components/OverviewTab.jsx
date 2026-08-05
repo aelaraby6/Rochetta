@@ -1,4 +1,10 @@
-import { Coins, ShoppingBag, Package, Users, AlertTriangle } from "lucide-react";
+import {
+  Coins,
+  ShoppingBag,
+  Package,
+  Users,
+  AlertTriangle,
+} from "lucide-react";
 import StatsCard from "../../components/StatsCard";
 import RevenueChart from "./RevenueChart";
 
@@ -44,7 +50,8 @@ export default function OverviewTab({ stats, historical, forecast, trend }) {
                   Low Stock Alert:
                 </span>{" "}
                 <span className="text-sm text-amber-700 dark:text-amber-400">
-                  {stats.lowStockCount} items have less than 10 units remaining. Check the Inventory tab.
+                  {stats.lowStockCount} items have less than 10 units remaining.
+                  Check the Inventory tab.
                 </span>
               </div>
             </div>

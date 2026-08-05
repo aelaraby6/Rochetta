@@ -9,7 +9,7 @@ export default function Header() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-green-700 dark:bg-green-900 text-white shadow-md transition-colors duration-300">
+    <nav className="fixed top-0 w-full z-50 bg-(--color-primary-700) dark:bg-(--color-primary-900) text-white shadow-md transition-colors duration-300">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link

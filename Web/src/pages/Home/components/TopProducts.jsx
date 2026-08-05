@@ -1,6 +1,7 @@
 import { RefreshCcw } from "lucide-react";
 import { useGetProductsQuery } from "../../../features/products/api/productsApi";
 import ProductCard from "../../../features/products/ui/ProductCard/ProductCard";
+import GlobalLoader from "../../../components/ui/GlobalLoader";
 
 export default function TopProducts() {
   const { data: productsData, isLoading } = useGetProductsQuery({
@@ -12,14 +13,12 @@ export default function TopProducts() {
 
   return (
     <div className="w-full px-4 sm:px-8 lg:px-12 py-16">
-      <h3 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-10">
+      <h3 className="text-3xl font-bold text-center text-(--color-text-primary) dark:text-white mb-10">
         Top Selling Products
       </h3>
 
       {isLoading ? (
-        <div className="text-center py-10 text-green-600 font-bold flex justify-center items-center gap-2">
-          <RefreshCcw className="w-6 h-6 animate-spin" /> Loading products...
-        </div>
+        <GlobalLoader/>
       ) : (
         // snap for swipe
         <div
@@ -39,7 +38,7 @@ export default function TopProducts() {
               </div>
             ))
           ) : (
-            <div className="w-full text-center text-gray-500 py-10 text-xl font-semibold">
+            <div className="w-full text-center text-(--color-text-secondary) py-10 text-xl font-semibold">
               No products found.
             </div>
           )}

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { Loader2, Upload, X } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import { useGetCategoriesQuery } from "../../../admin/categories/api/categoriesApi";
+import Input from "../../../../components/ui/Input";
+import Button from "../../../../components/ui/Button";
 
 export default function ProductForm({
   initialData = null,
@@ -82,8 +84,8 @@ export default function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-     <div className="flex flex-col items-center justify-center space-y-4">
-        <div className="relative w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-[#252525]">
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <div className="relative w-32 h-32 rounded-xl border-2 border-dashed border-(--color-border-input) dark:border-gray-700 overflow-hidden flex items-center justify-center bg-(--color-surface-input) dark:bg-[#252525]">
           {imagePreview ? (
             <>
               <img
@@ -95,14 +97,14 @@ export default function ProductForm({
                 <button
                   type="button"
                   onClick={clearImage}
-                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                  className="absolute top-1 right-1 p-1 bg-(--color-danger-600) text-white rounded-full hover:bg-(--color-danger-700)"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
             </>
           ) : (
-            <div className="text-center text-gray-400">
+            <div className="text-center text-(--color-text-muted)">
               <Upload className="w-8 h-8 mx-auto mb-2" />
               <span className="text-xs">Upload Image</span>
             </div>
@@ -118,23 +120,18 @@ export default function ProductForm({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Name */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Product Name
-          </label>
-          <input
-            required
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none"
-          />
-        </div>
+        <Input
+          label="Product Name"
+          required
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
 
         {/* Category */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="flex flex-col gap-1">
+          <label className="block text-(--color-text-label) dark:text-gray-300 font-semibold text-sm">
             Category
           </label>
           <select
@@ -142,7 +139,7 @@ export default function ProductForm({
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none"
+            className="w-full px-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all text-sm"
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
@@ -154,36 +151,26 @@ export default function ProductForm({
         </div>
 
         {/* Price & Stock */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Price
-          </label>
-          <input
-            required
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Stock
-          </label>
-          <input
-            required
-            type="number"
-            name="stock"
-            value={formData.stock}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none"
-          />
-        </div>
+        <Input
+          label="Price"
+          required
+          type="number"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+        />
+        <Input
+          label="Stock"
+          required
+          type="number"
+          name="stock"
+          value={formData.stock}
+          onChange={handleChange}
+        />
 
         {/* Description - Full Width */}
-        <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="space-y-1 md:col-span-2">
+          <label className="block text-(--color-text-label) dark:text-gray-300 font-semibold text-sm">
             Description
           </label>
           <textarea
@@ -192,7 +179,7 @@ export default function ProductForm({
             value={formData.description}
             onChange={handleChange}
             rows="3"
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none resize-none"
+            className="w-full px-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all resize-none text-sm"
           />
         </div>
 
@@ -203,11 +190,11 @@ export default function ProductForm({
             id="requires_prescription"
             checked={formData.requires_prescription}
             onChange={handleChange}
-            className="w-4 h-4 text-[#165938] bg-gray-100 border-gray-300 rounded focus:ring-[#165938] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            className="w-4 h-4 text-(--color-primary-700) bg-(--color-surface-input) border-(--color-border-input) rounded focus:ring-(--color-primary-500) dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
           <label
             htmlFor="requires_prescription"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-(--color-text-label) dark:text-gray-300"
           >
             Requires Prescription
           </label>
@@ -220,11 +207,11 @@ export default function ProductForm({
             id="has_strips"
             checked={formData.has_strips}
             onChange={handleChange}
-            className="w-4 h-4 text-[#165938] bg-gray-100 border-gray-300 rounded focus:ring-[#165938] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            className="w-4 h-4 text-(--color-primary-700) bg-(--color-surface-input) border-(--color-border-input) rounded focus:ring-(--color-primary-500) dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
           <label
             htmlFor="has_strips"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            className="text-sm font-medium text-(--color-text-label) dark:text-gray-300"
           >
             Has Strips (الشرايط)
           </label>
@@ -233,50 +220,37 @@ export default function ProductForm({
         {/* Strip Details (Conditional) */}
         {formData.has_strips && (
           <>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Strip Count
-              </label>
-              <input
-                required={formData.has_strips}
-                type="number"
-                name="strip_count"
-                value={formData.strip_count}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Strips Per Box
-              </label>
-              <input
-                required={formData.has_strips}
-                type="number"
-                name="strips_per_box"
-                value={formData.strips_per_box}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none"
-              />
-            </div>
+            <Input
+              label="Strip Count"
+              required={formData.has_strips}
+              type="number"
+              name="strip_count"
+              value={formData.strip_count}
+              onChange={handleChange}
+            />
+            <Input
+              label="Strips Per Box"
+              required={formData.has_strips}
+              type="number"
+              name="strips_per_box"
+              value={formData.strips_per_box}
+              onChange={handleChange}
+            />
           </>
         )}
       </div>
 
       {/* Action Button */}
-      <div className="flex justify-end pt-4 border-t border-gray-100 dark:border-gray-800">
-        <button
+      <div className="flex justify-end pt-4 border-t border-(--color-border-base) dark:border-gray-800">
+        <Button
           type="submit"
-          disabled={isLoading}
-          className="inline-flex items-center justify-center min-w-35 gap-2 bg-[#165938] hover:bg-[#114229] text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          variant="solid"
+          size="md"
+          isLoading={isLoading}
+          className="min-w-[140px]"
         >
-          {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {isLoading
-            ? "Saving..."
-            : initialData
-              ? "Update Product"
-              : "Create Product"}
-        </button>
+          {initialData ? "Update Product" : "Create Product"}
+        </Button>
       </div>
     </form>
   );
