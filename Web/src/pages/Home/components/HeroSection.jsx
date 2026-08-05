@@ -35,7 +35,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className="hidden md:flex w-full md:w-1/2 justify-center lg:justify-end items-end relative top-1">
+          <div className="hidden md:flex w-full md:w-1/2 justify-center lg:justify-end items-end relative top-2.5">
             <div className="absolute inset-0 bg-(--color-primary-400)/20 rounded-full blur-3xl scale-150 -z-10"></div>
             <img
               src={landingImage}

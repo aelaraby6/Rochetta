@@ -71,7 +71,7 @@ export default function NotificationDropdown() {
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-(--color-surface-card) dark:bg-(--color-panel-dark) rounded-2xl shadow-2xl border border-(--color-border-base) dark:border-gray-800 z-50 overflow-hidden">
+        <div className="absolute right-[-70px] sm:right-0 mt-2 w-[90vw] sm:w-96 max-w-[380px] bg-(--color-surface-card) dark:bg-(--color-panel-dark) rounded-2xl shadow-2xl border border-(--color-border-base) dark:border-gray-800 z-50 overflow-hidden origin-top-right">
           <div className="flex items-center justify-between px-4 py-3 border-b border-(--color-border-base) dark:border-gray-800">
             <h3 className="font-bold text-sm text-(--color-text-primary) dark:text-white">
               Notifications
@@ -88,7 +88,7 @@ export default function NotificationDropdown() {
             )}
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-(--color-border-base) dark:divide-gray-800">
+          <div className="max-h-[60vh] sm:max-h-80 overflow-y-auto divide-y divide-(--color-border-base) dark:divide-gray-800">
             {isLoading ? (
               <div className="py-6 text-center text-sm text-(--color-text-muted)">
                 Loading...
