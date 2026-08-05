@@ -7,8 +7,8 @@ import * as z from "zod";
 import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "../../store/authApi";
 import { setCredentials } from "../../store/authSlice";
-import Input from "../../../components/ui/Input";
-import Button from "../../../components/ui/Button";
+import Input from "../../../../components/ui/Input";
+import Button from "../../../../components/ui/Button";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email address"),
