@@ -28,18 +28,20 @@ export default function FeatureCards() {
         ].map((feature, idx) => (
           <div
             key={idx}
-            className="flex flex-col items-center text-center p-6 bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 hover:-translate-y-2 transition-transform duration-300"
+            className="flex flex-col items-center text-center p-6 bg-(--color-surface-card) dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-(--color-border-base) dark:border-gray-800 hover:-translate-y-2 transition-transform duration-300"
           >
-            <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-(--color-primary-50) dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
               <feature.icon
-                className="w-8 h-8 text-green-600 dark:text-green-500"
+                className="w-8 h-8 text-(--color-primary-600) dark:text-green-500"
                 aria-hidden="true"
               />
             </div>
-            <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            <h4 className="text-xl font-bold text-(--color-text-primary) dark:text-white mb-2">
               {feature.title}
             </h4>
-            <p className="text-gray-500 dark:text-gray-400">{feature.desc}</p>
+            <p className="text-(--color-text-secondary) dark:text-gray-400">
+              {feature.desc}
+            </p>
           </div>
         ))}
       </div>

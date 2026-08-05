@@ -1,9 +1,10 @@
-import { Loader2 } from "lucide-react";
 import { useProductDetailsLogic } from "../../hooks/useProductDetailsLogic";
 import ProductGallery from "./components/ProductGallery";
 import ProductInfo from "./components/ProductInfo";
 import ProductActions from "./components/ProductActions";
 import ReviewsSection from "./components/ReviewsSection";
+import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ProductDetails() {
   const {
@@ -25,7 +26,7 @@ export default function ProductDetails() {
   if (isFetching) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="w-12 h-12 animate-spin text-green-700" />
+        <GlobalLoader width="w-12" height="h-12" animate-spin text="text-(--color-primary-700)" />
       </div>
     );
   }
@@ -34,21 +35,23 @@ export default function ProductDetails() {
     return (
       <div className="mt-40 text-center dark:text-white">
         <p className="text-2xl mb-4 font-semibold">Product not found</p>
-        <button
-          className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+        <Button
+          variant="solid"
+          size="md"
+          className="bg-gray-600 hover:bg-gray-700 text-white"
           onClick={() => navigate(-1)}
         >
           Go back
-        </button>
+        </Button>
       </div>
     );
   }
 
-  const currentProductId = product?._id
+  const currentProductId = product?._id;
 
   return (
-    <div className="max-w-6xl mx-auto mt-28 px-4 sm:px-6 lg:px-8 mb-20 text-black dark:text-white transition-colors duration-300">
-      <div className="flex flex-col md:flex-row gap-10 bg-white dark:bg-[#2c2c2c] p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 mb-10">
+    <div className="max-w-6xl mx-auto mt-28 px-4 sm:px-6 lg:px-8 mb-20 text-(--color-text-primary) dark:text-white transition-colors duration-300">
+      <div className="flex flex-col md:flex-row gap-10 bg-(--color-surface-card) dark:bg-[#2c2c2c] p-8 rounded-3xl shadow-xl border border-(--color-border-base) dark:border-gray-800 mb-10">
         <ProductGallery
           optimizedImage={optimizedImage}
           productName={product.name}

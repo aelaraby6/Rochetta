@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { User } from "lucide-react";
 import CartBadge from "./CartBadge";
 import ThemeToggle from "./ThemeToggle";
+import Button from "../../../components/ui/Button";
 
 export default function DesktopNav() {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -11,7 +12,7 @@ export default function DesktopNav() {
     <div className="hidden md:flex items-center gap-6">
       <Link
         to="/"
-        className="font-medium text-white hover:text-green-200 transition-colors"
+        className="font-medium text-white hover:text-(--color-primary-200) transition-colors"
       >
         Home
       </Link>
@@ -23,7 +24,7 @@ export default function DesktopNav() {
         <Link
           to="/profile"
           aria-label="User Profile"
-          className="text-white hover:text-green-200 transition-colors"
+          className="text-white hover:text-(--color-primary-200) transition-colors"
         >
           <User className="w-6 h-6" aria-hidden="true" />
         </Link>
@@ -31,16 +32,19 @@ export default function DesktopNav() {
         <div className="flex items-center gap-4">
           <Link
             to="/login"
-            className="font-bold text-white hover:text-green-200 transition-colors"
+            className="font-bold text-white hover:text-(--color-primary-200) transition-colors"
           >
             Login
           </Link>
-          <Link
+          <Button
+            as={Link}
             to="/signup"
-            className="font-bold bg-white text-green-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors shadow-sm"
+            variant="solid"
+            size="sm"
+            className="bg-white text-(--color-primary-700) hover:bg-gray-100 shadow-sm"
           >
             Signup
-          </Link>
+          </Button>
         </div>
       )}
     </div>

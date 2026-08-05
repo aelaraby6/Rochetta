@@ -5,6 +5,7 @@ import {
   useAddProductMutation,
   useUpdateProductMutation,
 } from "../../../products/api/productsApi";
+import Button from "../../../../components/ui/Button";
 
 export default function ProductActionModal({ isOpen, onClose, productToEdit }) {
   const [addProduct, { isLoading: isAdding }] = useAddProductMutation();
@@ -32,17 +33,19 @@ export default function ProductActionModal({ isOpen, onClose, productToEdit }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-xl">
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+      <div className="bg-(--color-surface-card) dark:bg-(--color-panel-dark) rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-xl border border-(--color-border-base) dark:border-gray-800">
+        <div className="flex items-center justify-between p-6 border-b border-(--color-border-base) dark:border-gray-800">
+          <h2 className="text-xl font-bold text-(--color-text-primary) dark:text-white">
             {isEditMode ? "Edit Product" : "Create New Product"}
           </h2>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg transition-colors"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         <div className="p-6">

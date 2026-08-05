@@ -19,6 +19,8 @@ import { useGetCategoriesQuery } from "../categories/api/categoriesApi";
 import toast from "react-hot-toast";
 import ProductActionModal from "./components/ProductActionModal";
 import ProductDetailsModal from "./components/ProductDetailsModal";
+import Input from "../../../components/ui/Input";
+import Button from "../../../components/ui/Button";
 
 export default function ProductsPage() {
   const [page, setPage] = useState(1);
@@ -41,10 +43,10 @@ export default function ProductsPage() {
     page,
     limit,
     search: debouncedSearch,
-    categoryName: categoryFilter, 
+    categoryName: categoryFilter,
     is_active: statusFilter,
   });
-  
+
   const [updateProduct] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
 
@@ -97,7 +99,7 @@ export default function ProductsPage() {
       label: "Product",
       render: (_, row) => (
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
+          <div className="w-12 h-12 rounded-lg bg-(--color-surface-muted) dark:bg-gray-800 overflow-hidden shrink-0 border border-(--color-border-base) dark:border-gray-700 flex items-center justify-center">
             {row.image ? (
               <img
                 src={row.image}
@@ -105,14 +107,14 @@ export default function ProductsPage() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <Package className="w-full h-full p-2 text-gray-400" />
+              <Package className="w-full h-full p-2 text-(--color-text-muted)" />
             )}
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-900 dark:text-white line-clamp-1">
+            <span className="font-semibold text-(--color-text-primary) dark:text-white line-clamp-1">
               {row.name}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-(--color-text-secondary)">
               {row.category?.name || "No Category"}
             </span>
           </div>
@@ -123,7 +125,7 @@ export default function ProductsPage() {
       key: "price",
       label: "Price",
       render: (val) => (
-        <span className="font-medium text-gray-900 dark:text-gray-100">
+        <span className="font-medium text-(--color-text-primary) dark:text-gray-100">
           {val} EGP
         </span>
       ),
@@ -150,10 +152,10 @@ export default function ProductsPage() {
           <span
             className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
               val > 10
-                ? "bg-green-50 text-green-700"
+                ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                 : val > 0
-                  ? "bg-orange-50 text-orange-700"
-                  : "bg-red-50 text-red-700"
+                  ? "bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+                  : "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
             }`}
           >
             {val > 0 ? displayStock : "Out of stock"}
@@ -174,7 +176,7 @@ export default function ProductsPage() {
               checked={val}
               onChange={() => handleToggleStatus(row)}
             />
-            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-(--color-primary-600)"></div>
           </label>
         </div>
       ),
@@ -185,27 +187,36 @@ export default function ProductsPage() {
       align: "right",
       render: (_, row) => (
         <div className="flex items-center justify-end gap-1">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => openDetailsModal(row._id)}
-            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+            className="p-2 text-(--color-text-muted) hover:text-(--color-info-600) hover:bg-blue-50 dark:hover:bg-blue-900/20"
             title="View Details"
+            aria-label="View Details"
           >
             <Eye className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={(e) => openEditModal(row, e)}
-            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+            className="p-2 text-(--color-text-muted) hover:text-(--color-primary-600) hover:bg-green-50 dark:hover:bg-green-900/20"
             title="Edit Product"
+            aria-label="Edit Product"
           >
             <Edit className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={(e) => handleDelete(row._id, e)}
-            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="p-2 text-(--color-text-muted) hover:text-(--color-danger-600) hover:bg-red-50 dark:hover:bg-red-900/20"
             title="Delete Product"
+            aria-label="Delete Product"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       ),
     },
@@ -215,29 +226,30 @@ export default function ProductsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-(--color-text-primary) dark:text-white">
             Products Management
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-(--color-text-secondary) dark:text-gray-400 mt-1">
             Manage your inventory, prices, and product details.
           </p>
         </div>
-        <button
+        <Button
+          variant="solid"
+          size="md"
           onClick={() => {
             setProductToEdit(null);
             setIsActionModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#288657] hover:bg-green-700 text-white font-semibold rounded-xl shadow-sm transition-colors shrink-0"
+          className="bg-(--color-primary-700) hover:bg-(--color-primary-800) shrink-0"
         >
           <PlusCircle className="w-5 h-5" />
           Add Product
-        </button>
+        </Button>
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row items-center gap-4">
+      <div className="bg-(--color-surface-card) dark:bg-(--color-panel-dark) p-4 rounded-xl shadow-sm border border-(--color-border-base) dark:border-gray-800 flex flex-col md:flex-row items-center gap-4">
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
+          <Input
             type="text"
             placeholder="Search products..."
             value={searchQuery}
@@ -245,17 +257,18 @@ export default function ProductsPage() {
               setSearchQuery(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
+            icon={<Search className="w-4 h-4 text-(--color-text-muted)" />}
+            className="border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525]"
           />
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="relative flex-1 md:w-48">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--color-text-muted) z-10 pointer-events-none" />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all cursor-pointer appearance-none"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all cursor-pointer appearance-none text-sm"
             >
               <option value="">All Categories</option>
               {categories?.map((cat) => (
@@ -273,7 +286,7 @@ export default function ProductsPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all cursor-pointer appearance-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all cursor-pointer appearance-none text-sm"
             >
               <option value="">All Status</option>
               <option value="true">Active</option>

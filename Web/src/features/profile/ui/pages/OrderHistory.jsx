@@ -1,7 +1,8 @@
-import { Package, Loader2 } from "lucide-react";
+import { Package } from "lucide-react";
 import { useOrderHistoryLogic } from "../../hooks/useOrderHistoryLogic";
 import OrderFilters from "../components/OrderFilters";
 import OrderCard from "../components/OrderCard";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function OrderHistory() {
   const {
@@ -34,7 +35,7 @@ export default function OrderHistory() {
 
       {isLoading ? (
         <div className="flex flex-col justify-center items-center py-20 text-green-600">
-          <Loader2 className="w-10 h-10 animate-spin mb-4" />
+          <GlobalLoader width="w-10" height="h-10" animate-spin text="text-green-600" />
         </div>
       ) : isEmpty ? (
         <div className="flex flex-col items-center justify-center py-20 text-center bg-gray-50 dark:bg-[#252525] rounded-2xl border border-gray-100 dark:border-gray-800">

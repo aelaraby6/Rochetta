@@ -4,15 +4,17 @@ export default function ProductList({ products = [] }) {
   return (
     <div className="w-full">
       {products.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700">
-          <span className="text-4xl mb-3" aria-hidden="true">📦</span>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="flex flex-col items-center justify-center py-16 text-(--color-text-secondary) dark:text-gray-400 bg-(--color-surface-card) dark:bg-gray-800 rounded-xl border border-(--color-border-base) dark:border-gray-700">
+          <span className="text-4xl mb-3" aria-hidden="true">
+            📦
+          </span>
+          <p className="text-lg font-bold text-(--color-text-primary) dark:text-white">
             No products found
           </p>
           <p className="text-sm mt-1">

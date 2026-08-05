@@ -8,6 +8,7 @@ import {
 } from "./api/ordersApi";
 import toast from "react-hot-toast";
 import OrderDetailsModal from "./components/OrderDetailsModal";
+import Input from "../../../components/ui/Input";
 
 export default function OrdersPage() {
   const [page, setPage] = useState(1);
@@ -61,7 +62,7 @@ export default function OrdersPage() {
       key: "id",
       label: "Order ID",
       render: (_, row) => (
-        <span className="font-mono text-sm text-gray-600 dark:text-gray-400">
+        <span className="font-mono text-sm text-(--color-text-secondary) dark:text-gray-400">
           #{row._id.slice(-6).toUpperCase()}
         </span>
       ),
@@ -71,10 +72,10 @@ export default function OrdersPage() {
       label: "Customer",
       render: (_, row) => (
         <div className="flex flex-col">
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-semibold text-(--color-text-primary) dark:text-white">
             {row.user?.name || "Unknown User"}
           </span>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-(--color-text-secondary)">
             {row.user?.email || "No email"}
           </span>
         </div>
@@ -84,7 +85,7 @@ export default function OrdersPage() {
       key: "total",
       label: "Total Amount",
       render: (val) => (
-        <span className="font-semibold text-gray-900 dark:text-white">
+        <span className="font-semibold text-(--color-text-primary) dark:text-white">
           ${val?.toFixed(2)}
         </span>
       ),
@@ -119,19 +120,18 @@ export default function OrdersPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-(--color-text-primary) dark:text-white">
             Orders Management
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-(--color-text-secondary) dark:text-gray-400 mt-1">
             Track, update, and manage customer orders.
           </p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col lg:flex-row items-center gap-4">
+      <div className="bg-(--color-surface-card) dark:bg-(--color-panel-dark) p-4 rounded-xl shadow-sm border border-(--color-border-base) dark:border-gray-800 flex flex-col lg:flex-row items-center gap-4">
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
+          <Input
             type="text"
             placeholder="Search orders, customers..."
             value={searchQuery}
@@ -139,20 +139,21 @@ export default function OrdersPage() {
               setSearchQuery(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
+            icon={<Search className="w-4 h-4 text-(--color-text-muted)" />}
+            className="border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525]"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <div className="relative flex-1 sm:w-36">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--color-text-muted) z-10 pointer-events-none" />
             <select
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all cursor-pointer appearance-none"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all cursor-pointer appearance-none text-sm"
             >
               <option value="">All Status</option>
               <option value="pending">Pending</option>
@@ -170,9 +171,9 @@ export default function OrdersPage() {
                 setStartDate(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[#165938]"
+              className="w-full px-3 py-2.5 text-sm rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white outline-none focus:ring-2 focus:ring-(--color-primary-500)"
             />
-            <span className="text-gray-400">-</span>
+            <span className="text-(--color-text-muted)">-</span>
             <input
               type="date"
               value={endDate}
@@ -180,7 +181,7 @@ export default function OrdersPage() {
                 setEndDate(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[#165938]"
+              className="w-full px-3 py-2.5 text-sm rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white outline-none focus:ring-2 focus:ring-(--color-primary-500)"
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import Input from "../../../../components/ui/Input";
+import Button from "../../../../components/ui/Button";
 
 export default function UserForm({ onSubmit, isLoading }) {
   const currentUser = useSelector((state) => state.auth.user);
@@ -37,78 +38,58 @@ export default function UserForm({ onSubmit, isLoading }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 max-w-2xl bg-white dark:bg-[#1e1e1e] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm"
+      className="space-y-6 max-w-2xl bg-(--color-surface-card) dark:bg-(--color-panel-dark) p-6 rounded-xl border border-(--color-border-base) dark:border-gray-800 shadow-sm"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Full Name
-          </label>
-          <input
-            required
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="John Doe"
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
-          />
-        </div>
+        <Input
+          label="Full Name"
+          required
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="John Doe"
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Email Address
-          </label>
-          <input
-            required
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="john@example.com"
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
-          />
-        </div>
+        <Input
+          label="Email Address"
+          required
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="john@example.com"
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center justify-between">
-            <span>Password</span>
-          </label>
-          <input
-            required
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            minLength={8}
-            placeholder="Enter a strong password"
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
-          />
-        </div>
+        <Input
+          label="Password"
+          required
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          minLength={8}
+          placeholder="Enter a strong password"
+        />
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="01xxxxxxxxx"
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all"
-          />
-        </div>
+        <Input
+          label="Phone Number"
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          placeholder="01xxxxxxxxx"
+        />
 
-        <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="space-y-1 md:col-span-2">
+          <label className="block text-(--color-text-label) dark:text-gray-300 font-semibold text-sm">
             Role
           </label>
           <select
             name="role"
             value={formData.role}
             onChange={handleChange}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#252525] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#165938] outline-none transition-all cursor-pointer"
+            className="w-full px-4 py-2.5 rounded-xl border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) outline-none transition-all cursor-pointer text-sm"
           >
             {AVAILABLE_ROLES.map((role) => (
               <option key={role.value} value={role.value}>
@@ -119,15 +100,16 @@ export default function UserForm({ onSubmit, isLoading }) {
         </div>
       </div>
 
-      <div className="flex justify-end pt-6 mt-2 border-t border-gray-100 dark:border-gray-800">
-        <button
+      <div className="flex justify-end pt-6 mt-2 border-t border-(--color-border-base) dark:border-gray-800">
+        <Button
           type="submit"
-          disabled={isLoading}
-          className="inline-flex items-center justify-center min-w-35 gap-2 bg-[#165938] hover:bg-[#114229] text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          variant="solid"
+          size="md"
+          isLoading={isLoading}
+          className="min-w-[140px]"
         >
-          {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {isLoading ? "Creating..." : "Create User"}
-        </button>
+          Create User
+        </Button>
       </div>
     </form>
   );

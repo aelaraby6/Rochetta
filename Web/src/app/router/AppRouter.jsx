@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProfileRoute";
 import AdminRoute from "./AdminRoute";
 import GlobalLoader from "../../components/ui/GlobalLoader";
+import { useSelector } from "react-redux";
 
 const LandingPage = lazy(() => import("../../pages/Home/landingPage"));
 const ProductDetails = lazy(
@@ -23,22 +24,12 @@ const ProfileLayout = lazy(
 const PersonalInfo = lazy(
   () => import("../../features/profile/ui/pages/PersonalInfo"),
 );
-const AddressBook = lazy(
-  () => import("../../features/profile/ui/pages/AddressBook"),
-);
-const PaymentMethods = lazy(
-  () => import("../../features/profile/ui/pages/PaymentMethods"),
-);
+
 const OrderHistory = lazy(
   () => import("../../features/profile/ui/pages/OrderHistory"),
 );
-const MyPrescriptions = lazy(
-  () => import("../../features/profile/ui/pages/MyPrescriptions"),
-);
+
 const Wishlist = lazy(() => import("../../features/profile/ui/pages/Wishlist"));
-const BuyItAgain = lazy(
-  () => import("../../features/profile/ui/pages/BuyItAgain"),
-);
 
 const DashboardLayout = lazy(
   () => import("../../features/admin/components/DashboardLayout"),
@@ -77,23 +68,23 @@ function DashboardPlaceholder({ title }) {
 }
 
 const RootRedirect = () => {
-  // const user = useSelector((state) => state.auth.user);
-  // if (user && (user.role === "admin" || user.role === "super_admin")) {
-  //   return <Navigate to="/dashboard" replace />;
-  // }
+  const user = useSelector((state) => state.auth.user);
+  if (user && (user.role === "admin" || user.role === "super_admin")) {
+    return <Navigate to="/dashboard" replace />;
+  }
   return <LandingPage />;
 };
 
-// const AuthRedirect = ({ children }) => {
-//   const user = useSelector((state) => state.auth.user);
-//   if (user && (user.role === "admin" || user.role === "super_admin")) {
-//     return <Navigate to="/dashboard" replace />;
-//   }
-//   if (user && user.role === "user") {
-//     return <Navigate to="/" replace />;
-//   }
-//   return children;
-// };
+const AuthRedirect = ({ children }) => {
+  const user = useSelector((state) => state.auth.user);
+  if (user && (user.role === "admin" || user.role === "super_admin")) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  if (user && user.role === "user") {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 export default function AppRouter() {
   return (
@@ -107,17 +98,17 @@ export default function AppRouter() {
         <Route
           path="/signup"
           element={
-            // <AuthRedirect>
-            <Signup />
-            /* </AuthRedirect> */
+            <AuthRedirect>
+              <Signup />
+            </AuthRedirect>
           }
         />
         <Route
           path="/login"
           element={
-            // <AuthRedirect>
-            <Login />
-            /* </AuthRedirect> */
+            <AuthRedirect>
+              <Login />
+            </AuthRedirect>
           }
         />
 
@@ -141,11 +132,7 @@ export default function AppRouter() {
           <Route index element={<Navigate to="orders" replace />} />
           <Route path="orders" element={<OrderHistory />} />
           <Route path="personal-info" element={<PersonalInfo />} />
-          <Route path="address-book" element={<AddressBook />} />
-          <Route path="payment-methods" element={<PaymentMethods />} />
-          <Route path="prescriptions" element={<MyPrescriptions />} />
           <Route path="wishlist" element={<Wishlist />} />
-          <Route path="buy-again" element={<BuyItAgain />} />
         </Route>
 
         <Route
@@ -156,10 +143,7 @@ export default function AppRouter() {
             </AdminRoute>
           }
         >
-          <Route
-            index
-            element={<DashboardPage />}
-          />
+          <Route index element={<DashboardPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="users" element={<UsersPage />} />

@@ -26,17 +26,17 @@ export default function FAQAccordion() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-8 lg:px-12 py-20">
-      <h3 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-10">
+      <h3 className="text-3xl font-bold text-center text-(--color-text-primary) dark:text-white mb-10">
         Frequently Asked Questions
       </h3>
       <div className="space-y-4">
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className={`border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-all duration-300 ${
+            className={`border border-(--color-border-base) dark:border-gray-700 rounded-xl overflow-hidden transition-all duration-300 ${
               activeIndex === index
-                ? "bg-green-50 dark:bg-green-900/10 border-green-500"
-                : "bg-white dark:bg-[#1e1e1e]"
+                ? "bg-green-50 dark:bg-green-900/10 border-(--color-primary-500)"
+                : "bg-(--color-surface-card) dark:bg-[#1e1e1e]"
             }`}
           >
             <button
@@ -47,8 +47,8 @@ export default function FAQAccordion() {
               <span
                 className={`font-semibold text-left ${
                   activeIndex === index
-                    ? "text-green-700 dark:text-green-400"
-                    : "text-gray-900 dark:text-white"
+                    ? "text-(--color-primary-700) dark:text-green-400"
+                    : "text-(--color-text-primary) dark:text-white"
                 }`}
               >
                 {faq.question}
@@ -56,8 +56,8 @@ export default function FAQAccordion() {
               <span
                 className={`text-2xl font-light transition-transform duration-300 ${
                   activeIndex === index
-                    ? "text-green-600 rotate-45"
-                    : "text-gray-400"
+                    ? "text-(--color-primary-600) rotate-45"
+                    : "text-(--color-text-muted)"
                 }`}
                 aria-hidden="true"
               >
@@ -71,7 +71,9 @@ export default function FAQAccordion() {
                   : "max-h-0"
               }`}
             >
-              <p className="text-gray-600 dark:text-gray-400">{faq.answer}</p>
+              <p className="text-(--color-text-secondary) dark:text-gray-400">
+                {faq.answer}
+              </p>
             </div>
           </div>
         ))}

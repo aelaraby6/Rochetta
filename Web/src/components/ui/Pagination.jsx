@@ -41,7 +41,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#252525] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg border border-(--color-border-base) dark:border-gray-700 bg-(--color-surface-card) dark:bg-(--color-panel-dark) text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#252525] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Previous page"
       >
         <ChevronLeft className="w-5 h-5" />
@@ -62,8 +62,8 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
               onClick={() => onPageChange(page)}
               className={`min-w-[2.5rem] h-10 px-3 rounded-lg border text-sm font-semibold transition-colors ${
                 currentPage === page
-                  ? "border-green-600 bg-green-600 text-white"
-                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#252525]"
+                  ? "border-(--color-primary-600) bg-(--color-primary-600) text-white"
+                  : "border-(--color-border-base) dark:border-gray-700 bg-(--color-surface-card) dark:bg-(--color-panel-dark) text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#252525]"
               }`}
               aria-label={`Page ${page}`}
               aria-current={currentPage === page ? "page" : undefined}
@@ -77,7 +77,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#252525] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg border border-(--color-border-base) dark:border-gray-700 bg-(--color-surface-card) dark:bg-(--color-panel-dark) text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#252525] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Next page"
       >
         <ChevronRight className="w-5 h-5" />

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import landingImage from "../../../assets/Home/doctor.webp";
+import Button from "../../../components/ui/Button";
 
 export default function HeroSection() {
   return (
@@ -15,20 +16,27 @@ export default function HeroSection() {
               anytime, anywhere.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <Link
+              <Button
+                as={Link}
                 to="/category/pain-relief"
-                className="px-8 py-3 bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl transition-all shadow-lg active:scale-95"
+                variant="solid"
+                size="lg"
+                className="px-8 py-3 bg-(--color-primary-500) hover:bg-(--color-primary-400) text-white font-bold rounded-xl transition-all shadow-lg active:scale-95"
               >
                 Get Started
-              </Link>
-              <button className="px-8 py-3 bg-transparent border-2 border-green-400 hover:bg-green-400/20 text-white font-bold rounded-xl transition-all active:scale-95">
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-3 bg-transparent border-2 border-(--color-primary-400) hover:bg-(--color-primary-400)/20 text-white font-bold rounded-xl transition-all active:scale-95"
+              >
                 Learn More
-              </button>
+              </Button>
             </div>
           </div>
 
-          <div className="hidden md:flex w-full md:w-1/2 justify-center lg:justify-end items-end relative top-1">
-            <div className="absolute inset-0 bg-green-400/20 rounded-full blur-3xl scale-150 -z-10"></div>
+          <div className="hidden md:flex w-full md:w-1/2 justify-center lg:justify-end items-end relative top-2.5">
+            <div className="absolute inset-0 bg-(--color-primary-400)/20 rounded-full blur-3xl scale-150 -z-10"></div>
             <img
               src={landingImage}
               alt="Doctor"

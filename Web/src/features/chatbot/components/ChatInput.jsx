@@ -25,13 +25,13 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="border-t border-[#E5E7EB] dark:border-[#303030] bg-[#FFFFFF] dark:bg-[#1E1E1E] p-4">
+    <div className="border-t border-(--color-border-base) dark:border-[#303030] bg-(--color-surface-card) dark:bg-(--color-panel-dark) p-4">
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => clearHistory()}
           disabled={isClearing}
-          className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#166534] bg-transparent text-[#166534] transition-all hover:bg-[#DCFCE7] disabled:opacity-50 dark:border-[#22C55E] dark:text-[#22C55E] dark:hover:bg-[#166534]/30"
+          className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-(--color-primary-700) bg-transparent text-(--color-primary-700) transition-all hover:bg-(--color-primary-50) disabled:opacity-50 dark:border-[#22C55E] dark:text-[#22C55E] dark:hover:bg-(--color-primary-900)/30"
           title="Clear History"
         >
           <svg
@@ -54,14 +54,14 @@ const ChatInput = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Ask a medical question..."
-          className="flex-1 h-11 rounded-full border border-[#E5E7EB] dark:border-[#303030] bg-[#F8FAFC] dark:bg-[#121212] px-5 py-2.5 text-[15px] text-[#111827] dark:text-[#F9FAFB] placeholder-[#9CA3AF] shadow-sm transition-all focus:border-[#22C55E] focus:outline-none focus:ring-2 focus:ring-[#22C55E]/20"
+          className="flex-1 h-11 rounded-full border border-(--color-border-input) dark:border-[#303030] bg-(--color-surface-input) dark:bg-[#121212] px-5 py-2.5 text-[15px] text-(--color-text-primary) dark:text-[#F9FAFB] placeholder-(--color-text-muted) shadow-sm transition-all focus:border-(--color-primary-500) focus:outline-none focus:ring-2 focus:ring-(--color-primary-500)/20"
           disabled={isLoading}
         />
 
         <button
           type="submit"
           disabled={!message.trim() || isLoading}
-          className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#166534] text-white shadow-sm transition-all hover:bg-[#15803D] hover:shadow-md disabled:opacity-50 disabled:hover:bg-[#166534] disabled:hover:shadow-sm"
+          className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-primary-700) text-white shadow-sm transition-all hover:bg-(--color-primary-800) hover:shadow-md disabled:opacity-50 disabled:hover:bg-(--color-primary-700) disabled:hover:shadow-sm"
         >
           <svg
             className="h-5 w-5 rotate-90 transition-transform group-hover:scale-110 group-active:scale-95"

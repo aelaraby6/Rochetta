@@ -1,9 +1,11 @@
-import { X, Star, Loader2, Award } from "lucide-react";
+import { X, Star, Award } from "lucide-react";
 import {
   useGetReviewByIdQuery,
   useUpdateReviewMutation,
 } from "../api/reviewsApi";
 import toast from "react-hot-toast";
+import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
   const { data, isLoading } = useGetReviewByIdQuery(reviewId, {
@@ -34,10 +36,10 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800">
+      <div className="bg-(--color-surface-card) dark:bg-(--color-panel-dark) rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-(--color-border-base) dark:border-gray-800">
+        <div className="flex items-center justify-between p-5 border-b border-(--color-border-base) dark:border-gray-800">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-(--color-text-primary) dark:text-white">
               Review Details
             </h2>
             {review?.isTopReview && (
@@ -46,36 +48,39 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
               </span>
             )}
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="hover:bg-gray-100 dark:hover:bg-gray-800"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         <div className="p-6 overflow-y-auto">
           {isLoading ? (
             <div className="flex justify-center items-center py-10">
-              <Loader2 className="w-8 h-8 animate-spin text-[#288657]" />
+              <GlobalLoader width="w-8" height="h-8" animate-spin text="(--color-primary-600)" />
             </div>
           ) : !review ? (
-            <div className="text-center py-10 text-gray-500">
+            <div className="text-center py-10 text-(--color-text-secondary)">
               Review not found.
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-[#252525] rounded-xl">
+              <div className="flex items-center gap-4 p-4 bg-(--color-surface-page) dark:bg-[#252525] rounded-xl">
                 <img
                   src={review.product.image}
                   alt={review.product.name}
-                  className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+                  className="w-16 h-16 object-cover rounded-lg border border-(--color-border-base) dark:border-gray-700"
                 />
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                  <p className="text-xs text-(--color-text-secondary) dark:text-gray-400 mb-1">
                     Product
                   </p>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">
+                  <h3 className="font-semibold text-(--color-text-primary) dark:text-white">
                     {review.product.name}
                   </h3>
                 </div>
@@ -85,13 +90,13 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
                 <img
                   src={review.user.avatar || null}
                   alt={review.user.name}
-                  className="w-12 h-12 object-cover rounded-full border-2 border-gray-200 dark:border-gray-700"
+                  className="w-12 h-12 object-cover rounded-full border-2 border-(--color-border-base) dark:border-gray-700"
                 />
                 <div>
-                  <h4 className="font-medium text-gray-900 dark:text-white">
+                  <h4 className="font-medium text-(--color-text-primary) dark:text-white">
                     {review.user.name}
                   </h4>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-(--color-text-secondary)">
                     {new Date(review.createdAt).toLocaleString("en-GB")}
                   </p>
                 </div>
@@ -110,8 +115,8 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
                     />
                   ))}
                 </div>
-                <div className="p-4 bg-gray-50 dark:bg-[#252525] rounded-xl">
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
+                <div className="p-4 bg-(--color-surface-page) dark:bg-[#252525] rounded-xl">
+                  <p className="text-(--color-text-body) dark:text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
                     {review.comment}
                   </p>
                 </div>
@@ -120,31 +125,31 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
           )}
         </div>
 
-        <div className="p-5 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-[#252525]/50">
+        <div className="p-5 border-t border-(--color-border-base) dark:border-gray-800 flex justify-between items-center bg-(--color-surface-page)/50 dark:bg-[#252525]/50">
           {review && (
-            <button
+            <Button
+              variant="outline"
+              size="md"
               onClick={handleToggleTop}
-              disabled={isUpdating}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              isLoading={isUpdating}
+              className={`text-sm font-medium ${
                 review.isTopReview
-                  ? "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50"
-                  : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 dark:bg-[#1e1e1e] dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                  ? "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50 border-amber-300"
+                  : "bg-(--color-surface-card) border-(--color-border-base) text-(--color-text-primary) hover:bg-gray-50 dark:bg-[#1e1e1e] dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
               }`}
             >
-              {isUpdating ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Award className="w-4 h-4" />
-              )}
+              <Award className="w-4 h-4" />
               {review.isTopReview ? "Remove from Top" : "Make Top Review"}
-            </button>
+            </Button>
           )}
-          <button
+          <Button
+            variant="ghost"
+            size="md"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition-colors ml-auto"
+            className="text-(--color-text-primary) bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 ml-auto"
           >
             Close
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Loader2, Star, User, Edit2, Trash2, X, Check } from "lucide-react";
+import { Star, User, Edit2, Trash2, X, Check } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   useGetProductReviewsQuery,
@@ -8,6 +8,8 @@ import {
   useUpdateReviewMutation,
   useDeleteReviewMutation,
 } from "../../../../admin/reviews/api/reviewsApi";
+import Button from "../../../../../components/ui/Button";
+import GlobalLoader from "../../../../../components/ui/GlobalLoader";
 
 export default function ReviewsSection({ productId }) {
   const { isAuthenticated, user: currentUser } = useSelector(
@@ -51,7 +53,7 @@ export default function ReviewsSection({ productId }) {
       setComment("");
       setRating(5);
     } catch {
-      toast.error("Failed to add review you have already submitted." );
+      toast.error("Failed to add review you have already submitted.");
     }
   };
 
@@ -96,20 +98,24 @@ export default function ReviewsSection({ productId }) {
   };
 
   return (
-    <div className="bg-white dark:bg-[#2c2c2c] p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
-      <h3 className="text-2xl font-bold mb-6 border-l-4 border-green-500 pl-3">
+    <div className="bg-(--color-surface-card) dark:bg-[#2c2c2c] p-8 rounded-3xl shadow-xl border border-(--color-border-base) dark:border-gray-800">
+      <h3 className="text-2xl font-bold mb-6 border-l-4 border-(--color-primary-500) pl-3 text-(--color-text-primary) dark:text-white">
         Customer Reviews
       </h3>
 
       {isAuthenticated ? (
         <form
           onSubmit={handleSubmit}
-          className="mb-10 bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700"
+          className="mb-10 bg-(--color-surface-page) dark:bg-gray-800 p-6 rounded-2xl border border-(--color-border-base) dark:border-gray-700"
         >
-          <h4 className="font-semibold mb-4 text-lg">Write a Review</h4>
+          <h4 className="font-semibold mb-4 text-lg text-(--color-text-primary) dark:text-white">
+            Write a Review
+          </h4>
 
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium">Rating:</span>
+            <span className="text-sm font-medium text-(--color-text-label) dark:text-gray-300">
+              Rating:
+            </span>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -129,24 +135,25 @@ export default function ReviewsSection({ productId }) {
           </div>
 
           <textarea
-            className="w-full p-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2c2c2c] focus:ring-2 focus:ring-green-500 focus:outline-none resize-none mb-4"
+            className="w-full p-4 rounded-xl border border-(--color-border-input) dark:border-gray-600 bg-(--color-surface-input) dark:bg-[#2c2c2c] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-(--color-primary-500) focus:outline-none resize-none mb-4"
             rows="3"
             placeholder="Share your thoughts about this product..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>
 
-          <button
+          <Button
             type="submit"
-            disabled={isAdding}
-            className="bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-xl font-bold transition-colors flex items-center gap-2 disabled:bg-gray-400"
+            variant="solid"
+            size="md"
+            isLoading={isAdding}
+            className="bg-(--color-primary-700) hover:bg-(--color-primary-800)"
           >
-            {isAdding && <Loader2 className="w-4 h-4 animate-spin" />}
             Submit Review
-          </button>
+          </Button>
         </form>
       ) : (
-        <div className="mb-10 p-4 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 rounded-xl border border-yellow-200 dark:border-yellow-800 text-center font-medium">
+        <div className="mb-10 p-4 bg-amber-50 dark:bg-yellow-900/20 text-amber-800 dark:text-yellow-200 rounded-xl border border-amber-200 dark:border-yellow-800 text-center font-medium">
           Please login to share your review.
         </div>
       )}
@@ -154,14 +161,14 @@ export default function ReviewsSection({ productId }) {
       <div className="space-y-6">
         {isLoading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="w-8 h-8 animate-spin text-green-700" />
+            <GlobalLoader width="w-8" height="h-8" animate-spin text="text-(--color-primary-700)" />
           </div>
         ) : isError ? (
-          <p className="text-red-500 text-center py-10 font-medium">
+          <p className="text-(--color-danger-600) text-center py-10 font-medium">
             Failed to load reviews.
           </p>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-10 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-10 text-(--color-text-secondary) dark:text-gray-400">
             <p className="text-lg">No reviews yet.</p>
             <p className="text-sm">Be the first to review this product!</p>
           </div>
@@ -169,52 +176,58 @@ export default function ReviewsSection({ productId }) {
           reviews.map((review) => (
             <div
               key={review._id}
-              className="border-b border-gray-100 dark:border-gray-700 pb-6 last:border-0 last:pb-0"
+              className="border-b border-(--color-border-base) dark:border-gray-700 pb-6 last:border-0 last:pb-0"
             >
               <div className="flex items-start gap-4">
                 {review.user?.avatar ? (
                   <img
                     src={review.user.avatar}
                     alt={review.user.name}
-                    className="w-12 h-12 rounded-full object-cover border border-gray-200"
+                    className="w-12 h-12 rounded-full object-cover border border-(--color-border-base)"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-                    <User className="w-6 h-6 text-gray-500 dark:text-gray-400" />
+                  <div className="w-12 h-12 rounded-full bg-(--color-surface-muted) dark:bg-gray-700 flex items-center justify-center shrink-0">
+                    <User className="w-6 h-6 text-(--color-text-muted)" />
                   </div>
                 )}
 
                 <div className="flex-1 w-full">
                   <div className="flex justify-between items-start mb-1">
-                    <h5 className="font-bold text-gray-900 dark:text-white">
+                    <h5 className="font-bold text-(--color-text-primary) dark:text-white">
                       {review.user?.name || "Unknown User"}
                     </h5>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-(--color-text-secondary)">
                         {new Date(review.createdAt).toLocaleDateString()}
                       </span>
                       {currentUser?._id === review.user?._id &&
                         editingId !== review._id && (
                           <div className="flex items-center gap-2">
-                            <button
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               onClick={() => handleStartEdit(review)}
-                              className="text-gray-400 hover:text-blue-500 transition-colors"
+                              className="text-(--color-text-muted) hover:text-(--color-info-600)"
+                              aria-label="Edit review"
                             >
                               <Edit2 className="w-4 h-4" />
-                            </button>
-                            <button
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               onClick={() => handleDelete(review._id)}
-                              className="text-gray-400 hover:text-red-500 transition-colors"
+                              className="text-(--color-text-muted) hover:text-(--color-danger-600)"
+                              aria-label="Delete review"
                             >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </Button>
                           </div>
                         )}
                     </div>
                   </div>
 
                   {editingId === review._id ? (
-                    <div className="mt-3 bg-gray-50 dark:bg-[#252525] p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <div className="mt-3 bg-(--color-surface-page) dark:bg-[#252525] p-4 rounded-xl border border-(--color-border-base) dark:border-gray-700">
                       <div className="flex items-center gap-1 mb-3">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
@@ -232,30 +245,31 @@ export default function ReviewsSection({ productId }) {
                         ))}
                       </div>
                       <textarea
-                        className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1e1e1e] focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none mb-3 text-sm"
+                        className="w-full p-3 rounded-lg border border-(--color-border-input) dark:border-gray-600 bg-(--color-surface-input) dark:bg-[#1e1e1e] text-(--color-text-primary) dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none mb-3 text-sm"
                         rows="2"
                         value={editComment}
                         onChange={(e) => setEditComment(e.target.value)}
                       ></textarea>
                       <div className="flex items-center gap-2 justify-end">
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={handleCancelEdit}
-                          className="p-2 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          className="text-(--color-text-secondary) hover:bg-gray-200 dark:hover:bg-gray-700"
+                          aria-label="Cancel editing"
                         >
                           <X className="w-4 h-4" />
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                          variant="solid"
+                          size="sm"
                           onClick={() => handleUpdate(review._id)}
-                          disabled={isUpdating}
-                          className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:bg-gray-400"
+                          isLoading={isUpdating}
+                          className="bg-(--color-info-600) hover:bg-(--color-info-700) text-white"
                         >
-                          {isUpdating ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Check className="w-4 h-4" />
-                          )}
+                          {!isUpdating && <Check className="w-4 h-4" />}
                           Save
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   ) : (
@@ -272,7 +286,7 @@ export default function ReviewsSection({ productId }) {
                           />
                         ))}
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                      <p className="text-(--color-text-body) dark:text-gray-300 text-sm leading-relaxed">
                         {review.comment}
                       </p>
                     </>

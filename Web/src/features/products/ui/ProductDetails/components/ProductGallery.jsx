@@ -1,6 +1,6 @@
 export default function ProductGallery({ optimizedImage, productName }) {
   return (
-    <div className="w-full md:w-1/2 flex justify-center items-center bg-white rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+    <div className="w-full md:w-1/2 flex justify-center items-center bg-(--color-surface-card) dark:bg-[#1e1e1e] rounded-3xl p-8 shadow-sm border border-(--color-border-base) dark:border-gray-700">
       <img
         src={optimizedImage}
         alt={productName}
