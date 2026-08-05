@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Plus, Minus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Minus, Trash2 } from "lucide-react";
 import Button from "../../../components/ui/Button";
 
 export default function CartItem({
@@ -11,25 +11,40 @@ export default function CartItem({
 }) {
   const product = item.product || item;
   const id = product._id;
+
   const qty = item.quantity ?? item.NOI ?? 1;
-  const stripsPerBox = Number(product.stripsPerBox || product.strip_count || 0);
-  const isStripItem = item.unit === "strip" && stripsPerBox > 0;
-  const unitPrice = Number(product.price.toFixed(2) ?? 0);
-  const subtotal = (unitPrice * qty).toFixed(2);
   const stockAvailable = product.pieces ?? product.stock ?? 0;
 
+  const stripsPerBox = Number(
+    product.stripsPerBox || product.strip_count || product.strips_per_box || 0,
+  );
+  const hasStrips = product.has_strips || stripsPerBox > 0;
+
+  const boxPrice = Number(product.price ?? 0);
+  const unitPrice = hasStrips ? boxPrice / stripsPerBox : boxPrice;
+  const subtotal = (unitPrice * qty).toFixed(2);
+
   let qtyDisplay = "";
-  if (isStripItem) {
+  if (hasStrips) {
     const boxes = Math.floor(qty / stripsPerBox);
-    const strips = Math.round(qty % stripsPerBox);
-    if (boxes > 0 && strips > 0) qtyDisplay = `${boxes} box + ${strips} strip`;
-    else if (boxes > 0) qtyDisplay = `${boxes} box${boxes > 1 ? "es" : ""}`;
-    else qtyDisplay = `${strips} strip${strips > 1 ? "s" : ""}`;
+    const strips = qty % stripsPerBox;
+    if (boxes > 0 && strips > 0) qtyDisplay = `${boxes} Box + ${strips} Strip`;
+    else if (boxes > 0) qtyDisplay = `${boxes} Box${boxes > 1 ? "es" : ""}`;
+    else qtyDisplay = `${strips} Strip${strips > 1 ? "s" : ""}`;
   } else {
-    const num = Math.round(qty * 100) / 100;
-    qtyDisplay = Number.isInteger(num)
-      ? `${num} box${num > 1 ? "es" : ""}`
-      : `${num.toFixed(2)} box`;
+    qtyDisplay = `${qty} Item${qty > 1 ? "s" : ""}`;
+  }
+
+  let stockDisplay = "";
+  if (hasStrips) {
+    const sBoxes = Math.floor(stockAvailable / stripsPerBox);
+    const sStrips = stockAvailable % stripsPerBox;
+    if (sBoxes > 0 && sStrips > 0)
+      stockDisplay = `${sBoxes} Box + ${sStrips} Strip`;
+    else if (sBoxes > 0) stockDisplay = `${sBoxes} Box`;
+    else stockDisplay = `${sStrips} Strip`;
+  } else {
+    stockDisplay = `${stockAvailable} Item${stockAvailable !== 1 ? "s" : ""}`;
   }
 
   const isIncLoading = activeAction.id === id && activeAction.type === "inc";
@@ -72,21 +87,21 @@ export default function CartItem({
               variant="outline"
               size="icon"
               aria-label={`Increase quantity of ${product.name}`}
-              onClick={() => onIncrement(item, isStripItem, stripsPerBox)}
+              onClick={() => onIncrement(item, hasStrips, stripsPerBox)}
               disabled={stockAvailable <= qty || actionInProgress}
               isLoading={isIncLoading}
               className="w-8 h-8 rounded-lg border border-(--color-primary-600) text-(--color-primary-600) hover:bg-(--color-primary-50) dark:hover:bg-(--color-primary-900)"
             >
               {!isIncLoading && <Plus className="w-4 h-4" aria-hidden="true" />}
             </Button>
-            <div className="min-w-[4rem] text-center font-bold text-(--color-text-primary) dark:text-white bg-(--color-surface-muted) dark:bg-gray-700 py-1 px-2 rounded-lg text-sm">
+            <div className="min-w-[6rem] text-center font-bold text-(--color-text-primary) dark:text-white bg-(--color-surface-muted) dark:bg-gray-700 py-1 px-2 rounded-lg text-sm">
               {qtyDisplay}
             </div>
             <Button
               variant="outline"
               size="icon"
               aria-label={`Decrease quantity of ${product.name}`}
-              onClick={() => onDecrement(item, isStripItem, stripsPerBox)}
+              onClick={() => onDecrement(item, hasStrips, stripsPerBox)}
               disabled={actionInProgress}
               isLoading={isDecLoading}
               className="w-8 h-8 rounded-lg border border-(--color-warning-600) text-(--color-warning-600) hover:bg-(--color-warning-50) dark:hover:bg-(--color-warning-900)"
@@ -99,7 +114,7 @@ export default function CartItem({
           <div className="text-(--color-text-primary) dark:text-gray-300 font-semibold">
             ${unitPrice.toFixed(2)}{" "}
             <span className="text-sm text-(--color-text-secondary) font-normal">
-              each
+              {hasStrips ? "/ strip" : "/ item"}
             </span>
           </div>
         </div>
@@ -111,7 +126,7 @@ export default function CartItem({
             ${subtotal}
           </div>
           <div className="text-xs text-(--color-text-secondary) dark:text-gray-400 mt-1">
-            {stockAvailable.toFixed(2)} in stock
+            {stockDisplay} in stock
           </div>
         </div>
         <Button

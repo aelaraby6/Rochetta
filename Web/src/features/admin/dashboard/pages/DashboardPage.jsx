@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, Brain, Boxes, Loader2 } from "lucide-react";
+import { LayoutDashboard, Brain, Boxes } from "lucide-react";
 import {
   useGetDashboardStatsQuery,
   useGetRevenueForecastQuery,
@@ -10,6 +10,7 @@ import {
 import OverviewTab from "../components/OverviewTab";
 import AITab from "../components/AITab";
 import InventoryTab from "../components/InventoryTab";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -36,7 +37,7 @@ export default function DashboardPage() {
   if (isAnyLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="w-12 h-12 text-(--color-primary-700) animate-spin mb-4" />
+        <GlobalLoader />
         <p className="text-(--color-text-secondary) dark:text-gray-400 font-medium">
           Running analytics algorithms and loading dashboard...
         </p>

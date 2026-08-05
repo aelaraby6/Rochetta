@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { User, LogOut, Camera, Loader2, FilePlus } from "lucide-react";
+import { User, LogOut, Camera, FilePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { logout } from "../../../auth/store/authSlice";
 import ProfileNav from "./ProfileNav";
@@ -61,10 +61,7 @@ export default function ProfileLayout() {
             <div className="relative group">
               <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-green-400 to-green-600 text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-gray-800 shrink-0 overflow-hidden">
                 {isUploading ? (
-                  <Loader2
-                    className="w-8 h-8 animate-spin"
-                    aria-hidden="true"
-                  />
+                  <GlobalLoader width="w-8" height="h-8" animate-spin text="text-white" />
                 ) : user.avatar ? (
                   <img
                     src={user.avatar}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 import { useGetCategoriesQuery } from "../../../features/admin/categories/api/categoriesApi";
+import GlobalLoader from "../../../components/ui/GlobalLoader";
 
 export default function ShopCategories() {
   const {
@@ -16,7 +16,7 @@ export default function ShopCategories() {
   if (isLoading) {
     return (
       <div className="py-12 flex justify-center items-center">
-        <Loader2 className="w-10 h-10 animate-spin text-(--color-primary-600)" />
+        <GlobalLoader width="w-10" height="h-10" animate-spin text="text-(--color-primary-600)" />
       </div>
     );
   }

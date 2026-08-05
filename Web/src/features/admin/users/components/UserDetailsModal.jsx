@@ -5,7 +5,6 @@ import {
   Calendar,
   User as UserIcon,
   Shield,
-  Loader2,
 } from "lucide-react";
 import { useGetUserByIdQuery } from "../api/usersApi";
 import Button from "../../../../components/ui/Button";
@@ -44,7 +43,7 @@ export default function UserDetailsModal({ isOpen, onClose, userId }) {
         <div className="p-6 overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center h-48">
-              <Loader2 className="w-8 h-8 animate-spin text-(--color-primary-600)" />
+              <GlobalLoader width="w-8" height="h-8" animate-spin text="(--color-primary-600)" />
             </div>
           ) : isError || !user ? (
             <div className="flex flex-col items-center justify-center h-48 text-center">

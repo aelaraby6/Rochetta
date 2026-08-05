@@ -1,11 +1,22 @@
 import { useState, useCallback } from "react";
 import ChatWindow from "./ChatWindow";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const ChatBotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
 
   const toggleChat = useCallback(() => setIsOpen((prev) => !prev), []);
 
+  const isDashboard = location.pathname.startsWith("/dashboard");
+  const isAuthPage = ["/login", "/signup"].includes(location.pathname);
+  const isAdmin = user?.role === "admin" || user?.role === "super_admin";
+
+  if (isAdmin || isDashboard || isAuthPage) {
+    return null;
+  }
   return (
     <>
       <button

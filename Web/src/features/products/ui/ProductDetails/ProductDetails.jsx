@@ -1,10 +1,10 @@
-import { Loader2 } from "lucide-react";
 import { useProductDetailsLogic } from "../../hooks/useProductDetailsLogic";
 import ProductGallery from "./components/ProductGallery";
 import ProductInfo from "./components/ProductInfo";
 import ProductActions from "./components/ProductActions";
 import ReviewsSection from "./components/ReviewsSection";
 import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ProductDetails() {
   const {
@@ -26,7 +26,7 @@ export default function ProductDetails() {
   if (isFetching) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="w-12 h-12 animate-spin text-(--color-primary-700)" />
+        <GlobalLoader width="w-12" height="h-12" animate-spin text="text-(--color-primary-700)" />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Menu, User, Sun, Moon, LogOut, Loader2, Camera } from "lucide-react";
+import { Menu, User, Sun, Moon, LogOut, Camera } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "./Sidebar";
 import { toast } from "react-hot-toast";
@@ -99,9 +99,7 @@ export default function DashboardLayout() {
                 title="Change Avatar"
                 className="relative w-10 h-10 rounded-full bg-(--color-primary-100) flex items-center justify-center overflow-hidden border border-(--color-border-base) dark:border-gray-700 cursor-pointer group"
               >
-                {isUpdatingAvatar ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-(--color-primary-700)" />
-                ) : user?.avatar ? (
+                {isUpdatingAvatar ? <GlobalLoader width="w-5" height="h-5" /> : user?.avatar ? (
                   <>
                     <img
                       src={user.avatar}

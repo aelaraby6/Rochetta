@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ShoppingCart, Loader2, Star } from "lucide-react";
+import { ShoppingCart, Star } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAddToCartMutation } from "../../../cart/store/cartApi";
 import stripImage from "../../../../assets/strip.webp";
 import { optimizeCloudinaryUrl } from "../../../../utils/productUtils";
 import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ProductCard({ product, priority, className = "" }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -141,8 +142,11 @@ export default function ProductCard({ product, priority, className = "" }) {
                 onClick={() => handleAddToCart("strip")}
               >
                 {isAdding && addingUnit === "strip" ? (
-                  <Loader2
-                    className="w-4 h-4 text-white animate-spin"
+                  <GlobalLoader
+                    width="w-4"
+                    height="h-4"
+                    text="text-white"
+                    animate-spin
                     aria-hidden="true"
                   />
                 ) : (
@@ -169,7 +173,7 @@ export default function ProductCard({ product, priority, className = "" }) {
               onClick={() => handleAddToCart("box")}
             >
               {isAdding && addingUnit === "box" ? (
-                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                <GlobalLoader width="w-4" height="h-4" animate-spin text="text-white" aria-hidden="true" />
               ) : (
                 <ShoppingCart
                   className="w-4 h-4 md:w-5 md:h-5"

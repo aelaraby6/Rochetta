@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Loader2, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useCreateUserMutation } from "../api/usersApi";
 import toast from "react-hot-toast";
 import Input from "../../../../components/ui/Input";

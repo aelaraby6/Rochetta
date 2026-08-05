@@ -18,9 +18,9 @@ const VARIANTS = {
 };
 
 const SIZES = {
-  sm: "px-4 py-2 text-sm rounded-lg",
-  md: "px-6 py-2.5 text-sm rounded-xl",
-  lg: "px-8 py-3.5 text-base rounded-xl",
+  sm: "px-4 py-2 text-sm rounded-lg min-h-[36px]",
+  md: "px-6 py-2.5 text-sm rounded-xl min-h-[42px]",
+  lg: "px-8 py-3.5 text-base rounded-xl min-h-[52px]",
   icon: "w-8 h-8 rounded-lg flex-shrink-0",
 };
 
@@ -60,7 +60,7 @@ const Button = forwardRef(function Button(
       {...props}
     >
       {isLoading ? (
-        <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+        <Loader2 className="w-5 h-5 animate-spin shrink-0 text-current" />
       ) : (
         children
       )}

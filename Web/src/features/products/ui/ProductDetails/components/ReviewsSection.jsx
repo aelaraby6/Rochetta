@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Loader2, Star, User, Edit2, Trash2, X, Check } from "lucide-react";
+import { Star, User, Edit2, Trash2, X, Check } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   useGetProductReviewsQuery,
@@ -9,6 +9,7 @@ import {
   useDeleteReviewMutation,
 } from "../../../../admin/reviews/api/reviewsApi";
 import Button from "../../../../../components/ui/Button";
+import GlobalLoader from "../../../../../components/ui/GlobalLoader";
 
 export default function ReviewsSection({ productId }) {
   const { isAuthenticated, user: currentUser } = useSelector(
@@ -160,7 +161,7 @@ export default function ReviewsSection({ productId }) {
       <div className="space-y-6">
         {isLoading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="w-8 h-8 animate-spin text-(--color-primary-700)" />
+            <GlobalLoader width="w-8" height="h-8" animate-spin text="text-(--color-primary-700)" />
           </div>
         ) : isError ? (
           <p className="text-(--color-danger-600) text-center py-10 font-medium">

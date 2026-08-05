@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "../../store/authApi";
 import { setCredentials } from "../../store/authSlice";
 import Input from "../../../../components/ui/Input";

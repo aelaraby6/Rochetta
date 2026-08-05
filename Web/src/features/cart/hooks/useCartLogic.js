@@ -33,7 +33,18 @@ export const useCartLogic = () => {
   const cartTotal = cartItems.reduce((acc, item) => {
     const price = Number(item.price ?? item.product?.price ?? 0);
     const qty = item.quantity ?? item.NOI ?? 1;
-    return acc + price * qty;
+
+    const stripsPerBox =
+      item.product?.strips_per_box ||
+      item.product?.strip_count ||
+      item.product?.stripsPerBox ||
+      0;
+    const hasStrips = item.product?.has_strips || stripsPerBox > 0;
+
+    const unitPrice =
+      hasStrips && stripsPerBox > 0 ? price / stripsPerBox : price;
+
+    return acc + unitPrice * qty;
   }, 0);
 
   const handleCreateOrder = async (checkoutFormData) => {
@@ -57,7 +68,7 @@ export const useCartLogic = () => {
 
       if (response.checkoutUrl) {
         toast.loading("Redirecting to secure payment...", { duration: 1500 });
-        
+
         setTimeout(() => {
           window.location.href = response.checkoutUrl;
         }, 800);
@@ -68,16 +79,15 @@ export const useCartLogic = () => {
     } catch (error) {
       console.error("Create Order Error:", error);
       toast.error(
-        error?.data?.message || "Failed to create order. Please try again."
+        error?.data?.message || "Failed to create order. Please try again.",
       );
     }
   };
 
   const handleIncrement = async (item, isStripItem, stripsPerBox) => {
     const id = item.product?._id || item._id;
-    const addQty = isStripItem
-      ? Number((1 / Math.max(1, stripsPerBox)).toFixed(6))
-      : 1;
+
+    const addQty = isStripItem ? 1 : stripsPerBox > 0 ? stripsPerBox : 1;
 
     setActiveAction({ id, type: "inc" });
     try {
@@ -93,14 +103,13 @@ export const useCartLogic = () => {
   const handleDecrement = async (item, isStripItem, stripsPerBox) => {
     const id = item.product?._id || item._id;
     const currentQty = item.quantity ?? item.NOI ?? 1;
-    const subQty = isStripItem
-      ? Number((1 / Math.max(1, stripsPerBox)).toFixed(6))
-      : 1;
-    const newQty = Number((currentQty - subQty).toFixed(6));
+
+    const subQty = isStripItem ? 1 : stripsPerBox > 0 ? stripsPerBox : 1;
+    const newQty = currentQty - subQty;
 
     setActiveAction({ id, type: "dec" });
     try {
-      if (newQty < subQty) {
+      if (newQty < 1) {
         await removeFromCart(id).unwrap();
         toast.success("Item removed from cart");
       } else {

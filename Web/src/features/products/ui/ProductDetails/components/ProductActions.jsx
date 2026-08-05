@@ -1,4 +1,4 @@
-import { ShoppingCart, Loader2 } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import stripImage from "../../../../../assets/strip.webp";
 import Button from "../../../../../components/ui/Button";
 
@@ -13,7 +13,7 @@ export default function ProductActions({
   navigate,
 }) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+    <div className="flex flex-col sm:flex-row gap-4">
       <div className="flex flex-1 gap-3">
         <Button
           variant="solid"

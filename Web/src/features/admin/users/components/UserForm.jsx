@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import Input from "../../../../components/ui/Input";
 import Button from "../../../../components/ui/Button";
 

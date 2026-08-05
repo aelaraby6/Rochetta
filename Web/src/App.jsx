@@ -26,7 +26,6 @@ export default function App() {
 
   const isDashboard = location.pathname.startsWith("/dashboard");
   const authPaths = ["/login", "/signup"];
-
   const shouldHideNavbar = isDashboard || authPaths.includes(location.pathname);
 
   return (
@@ -47,7 +46,7 @@ export default function App() {
         {!shouldHideNavbar && <Footer />}
       </main>
 
-      {!shouldHideNavbar && <ChatBotWidget />}
+      <ChatBotWidget />
     </div>
   );
 }

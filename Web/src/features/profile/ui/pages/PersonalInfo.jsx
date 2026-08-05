@@ -1,6 +1,6 @@
 import { useGetMeQuery } from "../../store/userApi";
-import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function PersonalInfo() {
   const { data: response, isLoading, isError } = useGetMeQuery();
@@ -8,7 +8,7 @@ export default function PersonalInfo() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-green-600" />
+        <GlobalLoader width="w-8" height="h-8" animate-spin text="text-green-600" />
       </div>
     );
   }

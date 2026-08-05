@@ -1,6 +1,7 @@
-import { X, Loader2, Package, Pill } from "lucide-react";
+import { X, Package, Pill } from "lucide-react";
 import { useGetProductByIdQuery } from "../../../products/api/productsApi";
 import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ProductDetailsModal({ isOpen, onClose, productId }) {
   const { data, isLoading, error } = useGetProductByIdQuery(productId, {
@@ -37,7 +38,7 @@ export default function ProductDetailsModal({ isOpen, onClose, productId }) {
         <div className="p-6">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-(--color-primary-600)" />
+              <GlobalLoader width="w-8" height="h-8" animate-spin text="(--color-primary-600)" />
               <p className="mt-4 text-(--color-text-secondary)">
                 Loading details...
               </p>

@@ -1,10 +1,11 @@
-import { X, Star, Loader2, Award } from "lucide-react";
+import { X, Star, Award } from "lucide-react";
 import {
   useGetReviewByIdQuery,
   useUpdateReviewMutation,
 } from "../api/reviewsApi";
 import toast from "react-hot-toast";
 import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
   const { data, isLoading } = useGetReviewByIdQuery(reviewId, {
@@ -61,7 +62,7 @@ export default function ReviewDetailsModal({ isOpen, onClose, reviewId }) {
         <div className="p-6 overflow-y-auto">
           {isLoading ? (
             <div className="flex justify-center items-center py-10">
-              <Loader2 className="w-8 h-8 animate-spin text-(--color-primary-600)" />
+              <GlobalLoader width="w-8" height="h-8" animate-spin text="(--color-primary-600)" />
             </div>
           ) : !review ? (
             <div className="text-center py-10 text-(--color-text-secondary)">

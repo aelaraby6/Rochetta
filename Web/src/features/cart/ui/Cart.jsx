@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, Loader2, Trash2 } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { useCartLogic } from "../hooks/useCartLogic";
 import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";
@@ -24,7 +24,7 @@ export default function Cart() {
   if (isCartLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="w-12 h-12 animate-spin text-(--color-primary-600)" />
+        <GlobalLoader width="w-12" height="h-12" animate-spin text="(--color-primary-600)" />
       </div>
     );
   }

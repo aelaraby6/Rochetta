@@ -1,5 +1,6 @@
-import { Star, Loader2 } from "lucide-react";
+import { Star } from "lucide-react";
 import { useGetTopReviewsQuery } from "../../../features/admin/reviews/api/reviewsApi";
+import GlobalLoader from "../../../components/ui/GlobalLoader";
 
 export default function Testimonials() {
   const { data: response, isLoading, isError } = useGetTopReviewsQuery();
@@ -9,7 +10,7 @@ export default function Testimonials() {
   if (isLoading) {
     return (
       <div className="w-full bg-gray-100 dark:bg-[#1a1a1a] py-32 flex justify-center items-center">
-        <Loader2 className="w-10 h-10 animate-spin text-(--color-primary-600)" />
+        <GlobalLoader width="w-10" height="h-10" animate-spin text="text-(--color-primary-600)" />
       </div>
     );
   }
