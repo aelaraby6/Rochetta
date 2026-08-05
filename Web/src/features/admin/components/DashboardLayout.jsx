@@ -9,6 +9,7 @@ import { logout } from "../../auth/store/authSlice";
 import { useUpdateAvatarMutation } from "../../profile/store/userApi";
 import { setCredentials } from "../../auth/store/authSlice";
 import Button from "../../../components/ui/Button";
+import GlobalLoader from "../../../components/ui/GlobalLoader";
 
 export default function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);

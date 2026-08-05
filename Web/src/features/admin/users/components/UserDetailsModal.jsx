@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useGetUserByIdQuery } from "../api/usersApi";
 import Button from "../../../../components/ui/Button";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function UserDetailsModal({ isOpen, onClose, userId }) {
   const { data, isLoading, isError } = useGetUserByIdQuery(userId, {

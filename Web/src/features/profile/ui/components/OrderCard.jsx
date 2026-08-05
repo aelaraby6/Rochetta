@@ -1,4 +1,5 @@
 import { Calendar, DollarSign, Package, XCircle } from "lucide-react";
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function OrderCard({ order, cancellingId, onCancel }) {
   const total =

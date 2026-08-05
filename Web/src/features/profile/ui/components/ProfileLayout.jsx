@@ -7,6 +7,7 @@ import { logout } from "../../../auth/store/authSlice";
 import ProfileNav from "./ProfileNav";
 import { useUpdateAvatarMutation } from "../../store/userApi"; 
 import { setCredentials } from "../../../auth/store/authSlice"; 
+import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ProfileLayout() {
   const navigate = useNavigate();

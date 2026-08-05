@@ -5,6 +5,7 @@ import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import Button from "../../../components/ui/Button";
+import GlobalLoader from "../../../components/ui/GlobalLoader";
 
 export default function Cart() {
   const {
