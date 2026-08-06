@@ -13,6 +13,8 @@ import {
   GetAllProductsController,
   GetOneProductController,
   updateProductController,
+  GetSavedProductsController,
+  ToggleSavedProductController,
 } from "../../controllers/Product/product.controller.js";
 
 const router = Router();
@@ -43,6 +45,8 @@ router.patch(
 );
 
 router.get("/", GetAllProductsController);
+router.get("/saved-items", authMiddleware, GetSavedProductsController);
+router.post("/saved-items/:productId", authMiddleware, ToggleSavedProductController);
 router.get("/:id", GetOneProductController);
 
 export { router as ProductRouter };

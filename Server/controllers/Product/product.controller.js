@@ -6,6 +6,7 @@ import { validateObjectId } from "../../utils/validateObjectId.js";
 import cloudinary from "../../config/cloudinary.js";
 import streamifier from "streamifier";
 import { checkAndNotifyLowStock } from "../../services/notification.service.js";
+import SavedProduct from "../../models/Product/savedProduct.model.js";
 
 export const createProductController = async (req, res, next) => {
   try {
@@ -132,18 +133,18 @@ export const GetAllProductsController = async (req, res, next) => {
     }
 
     // Prescription requirement filter
-    if (req.query.requires_prescription !== undefined) {
+    if (req.query.requires_prescription !== undefined && req.query.requires_prescription !== "") {
       filters.requires_prescription =
         req.query.requires_prescription === "true";
     }
 
     // Has strips filter
-    if (req.query.has_strips !== undefined) {
+    if (req.query.has_strips !== undefined && req.query.has_strips !== "") {
       filters.has_strips = req.query.has_strips === "true";
     }
 
     // Stock status filter
-    if (req.query.inStock !== undefined) {
+    if (req.query.inStock !== undefined && req.query.inStock !== "") {
       if (req.query.inStock === "true") {
         filters.stock = { $gt: 0 };
       } else if (req.query.inStock === "false") {
@@ -303,3 +304,60 @@ export const updateProductController = async (req, res, next) => {
     next(error);
   }
 };
+
+export const GetSavedProductsController = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const saved = await SavedProduct.find({ user: userId })
+      .populate({
+        path: "product",
+        populate: { path: "category" }
+      })
+      .lean();
+
+    const products = saved
+      .map(item => item.product)
+      .filter(product => product && !product.is_deleted);
+
+    res.status(200).json({
+      message: "Saved products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const ToggleSavedProductController = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const { productId } = req.params;
+
+    validateObjectId(productId, "product id");
+
+    const productExists = await Product.findOne({ _id: productId, is_deleted: false });
+    if (!productExists) {
+      throw new NotFoundError("Product not found");
+    }
+
+    const existingSave = await SavedProduct.findOne({ user: userId, product: productId });
+
+    if (existingSave) {
+      await SavedProduct.deleteOne({ _id: existingSave._id });
+      return res.status(200).json({
+        message: "Product removed from wishlist",
+        isSaved: false,
+      });
+    } else {
+      const newSave = new SavedProduct({ user: userId, product: productId });
+      await newSave.save();
+      return res.status(200).json({
+        message: "Product added to wishlist",
+        isSaved: true,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+

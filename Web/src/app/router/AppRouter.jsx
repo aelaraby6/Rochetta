@@ -17,6 +17,7 @@ const Signup = lazy(() => import("../../features/auth/ui/Signup"));
 const NotFound = lazy(() => import("../../pages/Errors/NotFound"));
 const Cart = lazy(() => import("../../features/cart/ui/Cart"));
 const Policy = lazy(() => import("../../pages/Policy"));
+const AboutSystem = lazy(() => import("../../pages/AboutSystem"));
 
 const ProfileLayout = lazy(
   () => import("../../features/profile/ui/components/ProfileLayout"),
@@ -152,6 +153,7 @@ export default function AppRouter() {
         </Route>
 
         <Route path="policy" element={<Policy />} />
+        <Route path="about-system" element={<AboutSystem />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
