@@ -53,6 +53,14 @@ export default function Footer() {
                   Terms & Policy
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/about-system"
+                  className="text-gray-300 hover:text-(--color-warning-400) hover:underline transition-colors font-medium flex items-center justify-center md:justify-start gap-1.5"
+                >
+                  About System
+                </Link>
+              </li>
             </ul>
           </div>
 

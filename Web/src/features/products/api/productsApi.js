@@ -12,6 +12,9 @@ export const productsApi = apiSlice.injectEndpoints({
         sortPrice,
         minRating,
         is_active,
+        requires_prescription,
+        inStock,
+        has_strips,
       } = {}) => {
         const params = new URLSearchParams({ limit, page });
 
@@ -33,6 +36,18 @@ export const productsApi = apiSlice.injectEndpoints({
         }
 
         if (minRating) params.append("minRating", minRating);
+
+        if (requires_prescription !== undefined && requires_prescription !== "") {
+          params.append("requires_prescription", requires_prescription);
+        }
+
+        if (inStock !== undefined && inStock !== "") {
+          params.append("inStock", inStock);
+        }
+
+        if (has_strips !== undefined && has_strips !== "") {
+          params.append("has_strips", has_strips);
+        }
 
         return `/products?${params.toString()}`;
       },

@@ -25,6 +25,9 @@ export default function CategoryView() {
   const currentPage = parseInt(searchParams.get("page")) || 1;
   const sortPrice = searchParams.get("sortPrice") || "";
   const minRating = searchParams.get("minRating") || "";
+  const requires_prescription = searchParams.get("requires_prescription") || "";
+  const inStock = searchParams.get("inStock") || "";
+  const has_strips = searchParams.get("has_strips") || "";
   const ITEMS_PER_PAGE = 20;
 
   const {
@@ -47,6 +50,9 @@ export default function CategoryView() {
       search: searchTerm,
       sortPrice,
       minRating,
+      requires_prescription,
+      inStock,
+      has_strips,
     },
     { skip: !currentCategory },
   );
@@ -131,14 +137,12 @@ export default function CategoryView() {
               <h3 className="font-bold text-lg text-(--color-text-primary) dark:text-white">
                 Filters
               </h3>
-            </div>
-
-            <div className="flex flex-row md:flex-col items-center md:items-stretch gap-2 md:gap-6">
+            </div>            <div className="flex flex-row md:flex-col items-center md:items-stretch gap-2.5 md:gap-6 flex-wrap md:flex-nowrap">
               <div className="md:hidden flex items-center justify-center p-2.5 bg-(--color-surface-muted) dark:bg-gray-800 rounded-lg border border-(--color-border-base) dark:border-gray-700 text-(--color-text-secondary)">
                 <SlidersHorizontal className="w-4 h-4" />
               </div>
-
-              <div className="flex-1 space-y-0 md:space-y-3">
+ 
+              <div className="flex-1 min-w-[120px] space-y-0 md:space-y-3">
                 <label className="hidden md:block text-sm font-bold text-(--color-text-primary) dark:text-gray-200 uppercase tracking-wider">
                   Sort By Price
                 </label>
@@ -154,8 +158,8 @@ export default function CategoryView() {
                   <option value="desc">Price: High to Low</option>
                 </select>
               </div>
-
-              <div className="flex-1 space-y-0 md:space-y-3">
+ 
+              <div className="flex-1 min-w-[120px] space-y-0 md:space-y-3">
                 <label className="hidden md:block text-sm font-bold text-(--color-text-primary) dark:text-gray-200 uppercase tracking-wider">
                   Minimum Rating
                 </label>
@@ -169,6 +173,57 @@ export default function CategoryView() {
                   <option value="">Rating: All</option>
                   <option value="4">4+ Stars</option>
                   <option value="3">3+ Stars</option>
+                </select>
+              </div>
+
+              <div className="flex-1 min-w-[120px] space-y-0 md:space-y-3">
+                <label className="hidden md:block text-sm font-bold text-(--color-text-primary) dark:text-gray-200 uppercase tracking-wider">
+                  Prescription
+                </label>
+                <select
+                  value={requires_prescription}
+                  onChange={(e) =>
+                    handleFilterChange("requires_prescription", e.target.value)
+                  }
+                  className="w-full px-2 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl text-xs md:text-sm font-medium border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-(--color-primary-500) cursor-pointer text-(--color-text-body) dark:text-gray-200"
+                >
+                  <option value="">Prescription: All</option>
+                  <option value="true">Prescription Required</option>
+                  <option value="false">No Prescription</option>
+                </select>
+              </div>
+
+              <div className="flex-1 min-w-[120px] space-y-0 md:space-y-3">
+                <label className="hidden md:block text-sm font-bold text-(--color-text-primary) dark:text-gray-200 uppercase tracking-wider">
+                  Stock Availability
+                </label>
+                <select
+                  value={inStock}
+                  onChange={(e) =>
+                    handleFilterChange("inStock", e.target.value)
+                  }
+                  className="w-full px-2 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl text-xs md:text-sm font-medium border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-(--color-primary-500) cursor-pointer text-(--color-text-body) dark:text-gray-200"
+                >
+                  <option value="">Stock: All</option>
+                  <option value="true">In Stock</option>
+                  <option value="false">Out of Stock</option>
+                </select>
+              </div>
+
+              <div className="flex-1 min-w-[120px] space-y-0 md:space-y-3">
+                <label className="hidden md:block text-sm font-bold text-(--color-text-primary) dark:text-gray-200 uppercase tracking-wider">
+                  Pack Form
+                </label>
+                <select
+                  value={has_strips}
+                  onChange={(e) =>
+                    handleFilterChange("has_strips", e.target.value)
+                  }
+                  className="w-full px-2 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl text-xs md:text-sm font-medium border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-(--color-primary-500) cursor-pointer text-(--color-text-body) dark:text-gray-200"
+                >
+                  <option value="">Pack: All</option>
+                  <option value="true">Box of Strips</option>
+                  <option value="false">Standard Unit</option>
                 </select>
               </div>
             </div>
