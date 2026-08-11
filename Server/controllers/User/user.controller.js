@@ -1,9 +1,11 @@
-import { NotFoundError, BadRequestError,ForbiddenError } from "../../utils/errors.js";
+import {
+  NotFoundError,
+  BadRequestError,
+  ForbiddenError,
+} from "../../utils/errors.js";
 import User from "../../models/User/user.model.js";
 import cloudinary from "../../config/cloudinary.js";
 import bcrypt from "bcrypt";
-
-
 
 export const GetUserByIdController = async (req, res, next) => {
   try {
@@ -12,7 +14,7 @@ export const GetUserByIdController = async (req, res, next) => {
     const user = await User.findById(id).select("-password -__v").lean();
 
     if (!user) {
-      throw new NotFoundError("User not found"); 
+      throw new NotFoundError("User not found");
     }
 
     res.status(200).json({
@@ -28,7 +30,9 @@ export const GetUserProfileController = async (req, res, next) => {
   try {
     const userId = req.user._id;
 
-    const user = await User.findById(userId).select("-password -__v -is_deleted -is_active").lean();
+    const user = await User.findById(userId)
+      .select("-password -__v -is_deleted -is_active")
+      .lean();
 
     if (!user) {
       throw new NotFoundError("User not found");
@@ -58,7 +62,7 @@ export const UpdateAvatarController = async (req, res, next) => {
         (error, result) => {
           if (error) reject(error);
           else resolve(result);
-        }
+        },
       );
       stream.end(req.file.buffer);
     });
@@ -66,12 +70,14 @@ export const UpdateAvatarController = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { avatar: uploadResult.secure_url },
-      { new: true }
-    ).select("-password -__v -is_deleted -is_active").lean();
+      { new: true },
+    )
+      .select("-password -__v -is_deleted -is_active")
+      .lean();
 
     res.status(200).json({
       message: "Avatar updated successfully",
-      data: user
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -129,7 +135,7 @@ export const UpdateUserController = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { $set: updateData },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     )
       .select("-password -__v -is_deleted")
       .lean();
@@ -142,7 +148,6 @@ export const UpdateUserController = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export const UpdateUserRoleController = async (req, res, next) => {
   try {
@@ -168,14 +173,13 @@ export const UpdateUserRoleController = async (req, res, next) => {
       message: "User role updated successfully",
       data: {
         _id: targetUser._id,
-        role: targetUser.role
-      }
+        role: targetUser.role,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 export const CreateUserController = async (req, res, next) => {
   try {
@@ -183,7 +187,9 @@ export const CreateUserController = async (req, res, next) => {
     const { name, email, password, phone, role } = req.body;
 
     if (creatorRole === "admin" && role === "super_admin") {
-      throw new ForbiddenError("Admins are not allowed to create super_admin accounts");
+      throw new ForbiddenError(
+        "Admins are not allowed to create super_admin accounts",
+      );
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -287,7 +293,6 @@ export const GetAllUsersController = async (req, res, next) => {
   }
 };
 
-
 export const DeleteUserController = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -326,6 +331,21 @@ export const ToggleUserActiveController = async (req, res, next) => {
 
     res.status(200).json({
       message: `User ${is_active ? "activated" : "deactivated"} successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const GetCouriersListController = async (req, res, next) => {
+  try {
+    const couriers = await User.find({ role: "courier", is_deleted: false })
+      .select("name _id")
+      .lean();
+
+    return res.status(200).json({
+      message: "Couriers fetched successfully",
+      data: couriers,
     });
   } catch (error) {
     next(error);

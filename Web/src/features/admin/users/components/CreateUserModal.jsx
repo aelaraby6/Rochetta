@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { X } from "lucide-react";
+import { X, Eye, EyeOff } from "lucide-react";
 import { useCreateUserMutation } from "../api/usersApi";
 import toast from "react-hot-toast";
 import Input from "../../../../components/ui/Input";
@@ -9,6 +9,8 @@ import Button from "../../../../components/ui/Button";
 export default function CreateUserModal({ isOpen, onClose }) {
   const currentUser = useSelector((state) => state.auth.user);
   const [createUser, { isLoading }] = useCreateUserMutation();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const baseRoles = [
     { value: "user", label: "User" },
@@ -46,6 +48,7 @@ export default function CreateUserModal({ isOpen, onClose }) {
         phone: "",
         role: "user",
       });
+      setShowPassword(false);
       onClose();
     } catch (error) {
       toast.error(error?.data?.message || "Failed to create user");
@@ -103,16 +106,30 @@ export default function CreateUserModal({ isOpen, onClose }) {
                 placeholder="john@example.com"
               />
 
-              <Input
-                label="Password"
-                required
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                minLength={8}
-                placeholder="Enter a strong password"
-              />
+              <div className="relative">
+                <Input
+                  label="Password"
+                  required
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  minLength={8}
+                  placeholder="Enter a strong password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 bottom-[10px] text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
 
               <Input
                 label="Phone Number"

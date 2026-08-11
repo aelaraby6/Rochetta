@@ -1,16 +1,24 @@
-import { BadRequestError, NotFoundError, ConflictError, InternalServerError } from "../../utils/errors.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+  InternalServerError,
+} from "../../utils/errors.js";
 import { Cart } from "../../models/Cart/cart.model.js";
 import { Order } from "../../models/Order/order.model.js";
 import User from "../../models/User/user.model.js";
 import Product from "../../models/Product/product.model.js";
 import mongoose from "mongoose";
-import { checkAndNotifyLowStock, createNotification } from "../../services/notification.service.js";
+import {
+  checkAndNotifyLowStock,
+  createNotification,
+} from "../../services/notification.service.js";
 import { sendOrderConfirmationEmail } from "../../services/email.service.js";
 import {
   authenticatePaymob,
   createPaymobOrder,
   generatePaymentKey,
-  verifyPaymobHmac
+  verifyPaymobHmac,
 } from "../../services/paymob.service.js";
 
 export const CreateOrderController = async (req, res, next) => {
@@ -33,7 +41,9 @@ export const CreateOrderController = async (req, res, next) => {
     for (const item of items) {
       const product = products.find((p) => p._id.toString() === item.product);
       if (product.stock < item.quantity) {
-        throw new ConflictError(`Stock insufficient for product: ${product.name}`);
+        throw new ConflictError(
+          `Stock insufficient for product: ${product.name}`,
+        );
       }
     }
 
@@ -63,7 +73,7 @@ export const CreateOrderController = async (req, res, next) => {
           paymentStatus: "pending",
         },
       ],
-      { session }
+      { session },
     );
 
     const updatedProducts = [];
@@ -71,10 +81,12 @@ export const CreateOrderController = async (req, res, next) => {
       const updatedProduct = await Product.findOneAndUpdate(
         { _id: item.product, stock: { $gte: item.quantity } },
         { $inc: { stock: -item.quantity } },
-        { new: true, session }
+        { new: true, session },
       );
       if (!updatedProduct) {
-        throw new ConflictError("Stock became insufficient during transaction processing");
+        throw new ConflictError(
+          "Stock became insufficient during transaction processing",
+        );
       }
       updatedProducts.push(updatedProduct);
     }
@@ -95,7 +107,10 @@ export const CreateOrderController = async (req, res, next) => {
     // Check and notify low stock for products after successful checkout transaction
     for (const prod of updatedProducts) {
       checkAndNotifyLowStock(prod).catch((err) =>
-        console.error("Low stock check error from order placement:", err.message)
+        console.error(
+          "Low stock check error from order placement:",
+          err.message,
+        ),
       );
     }
 
@@ -103,7 +118,10 @@ export const CreateOrderController = async (req, res, next) => {
 
     if (paymentMethod === "COD") {
       if (user && user.email) {
-        const populatedOrder = await Order.findById(newOrder._id).populate("items.product", "name price");
+        const populatedOrder = await Order.findById(newOrder._id).populate(
+          "items.product",
+          "name price",
+        );
         if (populatedOrder) {
           sendOrderConfirmationEmail(user.email, user.name, populatedOrder);
         }
@@ -124,7 +142,9 @@ export const CreateOrderController = async (req, res, next) => {
 
         // Populate items with names/details for Paymob
         const populatedItems = orderItems.map((item) => {
-          const product = products.find((p) => p._id.toString() === item.product.toString());
+          const product = products.find(
+            (p) => p._id.toString() === item.product.toString(),
+          );
           return {
             name: product?.name || "Product",
             price: product?.price || item.price,
@@ -138,7 +158,7 @@ export const CreateOrderController = async (req, res, next) => {
           authToken,
           totalCents,
           newOrder._id,
-          populatedItems
+          populatedItems,
         );
 
         const names = user.name.split(" ");
@@ -160,7 +180,7 @@ export const CreateOrderController = async (req, res, next) => {
           authToken,
           totalCents,
           paymobOrderId,
-          billingData
+          billingData,
         );
 
         // Save paymobOrderId to database
@@ -175,7 +195,10 @@ export const CreateOrderController = async (req, res, next) => {
           checkoutUrl,
         });
       } catch (paymobError) {
-        console.error("Paymob Error during order creation, rolling back order:", paymobError);
+        console.error(
+          "Paymob Error during order creation, rolling back order:",
+          paymobError,
+        );
 
         // Manual rollback of order and stock since transaction is committed
         await Order.findByIdAndUpdate(newOrder._id, {
@@ -184,10 +207,14 @@ export const CreateOrderController = async (req, res, next) => {
         });
 
         for (const it of orderItems) {
-          await Product.findByIdAndUpdate(it.product, { $inc: { stock: it.quantity } });
+          await Product.findByIdAndUpdate(it.product, {
+            $inc: { stock: it.quantity },
+          });
         }
 
-        throw new BadRequestError("Failed to initiate online payment: " + paymobError.message);
+        throw new BadRequestError(
+          "Failed to initiate online payment: " + paymobError.message,
+        );
       }
     }
   } catch (error) {
@@ -248,7 +275,7 @@ export const CancelOrderController = async (req, res, next) => {
       await Product.findByIdAndUpdate(
         prodId,
         { $inc: { stock: it.quantity || 0 } },
-        { session }
+        { session },
       );
     }
 
@@ -262,7 +289,9 @@ export const CancelOrderController = async (req, res, next) => {
 
     await order.populate("items.product", "name price stock stripsPerBox");
 
-    return res.status(200).json({ message: "Order canceled and removed", order });
+    return res
+      .status(200)
+      .json({ message: "Order canceled and removed", order });
   } catch (error) {
     if (session.inTransaction()) {
       await session.abortTransaction();
@@ -272,10 +301,11 @@ export const CancelOrderController = async (req, res, next) => {
   }
 };
 
-// Get All Orders 
+// Get All Orders
 export const GetAllOrdersAdminController = async (req, res, next) => {
   try {
-    const { status, minTotal, maxTotal, startDate, endDate, search } = req.query;
+    const { status, minTotal, maxTotal, startDate, endDate, search } =
+      req.query;
 
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 10;
@@ -314,7 +344,9 @@ export const GetAllOrdersAdminController = async (req, res, next) => {
       }).select("_id");
 
       if (matchedUsers.length > 0) {
-        searchOrConditions.push({ user: { $in: matchedUsers.map((u) => u._id) } });
+        searchOrConditions.push({
+          user: { $in: matchedUsers.map((u) => u._id) },
+        });
       }
 
       const matchedProducts = await Product.find({
@@ -322,12 +354,14 @@ export const GetAllOrdersAdminController = async (req, res, next) => {
       }).select("_id");
 
       if (matchedProducts.length > 0) {
-        searchOrConditions.push({ "items.product": { $in: matchedProducts.map((p) => p._id) } });
+        searchOrConditions.push({
+          "items.product": { $in: matchedProducts.map((p) => p._id) },
+        });
       }
 
       searchOrConditions.push(
         { "address.street": { $regex: search, $options: "i" } },
-        { "address.city": { $regex: search, $options: "i" } }
+        { "address.city": { $regex: search, $options: "i" } },
       );
 
       query.$or = searchOrConditions;
@@ -360,7 +394,7 @@ export const GetAllOrdersAdminController = async (req, res, next) => {
   }
 };
 
-// Get Order by ID 
+// Get Order by ID
 export const GetOrderByIdAdminController = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -382,26 +416,41 @@ export const GetOrderByIdAdminController = async (req, res, next) => {
   }
 };
 
-// Update Order Status 
-export const UpdateOrderStatusAdminController = async (req, res, next) => {
+// Update Order Status
+export const UpdateOrderStatusController = async (req, res, next) => {
   const session = await mongoose.startSession();
   try {
     const { id } = req.params;
     const { status } = req.body;
+    const userId = req.user._id;
+    const userRole = req.user.role;
 
     session.startTransaction();
 
-    const order = await Order.findOne({ _id: id, is_deleted: false }).session(session);
+    const query = { _id: id, is_deleted: false };
+
+    if (userRole !== "admin" && userRole !== "super_admin") {
+      query.courier = userId;
+    }
+
+    const order = await Order.findOne(query).session(session);
+
     if (!order) {
-      throw new NotFoundError("Order not found");
+      return res.status(404).json({
+        message: "Order not found or you don't have permission to update it",
+      });
     }
 
     if (order.status === "canceled") {
-      throw new BadRequestError("Cannot update status of a canceled order");
+      return res
+        .status(400)
+        .json({ message: "Cannot update status of a canceled order" });
     }
 
     if (order.status === status) {
-      return res.status(400).json({ message: `Order status is already ${status}` });
+      return res
+        .status(400)
+        .json({ message: `Order status is already ${status}` });
     }
 
     if (status === "canceled") {
@@ -411,7 +460,7 @@ export const UpdateOrderStatusAdminController = async (req, res, next) => {
         await Product.findByIdAndUpdate(
           prodId,
           { $inc: { stock: it.quantity || 0 } },
-          { session }
+          { session },
         );
       }
       order.canceledAt = new Date();
@@ -427,12 +476,12 @@ export const UpdateOrderStatusAdminController = async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
-    await order.populate("user", "name email");
-    await order.populate("items.product", "name price stock stripsPerBox");
+    await order.populate("user", "name phone email");
+    await order.populate("items.product", "name image price");
 
     return res.status(200).json({
       message: "Order status updated successfully",
-      order,
+      data: order,
     });
   } catch (error) {
     if (session.inTransaction()) {
@@ -494,7 +543,10 @@ export const PaymobWebhookController = async (req, res, next) => {
         await order.save();
 
         // Clear user's cart
-        const cart = await Cart.findOne({ user: order.user, is_deleted: false });
+        const cart = await Cart.findOne({
+          user: order.user,
+          is_deleted: false,
+        });
         if (cart) {
           cart.items = [];
           cart.total_price = 0;
@@ -504,7 +556,10 @@ export const PaymobWebhookController = async (req, res, next) => {
         // Send order confirmation email
         const user = await User.findById(order.user);
         if (user && user.email) {
-          const populatedOrder = await Order.findById(order._id).populate("items.product", "name price");
+          const populatedOrder = await Order.findById(order._id).populate(
+            "items.product",
+            "name price",
+          );
           if (populatedOrder) {
             sendOrderConfirmationEmail(user.email, user.name, populatedOrder);
           }
@@ -516,7 +571,7 @@ export const PaymobWebhookController = async (req, res, next) => {
           message: `Payment of EGP ${order.total} successful for Order #${order._id}.`,
           type: "order",
           recipientRole: "admin",
-          metadata: { orderId: order._id, total: order.total }
+          metadata: { orderId: order._id, total: order.total },
         });
       }
     } else if (!pending) {
@@ -531,7 +586,9 @@ export const PaymobWebhookController = async (req, res, next) => {
         for (const item of order.items) {
           const prodId = item.product?._id || item.product;
           if (prodId) {
-            await Product.findByIdAndUpdate(prodId, { $inc: { stock: item.quantity || 0 } });
+            await Product.findByIdAndUpdate(prodId, {
+              $inc: { stock: item.quantity || 0 },
+            });
           }
         }
 
@@ -541,7 +598,7 @@ export const PaymobWebhookController = async (req, res, next) => {
           message: `We were unable to process your payment for Order #${order._id}. The order has been canceled.`,
           type: "order",
           recipient: order.user,
-          metadata: { orderId: order._id }
+          metadata: { orderId: order._id },
         });
       }
     }
@@ -552,4 +609,106 @@ export const PaymobWebhookController = async (req, res, next) => {
     next(error);
   }
 };
+export const AssignOrderToCourierController = async (req, res, next) => {
+  try {
+    const { id: orderId } = req.params;
+    const { courierId } = req.body;
 
+    const order = await Order.findOne({ _id: orderId, is_deleted: false });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const courier = await User.findOne({
+      _id: courierId,
+      role: "courier",
+      is_deleted: false,
+    });
+
+    if (!courier) {
+      return res.status(404).json({ message: "Courier not found or invalid" });
+    }
+
+    order.courier = courierId;
+    await order.save();
+
+    return res.status(200).json({
+      message: "Order assigned to courier successfully",
+      data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const GetCourierOrdersController = async (req, res, next) => {
+  try {
+    const courierId = req.user._id;
+    const { status } = req.query;
+
+    const query = { courier: courierId, is_deleted: false };
+
+    if (status) {
+      query.status = status;
+    }
+
+    const orders = await Order.find(query)
+      .populate("user", "name phone email")
+      .populate("items.product", "name image price")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.status(200).json({
+      message: "Courier orders fetched successfully",
+      data: orders,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const DeleteOrderAdminController = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  try {
+    const { id } = req.params;
+
+    session.startTransaction();
+
+    const order = await Order.findById(id).session(session);
+
+    if (!order || order.is_deleted) {
+      return res
+        .status(404)
+        .json({ message: "Order not found or already deleted" });
+    }
+
+    if (order.status !== "canceled") {
+      for (const it of order.items) {
+        const prodId = it.product?._id ? it.product._id : it.product;
+        if (!prodId) continue;
+        await Product.findByIdAndUpdate(
+          prodId,
+          { $inc: { stock: it.quantity || 0 } },
+          { session },
+        );
+      }
+    }
+
+    order.is_deleted = true;
+    await order.save({ session, validateBeforeSave: false });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({
+      message: "Order deleted successfully and stock restored",
+    });
+  } catch (error) {
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+    session.endSession();
+    next(error);
+  }
+};

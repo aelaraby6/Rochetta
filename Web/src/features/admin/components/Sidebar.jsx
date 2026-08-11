@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   LayoutDashboard,
   Package,
@@ -8,9 +9,10 @@ import {
   Activity,
   X,
   Star,
+  Truck,
 } from "lucide-react";
 
-const navItems = [
+const adminNavItems = [
   {
     label: "Dashboard",
     icon: LayoutDashboard,
@@ -49,7 +51,25 @@ const navItems = [
   },
 ];
 
+const courierNavItems = [
+  {
+    label: "Overview",
+    icon: LayoutDashboard,
+    path: "/courier",
+    end: true,
+  },
+  {
+    label: "My Orders",
+    icon: Truck,
+    path: "/courier/orders",
+    end: false,
+  },
+];
+
 export default function Sidebar({ mobileOpen, onMobileClose }) {
+  const { user } = useSelector((state) => state.auth);
+  const navItems = user?.role === "courier" ? courierNavItems : adminNavItems;
+
   return (
     <>
       {mobileOpen && (

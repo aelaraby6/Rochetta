@@ -25,8 +25,9 @@ export default function App() {
   }, [darkMode]);
 
   const isDashboard = location.pathname.startsWith("/dashboard");
+  const isCourier = location.pathname.startsWith("/courier");
   const authPaths = ["/login", "/signup"];
-  const shouldHideNavbar = isDashboard || authPaths.includes(location.pathname);
+  const shouldHideNavbar = isDashboard || isCourier || authPaths.includes(location.pathname);
 
   return (
     <div className="flex flex-col min-h-screen w-full">

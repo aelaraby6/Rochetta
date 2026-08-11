@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Search, Filter, ShoppingBag } from "lucide-react";
+import { Search, Filter, ShoppingBag, Trash2 } from "lucide-react";
 import DynamicTable from "../components/DynamicTable";
 import { useDebounce } from "../../../hooks/useDebounce";
 import {
   useGetOrdersQuery,
   useUpdateOrderStatusMutation,
+  useGetCouriersListQuery,
+  useAssignOrderToCourierMutation,
+  useDeleteOrderMutation,
 } from "./api/ordersApi";
 import toast from "react-hot-toast";
 import OrderDetailsModal from "./components/OrderDetailsModal";
@@ -31,8 +34,16 @@ export default function OrdersPage() {
     endDate,
   });
 
+  const { data: couriersData } = useGetCouriersListQuery();
+  const couriersList = couriersData?.data || [];
+
   const [updateOrderStatus, { isLoading: isUpdatingStatus }] =
     useUpdateOrderStatusMutation();
+
+  const [assignOrder, { isLoading: isAssigning }] =
+    useAssignOrderToCourierMutation();
+
+  const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
 
   const ordersData = data?.data?.orders || [];
   const pagination = data?.data?.pagination || { totalPages: 1 };
@@ -45,6 +56,31 @@ export default function OrdersPage() {
       toast.success("Order status updated successfully");
     } catch (error) {
       toast.error(error?.data?.message || "Failed to update status");
+    }
+  };
+
+  const handleAssignCourier = async (e, orderId) => {
+    e.stopPropagation();
+    const courierId = e.target.value;
+    if (!courierId) return;
+
+    try {
+      await assignOrder({ orderId, courierId }).unwrap();
+      toast.success("Order assigned to courier successfully");
+    } catch (error) {
+      toast.error(error?.data?.message || "Failed to assign courier");
+    }
+  };
+
+  const handleDeleteOrder = async (e, id) => {
+    e.stopPropagation();
+    if (window.confirm("Are you sure you want to delete this order?")) {
+      try {
+        await deleteOrder(id).unwrap();
+        toast.success("Order deleted successfully");
+      } catch (error) {
+        toast.error(error?.data?.message || "Failed to delete order");
+      }
     }
   };
 
@@ -91,6 +127,33 @@ export default function OrdersPage() {
       ),
     },
     {
+      key: "courier",
+      label: "Courier",
+      render: (val, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <select
+            value={val || ""}
+            onChange={(e) => handleAssignCourier(e, row._id)}
+            disabled={
+              isAssigning ||
+              row.status === "canceled" ||
+              row.status === "delivered"
+            }
+            className="text-xs px-2 py-1.5 rounded-lg border border-(--color-border-input) dark:border-gray-700 bg-(--color-surface-input) dark:bg-[#252525] text-(--color-text-primary) dark:text-white outline-none cursor-pointer"
+          >
+            <option value="" disabled>
+              Assign...
+            </option>
+            {couriersList.map((courier) => (
+              <option key={courier._id} value={courier._id}>
+                {courier.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      ),
+    },
+    {
       key: "status",
       label: "Status",
       render: (val, row) => (
@@ -113,6 +176,20 @@ export default function OrdersPage() {
       key: "createdAt",
       label: "Date",
       render: (val) => new Date(val).toLocaleDateString("en-GB"),
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (_, row) => (
+        <button
+          onClick={(e) => handleDeleteOrder(e, row._id)}
+          disabled={isDeleting}
+          className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+          title="Delete Order"
+        >
+          <Trash2 className="w-5 h-5" />
+        </button>
+      ),
     },
   ];
 
