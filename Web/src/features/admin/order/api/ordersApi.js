@@ -33,6 +33,24 @@ export const ordersApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Order"],
     }),
+    assignOrderToCourier: builder.mutation({
+      query: ({ orderId, courierId }) => ({
+        url: `/order/${orderId}/assign`,
+        method: "PATCH",
+        body: { courierId },
+      }),
+      invalidatesTags: ["Order", "CourierOrder"],
+    }),
+    getCouriersList: builder.query({
+      query: () => "/user/couriers/list",
+    }),
+    deleteOrder: builder.mutation({
+      query: (id) => ({
+        url: `/order/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Order"],
+    }),
   }),
 });
 
@@ -40,4 +58,7 @@ export const {
   useGetOrdersQuery,
   useGetOrderByIdQuery,
   useUpdateOrderStatusMutation,
+  useGetCouriersListQuery,
+  useAssignOrderToCourierMutation,
+  useDeleteOrderMutation,
 } = ordersApi;
