@@ -12,7 +12,7 @@ const FAQAccordion = lazy(() => import("./components/FAQAccordion"));
 
 export default function LandingPage() {
   return (
-    <div className="w-full bg-(--color-surface-page) dark:bg-[#121212] transition-colors duration-300">
+    <div className="w-full bg-(--color-surface-page) dark:bg-[#121212]">
       <HeroSection />
       <FeatureCards />
 

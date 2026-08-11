@@ -25,11 +25,9 @@ const ProfileLayout = lazy(
 const PersonalInfo = lazy(
   () => import("../../features/profile/ui/pages/PersonalInfo"),
 );
-
 const OrderHistory = lazy(
   () => import("../../features/profile/ui/pages/OrderHistory"),
 );
-
 const Wishlist = lazy(() => import("../../features/profile/ui/pages/Wishlist"));
 
 const DashboardLayout = lazy(
@@ -52,37 +50,33 @@ const DashboardPage = lazy(
   () => import("../../features/admin/dashboard/pages/DashboardPage"),
 );
 
-function DashboardPlaceholder({ title }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-        <span className="text-3xl">🚧</span>
-      </div>
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-        {title}
-      </h2>
-      <p className="text-gray-500 dark:text-gray-400">
-        This page will be built in the upcoming steps.
-      </p>
-    </div>
-  );
-}
-
-const RootRedirect = () => {
-  const user = useSelector((state) => state.auth.user);
-  if (user && (user.role === "admin" || user.role === "super_admin")) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  return <LandingPage />;
-};
+const CourierOverview = lazy(
+  () => import("../../features/courier/ui/pages/CourierOverview"),
+);
+const CourierOrders = lazy(
+  () => import("../../features/courier/ui/pages/CourierOrders"),
+);
 
 const AuthRedirect = ({ children }) => {
   const user = useSelector((state) => state.auth.user);
-  if (user && (user.role === "admin" || user.role === "super_admin")) {
-    return <Navigate to="/dashboard" replace />;
+  if (user) {
+    if (user.role === "admin" || user.role === "super_admin") {
+      return <Navigate to="/dashboard" replace />;
+    }
+    if (user.role === "courier") {
+      return <Navigate to="/courier" replace />;
+    }
+    if (user.role === "user") {
+      return <Navigate to="/" replace />;
+    }
   }
-  if (user && user.role === "user") {
-    return <Navigate to="/" replace />;
+  return children;
+};
+
+const CourierRoute = ({ children }) => {
+  const user = useSelector((state) => state.auth.user);
+  if (!user || user.role !== "courier") {
+    return <Navigate to="/login" replace />;
   }
   return children;
 };
@@ -91,7 +85,7 @@ export default function AppRouter() {
   return (
     <Suspense fallback={<GlobalLoader />}>
       <Routes>
-        <Route path="/" element={<RootRedirect />} />
+        <Route path="/" element={<LandingPage />} />
 
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/category/:slug" element={<CategoryView />} />
@@ -139,9 +133,9 @@ export default function AppRouter() {
         <Route
           path="/dashboard"
           element={
-            <AdminRoute>
-              <DashboardLayout />
-            </AdminRoute>
+            // <AdminRoute>
+            <DashboardLayout />
+            // </AdminRoute>
           }
         >
           <Route index element={<DashboardPage />} />
@@ -150,6 +144,18 @@ export default function AppRouter() {
           <Route path="users" element={<UsersPage />} />
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+        </Route>
+
+        <Route
+          path="/courier"
+          element={
+            <CourierRoute>
+              <DashboardLayout />
+            </CourierRoute>
+          }
+        >
+          <Route index element={<CourierOverview />} />
+          <Route path="orders" element={<CourierOrders />} />
         </Route>
 
         <Route path="policy" element={<Policy />} />
