@@ -11,6 +11,7 @@ import {
   ToggleUserActiveController,
   GetUserByIdController,
   UpdateUserRoleController,
+  GetCouriersListController
 } from "../../controllers/User/user.controller.js";
 import {
   processImage,
@@ -47,6 +48,12 @@ router.post(
   checkRole("super_admin", "admin"),
   validate(createUserSchema),
   CreateUserController,
+);
+
+router.get(
+  "/couriers/list",
+  checkRole(["admin", "super_admin"]),
+  GetCouriersListController,
 );
 
 router.get("/:id", checkRole("super_admin", "admin"), GetUserByIdController);

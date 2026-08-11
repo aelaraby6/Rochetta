@@ -7,25 +7,64 @@ import {
   CancelOrderController,
   GetAllOrdersAdminController,
   GetOrderByIdAdminController,
-  UpdateOrderStatusAdminController,
-  PaymobWebhookController
+  PaymobWebhookController,
+  AssignOrderToCourierController,
+  GetCourierOrdersController,
+  UpdateOrderStatusController,
+  DeleteOrderAdminController
 } from "../../controllers/Order/order.controller.js";
 import { validate } from "../../middleware/validate.middleware.js";
-import { CreateOrderSchema, UpdateOrderStatusSchema } from "../../validations/Order/order.validation.js";
+import {
+  CreateOrderSchema,
+  UpdateOrderStatusSchema,
+} from "../../validations/Order/order.validation.js";
 
 const router = Router();
 
-// Paymob webhook is called externally by Paymob (no user authentication JWT)
 router.post("/webhook/paymob", PaymobWebhookController);
 
 router.use(authMiddleware);
 
-router.post("/create-order", validate(CreateOrderSchema), CreateOrderController);
+router.post(
+  "/create-order",
+  validate(CreateOrderSchema),
+  CreateOrderController,
+);
 router.get("/", GetUserOrdersController);
 router.patch("/:id/cancel", CancelOrderController);
 
-router.get("/all-orders", checkRole(["admin", "super_admin"]), GetAllOrdersAdminController);
-router.get("/:id", checkRole(["admin", "super_admin"]), GetOrderByIdAdminController);
-router.patch("/:id/status", checkRole(["admin", "super_admin"]), validate(UpdateOrderStatusSchema), UpdateOrderStatusAdminController);
+router.get(
+  "/courier/my-orders",
+  checkRole(["courier"]),
+  GetCourierOrdersController,
+);
+
+router.patch(
+  "/:id/assign",
+  checkRole(["admin", "super_admin"]),
+  AssignOrderToCourierController,
+);
+
+router.get(
+  "/all-orders",
+  checkRole(["admin", "super_admin"]),
+  GetAllOrdersAdminController,
+);
+router.get(
+  "/:id",
+  checkRole(["admin", "super_admin", "courier"]),
+  GetOrderByIdAdminController,
+);
+router.patch(
+  "/:id/status",
+  checkRole(["admin", "super_admin", "courier"]),
+  validate(UpdateOrderStatusSchema),
+  UpdateOrderStatusController,
+);
+router.delete(
+  "/:id",
+  checkRole(["admin", "super_admin"]),
+  DeleteOrderAdminController,
+);
 
 export { router as OrderRouter };

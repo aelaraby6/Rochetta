@@ -21,7 +21,7 @@ router.get("/top", getTopReviewsController);
 
 router.use(authMiddleware);
 
-router.get("/", checkRole(["admin", "super_admin"]), getAllReviewsController);
+router.get("/", getAllReviewsController);
 router.get("/:id", checkRole(["admin", "super_admin"]), getOneReviewController);
 router.post("/", validate(createReviewSchema), createReviewController);
 router.patch("/:id", validate(updateReviewSchema), updateReviewController);

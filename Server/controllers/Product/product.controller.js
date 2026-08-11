@@ -7,6 +7,7 @@ import cloudinary from "../../config/cloudinary.js";
 import streamifier from "streamifier";
 import { checkAndNotifyLowStock } from "../../services/notification.service.js";
 import SavedProduct from "../../models/Product/savedProduct.model.js";
+import User from "../../models/User/user.model.js";
 
 export const createProductController = async (req, res, next) => {
   try {
@@ -133,7 +134,10 @@ export const GetAllProductsController = async (req, res, next) => {
     }
 
     // Prescription requirement filter
-    if (req.query.requires_prescription !== undefined && req.query.requires_prescription !== "") {
+    if (
+      req.query.requires_prescription !== undefined &&
+      req.query.requires_prescription !== ""
+    ) {
       filters.requires_prescription =
         req.query.requires_prescription === "true";
     }
@@ -311,13 +315,13 @@ export const GetSavedProductsController = async (req, res, next) => {
     const saved = await SavedProduct.find({ user: userId })
       .populate({
         path: "product",
-        populate: { path: "category" }
+        populate: { path: "category" },
       })
       .lean();
 
     const products = saved
-      .map(item => item.product)
-      .filter(product => product && !product.is_deleted);
+      .map((item) => item.product)
+      .filter((product) => product && !product.is_deleted);
 
     res.status(200).json({
       message: "Saved products fetched successfully",
@@ -327,7 +331,6 @@ export const GetSavedProductsController = async (req, res, next) => {
     next(error);
   }
 };
-
 export const ToggleSavedProductController = async (req, res, next) => {
   try {
     const userId = req.user._id;
@@ -335,22 +338,38 @@ export const ToggleSavedProductController = async (req, res, next) => {
 
     validateObjectId(productId, "product id");
 
-    const productExists = await Product.findOne({ _id: productId, is_deleted: false });
+    const productExists = await Product.findOne({
+      _id: productId,
+      is_deleted: false,
+    });
     if (!productExists) {
-      throw new NotFoundError("Product not found");
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    const existingSave = await SavedProduct.findOne({ user: userId, product: productId });
+    const existingSave = await SavedProduct.findOne({
+      user: userId,
+      product: productId,
+    });
 
     if (existingSave) {
-      await SavedProduct.deleteOne({ _id: existingSave._id });
+
+      await Promise.all([
+        SavedProduct.deleteOne({ _id: existingSave._id }),
+        Product.findByIdAndUpdate(productId, { $inc: { save_count: -1 } }),
+      ]);
+
       return res.status(200).json({
         message: "Product removed from wishlist",
         isSaved: false,
       });
     } else {
       const newSave = new SavedProduct({ user: userId, product: productId });
-      await newSave.save();
+
+      await Promise.all([
+        newSave.save(),
+        Product.findByIdAndUpdate(productId, { $inc: { save_count: 1 } }),
+      ]);
+
       return res.status(200).json({
         message: "Product added to wishlist",
         isSaved: true,
@@ -360,4 +379,3 @@ export const ToggleSavedProductController = async (req, res, next) => {
     next(error);
   }
 };
-
