@@ -1,4 +1,8 @@
-import { BadRequestError, NotFoundError,ConflictError  } from "../../utils/errors.js";
+import {
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+} from "../../utils/errors.js";
 import { generateToken } from "../../services/jwt.service.js";
 import User from "../../models/User/user.model.js";
 import {
@@ -7,6 +11,15 @@ import {
 } from "../../services/password.service.js";
 import { sendWelcomeEmail } from "../../services/email.service.js";
 import { DEFAULT_ROLE } from "../../utils/constants.js";
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 const formatUserResponse = (user) => {
   const { _id, name, email, role, avatar } = user.toObject();
@@ -29,33 +42,27 @@ export const RegisterController = async (req, res, next) => {
 
     const savedUser = existingUser?.is_deleted
       ? await User.findByIdAndUpdate(
-        existingUser._id,
-        {
-          name,
-          password: hashedPassword,
-          role: DEFAULT_ROLE,
-          is_deleted: false,
-          is_active: true,
-        },
-        { new: true }
-      )
+          existingUser._id,
+          {
+            name,
+            password: hashedPassword,
+            role: DEFAULT_ROLE,
+            is_deleted: false,
+            is_active: true,
+          },
+          { new: true },
+        )
       : await User.create({
-        name,
-        email: normalizedEmail,
-        password: hashedPassword,
-        avatar: null,
-      });
+          name,
+          email: normalizedEmail,
+          password: hashedPassword,
+          avatar: null,
+        });
 
     const token = generateToken(savedUser._id, savedUser.role);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", token, cookieOptions);
 
-    // Send welcome email
     sendWelcomeEmail(savedUser.email, savedUser.name);
 
     return res.status(201).json({
@@ -70,13 +77,15 @@ export const RegisterController = async (req, res, next) => {
   }
 };
 
-// Login 
+// Login
 export const LoginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const normalizedEmail = email.toLowerCase();
 
-    const user = await User.findOne({ email: normalizedEmail }).select("+password");
+    const user = await User.findOne({ email: normalizedEmail }).select(
+      "+password",
+    );
 
     if (!user || user.is_deleted || !user.is_active) {
       throw new NotFoundError("Invalid email or password");
@@ -90,12 +99,7 @@ export const LoginController = async (req, res, next) => {
 
     const token = generateToken(user._id, user.role);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", token, cookieOptions);
 
     return res.status(200).json({
       message: "Logged in successfully",
@@ -110,11 +114,9 @@ export const LoginController = async (req, res, next) => {
 // Logout
 export const LogoutController = async (req, res, next) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
+    const { maxAge, ...clearOptions } = cookieOptions;
+
+    res.clearCookie("token", clearOptions);
 
     return res.status(200).json({
       message: "Logged out successfully",
