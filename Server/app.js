@@ -11,6 +11,11 @@ import { ApiRouter } from "./routers/index.js";
 import { notFoundMiddleware } from "./middleware/not_found.middleware.js";
 import { swaggerUi, swaggerSpec } from "./utils/swagger.js";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -27,6 +32,9 @@ app.use(compression());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(hpp());
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
 
 // Global rate limiting for all API routes
 const limiter = rateLimit({
@@ -45,6 +53,7 @@ app.use("/api", limiter);
 app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
+
 
 
 if (process.env.NODE_ENV !== "production") {
