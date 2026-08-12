@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { User } from "lucide-react";
 import CartBadge from "./CartBadge";
 import ThemeToggle from "./ThemeToggle";
-import Button from "../../../components/ui/Button";
 
 export default function DesktopNav() {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -36,15 +35,12 @@ export default function DesktopNav() {
           >
             Login
           </Link>
-          <Button
-            as={Link}
+          <Link
             to="/signup"
-            variant="solid"
-            size="sm"
-            className="bg-white text-(--color-primary-700) hover:bg-gray-100 shadow-sm"
+            className="font-bold text-white hover:text-(--color-primary-200) transition-colors"
           >
             Signup
-          </Button>
+          </Link>
         </div>
       )}
     </div>
