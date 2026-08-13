@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { User, LogOut, Camera, FilePlus } from "lucide-react";
+import { User, LogOut, Camera } from "lucide-react";
 import toast from "react-hot-toast";
-import { logout } from "../../../auth/store/authSlice";
+import { logout, setCredentials } from "../../../auth/store/authSlice";
 import ProfileNav from "./ProfileNav";
 import { useUpdateAvatarMutation } from "../../store/userApi";
-import { setCredentials } from "../../../auth/store/authSlice";
 import GlobalLoader from "../../../../components/ui/GlobalLoader";
 
 export default function ProfileLayout() {
@@ -56,11 +55,11 @@ export default function ProfileLayout() {
 
   return (
     <div className="max-w-7xl mx-auto mt-10 px-4 sm:px-8 lg:px-12 mb-20 w-full transition-colors duration-300">
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 p-8 sm:p-12 mb-8 relative z-20 overflow-visible">
+      <div className="bg-(--color-surface-card) rounded-[2rem] shadow-sm border border-(--color-border-base) p-8 sm:p-12 mb-8">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-8">
           <div className="flex items-center gap-6">
             <div className="relative group">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-green-400 to-green-600 text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-gray-800 shrink-0 overflow-hidden">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-(--color-primary-400) to-(--color-primary-600) text-white rounded-full flex items-center justify-center shadow-lg border-4 border-(--color-surface-page) shrink-0 overflow-hidden">
                 {isUploading ? (
                   <GlobalLoader
                     width="w-8"
@@ -84,11 +83,11 @@ export default function ProfileLayout() {
               <button
                 onClick={handleAvatarClick}
                 disabled={isUploading}
-                className="absolute bottom-0 right-0 bg-white dark:bg-gray-800 p-2.5 rounded-full shadow-md border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-transform group-hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-600"
+                className="absolute bottom-0 right-0 bg-(--color-surface-card) p-2.5 rounded-full shadow-md border border-(--color-border-input) hover:bg-(--color-surface-muted) transition-transform group-hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-(--color-primary-600)"
                 aria-label="Upload new avatar"
               >
                 <Camera
-                  className="w-4 h-4 text-green-600 dark:text-green-500"
+                  className="w-4 h-4 text-(--color-primary-600)"
                   aria-hidden="true"
                 />
               </button>
@@ -105,10 +104,10 @@ export default function ProfileLayout() {
             </div>
 
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-1 tracking-tight line-clamp-1">
+              <h1 className="text-2xl sm:text-3xl font-black text-(--color-text-primary) mb-1 tracking-tight line-clamp-1">
                 {user.name || user.username || "Valued Customer"}
               </h1>
-              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 font-medium">
+              <p className="text-sm sm:text-base text-(--color-text-secondary) font-medium">
                 {user.email}
               </p>
             </div>
@@ -116,7 +115,7 @@ export default function ProfileLayout() {
 
           <button
             onClick={handleLogout}
-            className="sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-xl font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-(--color-danger-50) dark:bg-(--color-danger-900) text-(--color-danger-600) hover:bg-(--color-danger-100) dark:hover:bg-(--color-danger-800) rounded-xl font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-(--color-danger-500)"
             aria-label="Sign out of your account"
           >
             <LogOut className="w-5 h-5 hidden sm:inline" aria-hidden="true" />
@@ -124,13 +123,13 @@ export default function ProfileLayout() {
           </button>
         </div>
 
-        <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
+        <div className="pt-2 border-t border-(--color-border-base)">
           <ProfileNav />
         </div>
       </div>
 
       <div
-        className="bg-white dark:bg-[#1e1e1e] rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 p-8 sm:p-12 min-h-[500px] relative z-10 focus-visible:outline-none"
+        className="bg-(--color-surface-card) rounded-[2rem] shadow-sm border border-(--color-border-base) p-8 sm:p-12 min-h-[500px] focus-visible:outline-none"
         tabIndex="-1"
       >
         <Outlet />

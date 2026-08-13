@@ -18,13 +18,13 @@ export const userApi = apiSlice.injectEndpoints({
     }),
 
     updateProfile: builder.mutation({
-      query: (profileData) => ({
-        url: "/user/update-profile",
-        method: "PATCH",
-        body: profileData,
-      }),
-      invalidatesTags: ["User"],
-    }),
+  query: ({ id, ...body }) => ({
+    url: `/user/update-profile/${id}`,
+    method: "PATCH", 
+    body,
+  }),
+  invalidatesTags: ["User"],
+}),
   }),
   overrideExisting: false,
 });

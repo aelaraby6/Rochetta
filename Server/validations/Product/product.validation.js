@@ -31,25 +31,25 @@ export const CreateProductSchema = Joi.object({
     "any.required": "Stock is required",
   }),
 
-  requires_prescription: Joi.boolean().default(false).messages({
+  requires_prescription: Joi.boolean().empty("").default(false).messages({
     "boolean.base": "Requires_prescription must be true or false",
   }),
 
-  has_strips: Joi.boolean().default(false).messages({
+  has_strips: Joi.boolean().empty("").default(false).messages({
     "boolean.base": "Has_strips must be true or false",
   }),
 
-  strip_count: Joi.number().min(0).default(0).messages({
+  strip_count: Joi.number().empty("").optional().min(0).default(0).messages({
     "number.base": "Strip_count must be a number",
     "number.min": "Strip_count cannot be negative",
   }),
 
-  strips_per_box: Joi.number().min(0).default(0).messages({
+  strips_per_box: Joi.number().empty("").optional().min(0).default(0).messages({
     "number.base": "Strips per box must be a number",
     "number.min": "Strips per box cannot be negative",
   }),
 
-  is_active: Joi.boolean().default(true).messages({
+  is_active: Joi.boolean().empty("").default(true).messages({
     "boolean.base": "is_active must be true or false",
   }),
 });
@@ -69,37 +69,37 @@ export const UpdateProductSchema = Joi.object({
     "string.max": "Description must be less than or equal to 1000 characters",
   }),
 
-  price: Joi.number().min(0).messages({
+  price: Joi.number().empty("").min(0).messages({
     "number.base": "Price must be a number",
     "number.min": "Price cannot be negative",
   }),
 
   category: Joi.string().hex().length(24),
 
-  stock: Joi.number().min(0).messages({
+  stock: Joi.number().empty("").min(0).messages({
     "number.base": "Stock must be a number",
     "number.min": "Stock cannot be negative",
   }),
 
-  requires_prescription: Joi.boolean().messages({
+  requires_prescription: Joi.boolean().empty("").messages({
     "boolean.base": "Requires_prescription must be true or false",
   }),
 
-  has_strips: Joi.boolean().messages({
+  has_strips: Joi.boolean().empty("").messages({
     "boolean.base": "Has_strips must be true or false",
   }),
 
-  strip_count: Joi.number().min(0).messages({
+  strip_count: Joi.number().empty("").min(0).messages({
     "number.base": "Strip_count must be a number",
     "number.min": "Strip_count cannot be negative",
   }),
 
-  strips_per_box: Joi.number().min(0).messages({
+  strips_per_box: Joi.number().empty("").min(0).messages({
     "number.base": "Strips per box must be a number",
     "number.min": "Strips per box cannot be negative",
   }),
 
-  is_active: Joi.boolean().messages({
+  is_active: Joi.boolean().empty("").messages({
     "boolean.base": "is_active must be true or false",
   }),
 })
