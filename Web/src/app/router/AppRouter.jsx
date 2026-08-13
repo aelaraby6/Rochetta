@@ -57,27 +57,48 @@ const CourierOrders = lazy(
   () => import("../../features/courier/ui/pages/CourierOrders"),
 );
 
-const AuthRedirect = ({ children }) => {
+const isAdmin = (user) =>
+  user?.role === "admin" || user?.role === "super_admin";
+
+const RootHandler = () => {
   const user = useSelector((state) => state.auth.user);
+
+  if (isAdmin(user)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (user?.role === "courier") {
+    return <Navigate to="/courier" replace />;
+  }
+
+  return <LandingPage />;
+};
+
+const GuestOnlyRoute = ({ children }) => {
+  const user = useSelector((state) => state.auth.user);
+
   if (user) {
-    if (user.role === "admin" || user.role === "super_admin") {
+    if (isAdmin(user)) {
       return <Navigate to="/dashboard" replace />;
     }
+
     if (user.role === "courier") {
       return <Navigate to="/courier" replace />;
     }
-    if (user.role === "user") {
-      return <Navigate to="/" replace />;
-    }
+
+    return <Navigate to="/" replace />;
   }
+
   return children;
 };
 
 const CourierRoute = ({ children }) => {
   const user = useSelector((state) => state.auth.user);
+
   if (!user || user.role !== "courier") {
     return <Navigate to="/login" replace />;
   }
+
   return children;
 };
 
@@ -85,28 +106,35 @@ export default function AppRouter() {
   return (
     <Suspense fallback={<GlobalLoader />}>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        {/* Home */}
+        <Route path="/" element={<RootHandler />} />
 
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/category/:slug" element={<CategoryView />} />
-
+        {/* Guest Routes */}
         <Route
           path="/signup"
           element={
-            <AuthRedirect>
+            <GuestOnlyRoute>
               <Signup />
-            </AuthRedirect>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <AuthRedirect>
-              <Login />
-            </AuthRedirect>
+            </GuestOnlyRoute>
           }
         />
 
+        <Route
+          path="/login"
+          element={
+            <GuestOnlyRoute>
+              <Login />
+            </GuestOnlyRoute>
+          }
+        />
+
+        {/* Public Routes */}
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/category/:slug" element={<CategoryView />} />
+        <Route path="/policy" element={<Policy />} />
+        <Route path="/about-system" element={<AboutSystem />} />
+
+        {/* Protected User Routes */}
         <Route
           path="/cart"
           element={
@@ -130,12 +158,13 @@ export default function AppRouter() {
           <Route path="wishlist" element={<Wishlist />} />
         </Route>
 
+        {/* Admin Routes */}
         <Route
           path="/dashboard"
           element={
-            // <AdminRoute>
-            <DashboardLayout />
-            // </AdminRoute>
+            <AdminRoute>
+              <DashboardLayout />
+            </AdminRoute>
           }
         >
           <Route index element={<DashboardPage />} />
@@ -146,6 +175,7 @@ export default function AppRouter() {
           <Route path="reviews" element={<ReviewsPage />} />
         </Route>
 
+        {/* Courier Routes */}
         <Route
           path="/courier"
           element={
@@ -158,8 +188,7 @@ export default function AppRouter() {
           <Route path="orders" element={<CourierOrders />} />
         </Route>
 
-        <Route path="policy" element={<Policy />} />
-        <Route path="about-system" element={<AboutSystem />} />
+        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

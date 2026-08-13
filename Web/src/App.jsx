@@ -30,7 +30,7 @@ export default function App() {
   const shouldHideNavbar = isDashboard || isCourier || authPaths.includes(location.pathname);
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full transition ">
       <Toaster position="top-center" reverseOrder={false} />
 
       {!shouldHideNavbar && (

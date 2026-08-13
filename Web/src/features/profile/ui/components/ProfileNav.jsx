@@ -11,7 +11,7 @@ export default function ProfileNav() {
   ];
 
   return (
-    <nav className="relative z-50">
+    <nav>
       <ul className="flex flex-wrap gap-6 sm:gap-8">
         {navItems.map((item, index) => {
           const isActive = currentPath === item.path;
@@ -22,8 +22,8 @@ export default function ProfileNav() {
                 to={item.path}
                 className={`py-4 flex items-center gap-1 font-bold text-sm sm:text-lg transition-colors whitespace-nowrap ${
                   isActive
-                    ? "text-green-700 dark:text-green-500 border-b-4 border-green-700 dark:border-green-500"
-                    : "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 border-b-4 border-transparent"
+                    ? "text-(--color-primary-700) border-b-4 border-(--color-primary-700)"
+                    : "text-(--color-text-body) hover:text-(--color-primary-600) border-b-4 border-transparent"
                 }`}
               >
                 {item.label}

@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
 import { useGetTopReviewsQuery } from "../../../features/admin/reviews/api/reviewsApi";
 import GlobalLoader from "../../../components/ui/GlobalLoader";
+import defaultAvatar from "../../../assets/Home/default-avatar.webp";
 
 export default function Testimonials() {
   const { data: response, isLoading, isError } = useGetTopReviewsQuery();
@@ -10,7 +11,12 @@ export default function Testimonials() {
   if (isLoading) {
     return (
       <div className="w-full bg-gray-100 dark:bg-[#1a1a1a] py-32 flex justify-center items-center">
-        <GlobalLoader width="w-10" height="h-10" animate-spin text="text-(--color-primary-600)" />
+        <GlobalLoader
+          width="w-10"
+          height="h-10"
+          animate-spin
+          text="text-(--color-primary-600)"
+        />
       </div>
     );
   }
@@ -33,7 +39,7 @@ export default function Testimonials() {
               className="flex-none w-[85%] sm:w-[350px] snap-center bg-(--color-surface-card) dark:bg-[#252525] p-8 rounded-2xl text-center shadow-sm border border-(--color-border-base) dark:border-gray-800 relative pt-14 mt-12 flex flex-col h-auto"
             >
               <img
-                src={review.user?.avatar || "src/assets/Home/default-avatar.webp"}
+                src={review.user?.avatar || defaultAvatar}
                 alt={`Client ${review.user?.name}`}
                 loading="lazy"
                 className="w-24 h-24 rounded-full object-cover absolute -top-12 left-1/2 transform -translate-x-1/2 border-4 border-white dark:border-[#252525] shadow-md bg-(--color-surface-card) dark:bg-[#252525]"
