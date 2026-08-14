@@ -8,6 +8,7 @@ const orderItemSchema = new mongoose.Schema(
       required: true,
     },
     quantity: { type: Number, required: true, min: 1 },
+    unit: { type: String, enum: ["box", "strip"], default: "box" },
     price: { type: Number, required: true, min: 0 },
   },
   { _id: false },

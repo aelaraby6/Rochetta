@@ -11,16 +11,47 @@ import User from "../../models/User/user.model.js";
 
 export const createProductController = async (req, res, next) => {
   try {
-    const data = req.body;
+    const data = { ...req.body };
 
     if (!req.file) throw new BadRequestError("Product image is required");
-
     if (!data.category) throw new BadRequestError("Category is required");
 
     validateObjectId(data.category, "category id");
 
     const categoryExists = await Category.findById(data.category);
     if (!categoryExists) throw new BadRequestError("Category not found");
+
+    if (data.price) data.price = Number(data.price);
+    if (data.stock) data.stock = Number(data.stock);
+    if (typeof data.requires_prescription !== "undefined") {
+      data.requires_prescription =
+        data.requires_prescription === "true" ||
+        data.requires_prescription === true;
+    }
+
+    const isHasStrips = data.has_strips === "true" || data.has_strips === true;
+    const stripCount = Number(data.strip_count || 0);
+    const stripsPerBox = Number(data.strips_per_box || 0);
+
+    data.has_strips = isHasStrips;
+
+    if (!isHasStrips) {
+      data.strip_count = 0;
+      data.strips_per_box = 0;
+    } else {
+      if (stripsPerBox <= 0) {
+        throw new BadRequestError(
+          "Strips per box must be greater than 0 if product has strips.",
+        );
+      }
+      if (stripCount >= stripsPerBox) {
+        throw new BadRequestError(
+          `Strip count (${stripCount}) cannot be greater than or equal to strips per box (${stripsPerBox}).`,
+        );
+      }
+      data.strip_count = stripCount;
+      data.strips_per_box = stripsPerBox;
+    }
 
     const uploadStream = () =>
       new Promise((resolve, reject) => {
@@ -32,18 +63,14 @@ export const createProductController = async (req, res, next) => {
       });
 
     const result = await uploadStream();
+    data.image = result.secure_url;
 
-    const newProduct = new Product({
-      ...data,
-      image: result.secure_url,
-    });
-
+    const newProduct = new Product(data);
     await newProduct.save();
     await newProduct.populate("category");
 
-    // Check if stock is low on creation
     checkAndNotifyLowStock(newProduct).catch((err) =>
-      console.error("Low stock check error on product creation:", err.message),
+      console.error(err.message),
     );
 
     res.status(201).json({
@@ -239,11 +266,8 @@ export const updateProductController = async (req, res, next) => {
     const { id } = req.params;
     validateObjectId(id, "product id");
 
-    // ensure there's something to update
-    // note: when using multipart, req.body values are strings
     const body = { ...req.body };
 
-    // if file is present, upload to cloudinary and set image url into body
     if (req.file) {
       const uploadStream = () =>
         new Promise((resolve, reject) => {
@@ -269,15 +293,42 @@ export const updateProductController = async (req, res, next) => {
 
     if (body.price) body.price = Number(body.price);
     if (body.stock) body.stock = Number(body.stock);
-    if (body.strip_count) body.strip_count = Number(body.strip_count);
-
-    if (body.strips_per_box) body.strips_per_box = Number(body.strips_per_box);
-    if (typeof body.has_strips !== "undefined")
-      body.has_strips = body.has_strips === "true" || body.has_strips === true;
-    if (typeof body.requires_prescription !== "undefined")
+    if (typeof body.requires_prescription !== "undefined") {
       body.requires_prescription =
         body.requires_prescription === "true" ||
         body.requires_prescription === true;
+    }
+
+    if (
+      typeof body.has_strips !== "undefined" ||
+      body.strip_count ||
+      body.strips_per_box
+    ) {
+      const isHasStrips =
+        body.has_strips === "true" || body.has_strips === true;
+      const stripCount = Number(body.strip_count || 0);
+      const stripsPerBox = Number(body.strips_per_box || 0);
+
+      body.has_strips = isHasStrips;
+
+      if (!isHasStrips) {
+        body.strip_count = 0;
+        body.strips_per_box = 0;
+      } else {
+        if (stripsPerBox <= 0) {
+          throw new BadRequestError(
+            "Strips per box must be greater than 0 if product has strips.",
+          );
+        }
+        if (stripCount >= stripsPerBox) {
+          throw new BadRequestError(
+            `Strip count (${stripCount}) cannot be greater than or equal to strips per box (${stripsPerBox}).`,
+          );
+        }
+        body.strip_count = stripCount;
+        body.strips_per_box = stripsPerBox;
+      }
+    }
 
     if (body.category) {
       validateObjectId(body.category, "category id");
@@ -295,10 +346,7 @@ export const updateProductController = async (req, res, next) => {
 
     if (!product) throw new NotFoundError("Product not found");
 
-    // Check if stock is low on update
-    checkAndNotifyLowStock(product).catch((err) =>
-      console.error("Low stock check error on product update:", err.message),
-    );
+    checkAndNotifyLowStock(product).catch((err) => console.error(err.message));
 
     res.json({
       message: "Product updated successfully",
@@ -308,6 +356,7 @@ export const updateProductController = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const GetSavedProductsController = async (req, res, next) => {
   try {
@@ -352,7 +401,6 @@ export const ToggleSavedProductController = async (req, res, next) => {
     });
 
     if (existingSave) {
-
       await Promise.all([
         SavedProduct.deleteOne({ _id: existingSave._id }),
         Product.findByIdAndUpdate(productId, { $inc: { save_count: -1 } }),
