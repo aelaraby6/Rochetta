@@ -29,37 +29,92 @@ export const CreateOrderController = async (req, res, next) => {
     const userId = req.user._id;
 
     const productIds = items.map((item) => item.product);
+    const uniqueProductIds = [
+      ...new Set(productIds.map((id) => id.toString())),
+    ];
+
     const products = await Product.find({
-      _id: { $in: productIds },
+      _id: { $in: uniqueProductIds },
       is_deleted: false,
     });
 
-    if (products.length !== productIds.length) {
+    if (products.length !== uniqueProductIds.length) {
       throw new NotFoundError("One or more products not found");
     }
 
-    for (const item of items) {
-      const product = products.find((p) => p._id.toString() === item.product);
-      if (product.stock < item.quantity) {
-        throw new ConflictError(
-          `Stock insufficient for product: ${product.name}`,
-        );
-      }
-    }
-
+    const requiredQuantities = {};
     let total = 0;
     const orderItems = [];
+
     for (const item of items) {
-      const product = products.find((p) => p._id.toString() === item.product);
-      total += product.price * item.quantity;
+      const product = products.find(
+        (p) => p._id.toString() === item.product.toString(),
+      );
+      const unit = item.unit || "box";
+      const qty = item.quantity;
+
+      if (!requiredQuantities[product._id]) {
+        requiredQuantities[product._id] = { boxes: 0, strips: 0 };
+      }
+
+      if (unit === "box") {
+        requiredQuantities[product._id].boxes += qty;
+      } else {
+        requiredQuantities[product._id].strips += qty;
+      }
+
+      let itemPrice = product.price;
+      if (unit === "strip") {
+        itemPrice = Number(
+          (product.price / (product.strips_per_box || 1)).toFixed(2),
+        );
+      }
+
+      total += itemPrice * qty;
       orderItems.push({
         product: product._id,
-        quantity: item.quantity,
-        price: product.price,
+        quantity: qty,
+        unit: unit,
+        price: itemPrice,
       });
     }
 
     session.startTransaction();
+
+    const updatedProducts = [];
+    for (const prodId in requiredQuantities) {
+      const reqData = requiredQuantities[prodId];
+      const productDoc = await Product.findById(prodId).session(session);
+
+      if (productDoc.has_strips && productDoc.strips_per_box > 0) {
+        const totalRequestedStrips =
+          reqData.boxes * productDoc.strips_per_box + reqData.strips;
+        const totalAvailableStrips =
+          productDoc.stock * productDoc.strips_per_box + productDoc.strip_count;
+
+        if (totalAvailableStrips < totalRequestedStrips) {
+          throw new ConflictError(
+            `Stock insufficient for product: ${productDoc.name}`,
+          );
+        }
+
+        const newTotalStrips = totalAvailableStrips - totalRequestedStrips;
+        productDoc.stock = Math.floor(
+          newTotalStrips / productDoc.strips_per_box,
+        );
+        productDoc.strip_count = newTotalStrips % productDoc.strips_per_box;
+      } else {
+        if (productDoc.stock < reqData.boxes) {
+          throw new ConflictError(
+            `Stock insufficient for product: ${productDoc.name}`,
+          );
+        }
+        productDoc.stock -= reqData.boxes;
+      }
+
+      await productDoc.save({ session });
+      updatedProducts.push(productDoc);
+    }
 
     const [newOrder] = await Order.create(
       [
@@ -76,24 +131,11 @@ export const CreateOrderController = async (req, res, next) => {
       { session },
     );
 
-    const updatedProducts = [];
-    for (const item of items) {
-      const updatedProduct = await Product.findOneAndUpdate(
-        { _id: item.product, stock: { $gte: item.quantity } },
-        { $inc: { stock: -item.quantity } },
-        { new: true, session },
-      );
-      if (!updatedProduct) {
-        throw new ConflictError(
-          "Stock became insufficient during transaction processing",
-        );
-      }
-      updatedProducts.push(updatedProduct);
-    }
-
-    // Only clear the cart immediately if using COD
     if (paymentMethod === "COD") {
-      const cart = await Cart.findOne({ user: userId, is_deleted: false });
+      const cart = await Cart.findOne({
+        user: userId,
+        is_deleted: false,
+      }).session(session);
       if (cart) {
         cart.items = [];
         cart.total_price = 0;
@@ -104,7 +146,6 @@ export const CreateOrderController = async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
-    // Check and notify low stock for products after successful checkout transaction
     for (const prod of updatedProducts) {
       checkAndNotifyLowStock(prod).catch((err) =>
         console.error(
@@ -132,7 +173,6 @@ export const CreateOrderController = async (req, res, next) => {
         order: newOrder,
       });
     } else {
-      // Payment method is card
       try {
         if (!user) {
           throw new NotFoundError("User not found");
@@ -140,14 +180,14 @@ export const CreateOrderController = async (req, res, next) => {
 
         const authToken = await authenticatePaymob();
 
-        // Populate items with names/details for Paymob
         const populatedItems = orderItems.map((item) => {
           const product = products.find(
             (p) => p._id.toString() === item.product.toString(),
           );
+          const nameSuffix = item.unit === "strip" ? " (Strip)" : " (Box)";
           return {
-            name: product?.name || "Product",
-            price: product?.price || item.price,
+            name: (product?.name || "Product") + nameSuffix,
+            price: item.price,
             quantity: item.quantity,
           };
         });
@@ -183,7 +223,6 @@ export const CreateOrderController = async (req, res, next) => {
           billingData,
         );
 
-        // Save paymobOrderId to database
         newOrder.paymobOrderId = paymobOrderId.toString();
         await newOrder.save();
 
@@ -200,16 +239,33 @@ export const CreateOrderController = async (req, res, next) => {
           paymobError,
         );
 
-        // Manual rollback of order and stock since transaction is committed
         await Order.findByIdAndUpdate(newOrder._id, {
           status: "canceled",
           paymentStatus: "failed",
         });
 
-        for (const it of orderItems) {
-          await Product.findByIdAndUpdate(it.product, {
-            $inc: { stock: it.quantity },
-          });
+        for (const prodId in requiredQuantities) {
+          const reqData = requiredQuantities[prodId];
+          const productDoc = await Product.findById(prodId);
+
+          if (productDoc.has_strips && productDoc.strips_per_box > 0) {
+            const totalRequestedStrips =
+              reqData.boxes * productDoc.strips_per_box + reqData.strips;
+            const currentTotalStrips =
+              productDoc.stock * productDoc.strips_per_box +
+              productDoc.strip_count;
+            const revertedTotalStrips =
+              currentTotalStrips + totalRequestedStrips;
+
+            productDoc.stock = Math.floor(
+              revertedTotalStrips / productDoc.strips_per_box,
+            );
+            productDoc.strip_count =
+              revertedTotalStrips % productDoc.strips_per_box;
+          } else {
+            productDoc.stock += reqData.boxes;
+          }
+          await productDoc.save();
         }
 
         throw new BadRequestError(
@@ -218,7 +274,6 @@ export const CreateOrderController = async (req, res, next) => {
       }
     }
   } catch (error) {
-    // Rollback transaction on failure
     if (session.inTransaction()) {
       await session.abortTransaction();
     }
