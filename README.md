@@ -1,10 +1,6 @@
 # Rochetta - Online Pharmacy Platform
 
-Rochetta is a full-stack MERN web application designed to simulate a real-world pharmacy environment. It enables users to browse and purchase medications (with strip or full-box options, and prescription verification where necessary) and provides administrators with a dashboard to manage catalog operations.
-
-A video preview demonstrating the application in action can be accessed below:
-
-https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
+Rochetta is a full-stack MERN web application designed to simulate a real-world pharmacy environment. It enables users to browse and purchase medications and provides administrators with a dashboard to manage catalog operations.
 
 ---
 
@@ -15,11 +11,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
    - [Administrator Features](#administrator-features)
    - [AI Assistant Features](#ai-assistant-features)
 2. [Technical Interface Preview](#technical-interface-preview)
-   - [User Authentication Interfaces](#user-authentication-interfaces)
-   - [Shopping Cart](#shopping-cart)
 3. [System Architecture and Tech Stack](#system-architecture-and-tech-stack)
-   - [Frontend (Client)](#frontend-client)
-   - [Backend (Server)](#backend-server)
 4. [Directory Structure](#directory-structure)
 5. [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
@@ -27,8 +19,7 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
    - [Running the Application](#running-the-application)
 6. [Quality Assurance and CI Pipelines](#quality-assurance-and-ci-pipelines)
 7. [Database Design (ERD)](#database-design-erd)
-8. [API Documentation](#api-documentation)
-9. [Contributors](#contributors)
+8. [Contributors](#contributors)
 
 ---
 
@@ -64,17 +55,21 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 
 ## Technical Interface Preview
 
-### User Authentication Interfaces
-The platform implements secure login and registration pages with JWT-based authentication.
 
-<img width="1810" height="857" alt="Signup Interface" src="https://github.com/user-attachments/assets/a3c671c8-46fa-481f-9c28-2fe752f858e2" />
+<img width="494" height="737" alt="image" src="https://github.com/user-attachments/assets/db454160-9713-4c48-a8ca-697eae5992f6" />
 
-<img width="1851" height="861" alt="Login Interface" src="https://github.com/user-attachments/assets/96340a29-4ada-4845-818c-fbc9b6034331" />
+<img width="1868" height="893" alt="image" src="https://github.com/user-attachments/assets/cc0f599d-717d-4452-b8d9-349084c9d4b5" />
 
-### Shopping Cart
-A centralized view for reviewing, updating quantities, or removing selected items before checking out.
+<img width="1411" height="588" alt="image" src="https://github.com/user-attachments/assets/98c452f9-6330-4e88-9a29-0abc8d0806e0" />
 
-<img width="1232" height="717" alt="Shopping Cart Interface" src="https://github.com/user-attachments/assets/46792721-5840-4be1-9c6c-9cce164097ca" />
+<img width="1851" height="864" alt="image" src="https://github.com/user-attachments/assets/9fe6d263-7a11-4926-a3b5-8ef553e780dc" />
+
+<img width="1678" height="703" alt="image" src="https://github.com/user-attachments/assets/41bc233f-9dc0-42b8-9cb9-3c75c3f9b960" />
+
+<img width="1884" height="895" alt="image" src="https://github.com/user-attachments/assets/6fac547c-f1ab-4804-ac41-6d561d7f7154" />
+
+<img width="1906" height="902" alt="image" src="https://github.com/user-attachments/assets/b056feea-f395-4d37-8815-459f94f0a05c" />
+
 
 ---
 
@@ -199,19 +194,11 @@ To run the linters locally:
 
 The entity relationships mapping the collection schemas (Users, Products, Orders, Carts, etc.) are illustrated below:
 
-<img width="1279" height="1236" alt="Database Entity Relationship Diagram" src="https://github.com/user-attachments/assets/9c884abb-57b5-49ea-a170-a93e05090fb3" />
+<img width="3300" height="3043" alt="test_16_08_2026" src="https://github.com/user-attachments/assets/204d6680-0c88-45a1-9cd7-440cad34a6ac" />
+
 
 ---
 
-## API Documentation
-
-The backend incorporates an interactive **Swagger UI** for testing and exploring api endpoints.
-
-<img width="650" height="557" alt="Swagger Endpoints Overview" src="https://github.com/user-attachments/assets/8e7b37e4-4437-466b-97c4-6bae8c5a2304" />
-
-<img width="642" height="820" alt="Swagger Interactive Testing" src="https://github.com/user-attachments/assets/f4df8277-ceee-4a8d-9137-fa854252b430" />
-
----
 
 ## Contributors
 
