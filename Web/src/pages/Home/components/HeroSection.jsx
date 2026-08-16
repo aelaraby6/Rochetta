@@ -19,7 +19,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Button
                 as={Link}
-                to="/category/pain-relief"
+                to="/signup"
                 variant="solid"
                 size="lg"
                 className="px-8 py-3 bg-(--color-primary-500) hover:bg-(--color-primary-400) text-white font-bold rounded-xl transition-all shadow-lg active:scale-95"

@@ -31,6 +31,7 @@ const ROUNDED = {
 
 const Button = forwardRef(function Button(
   {
+    as: Component = "button",
     variant = "solid",
     size = "md",
     isLoading = false,
@@ -44,9 +45,9 @@ const Button = forwardRef(function Button(
   ref,
 ) {
   return (
-    <button
+    <Component
       ref={ref}
-      disabled={disabled || isLoading}
+      disabled={Component === "button" ? (disabled || isLoading) : undefined}
       className={[
         BASE,
         VARIANTS[variant] ?? VARIANTS.solid,
@@ -64,7 +65,7 @@ const Button = forwardRef(function Button(
       ) : (
         children
       )}
-    </button>
+    </Component>
   );
 });
 

@@ -3,21 +3,27 @@ import ChatWindow from "./ChatWindow";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Bot } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ChatBotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  const toggleChat = useCallback(() => setIsOpen((prev) => !prev), []);
+  const toggleChat = useCallback(() => {
+    if (!user) {
+      toast.error("Please log in to use the Rochetta Assistant.");
+      return;
+    }
+    setIsOpen((prev) => !prev);
+  }, [user]);
 
   const inCourierRoute = location.pathname.startsWith("/courier");
   const isDashboard = location.pathname.startsWith("/dashboard");
   const isAuthPage = ["/login", "/signup"].includes(location.pathname);
   const isAdmin = user?.role === "admin" || user?.role === "super_admin";
-  const isUser = user?.role === "user";
 
-  if (isAdmin || isDashboard || isAuthPage || inCourierRoute || isUser) {
+  if (isAdmin || isDashboard || isAuthPage || inCourierRoute) {
     return null;
   }
   return (

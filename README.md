@@ -11,8 +11,9 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 ## Table of Contents
 1. [Key Features](#key-features)
    - [Customer Features](#customer-features)
+   - [Courier Features](#courier-features)
    - [Administrator Features](#administrator-features)
-   - [New Branch Features and Refactors](#new-branch-features-and-refactors)
+   - [AI Assistant Features](#ai-assistant-features)
 2. [Technical Interface Preview](#technical-interface-preview)
    - [User Authentication Interfaces](#user-authentication-interfaces)
    - [Shopping Cart](#shopping-cart)
@@ -38,19 +39,26 @@ https://github.com/user-attachments/assets/af45da40-58fa-482b-bea2-388e67cd7468
 * **Flexible Purchasing:** Purchase medicines by the individual strip or by the full box.
 * **Prescription Control:** Certain medications are marked as requiring a prescription and cannot be checked out without upload/pharmacist review.
 * **Cart and Orders:** Live management of cart quantities and real-time checkout flows.
+* **Optimized Shopping Experience:** Fully optimized and rewritten cart backend ensuring atomic database updates, handles inventory reservation edge-cases, and speeds up shopping cart load times.
 * **Profile Management:** View order histories, manage delivery addresses, and track pending prescriptions.
 * **Responsive Styling:** Fully optimized for mobile, tablet, and desktop views.
+
+### Courier Features
+* **Delivery Dashboard:** View delivery metrics such as active, completed, and canceled assignments.
+* **Order Management & Tracking:** Search and filter assigned deliveries by ID, customer name, phone, or status.
+* **Real-time Status Updates:** Update delivery progress states directly (e.g., from Pending to Out for Delivery or Delivered).
+* **Detailed Order Modals:** Instantly view customer contacts, delivery addresses, payment types (COD amounts to collect), and specific order items.
 
 ### Administrator Features
 * **Catalog Management:** Create, read, update, and delete products, including product images uploaded directly to Cloudinary.
 * **Inventory Control:** Monitor stock, change pricing structures, and manage categories.
+* **AI-Powered Analytics:** Real-time revenue telemetry charts, inventory management tables, and a specialized AI Analytics Tab for sales prediction and forecasting.
 * **Authentication Controls:** View and manage user accounts and system permissions.
 
-### New Branch Features and Refactors
-This branch (`refactor/cart-backend`) introduces several structural improvements and new platform components:
-* **AI-Powered Admin Dashboard:** Added real-time revenue telemetry charts, inventory management tables, and a specialized AI Analytics Tab for sales prediction and forecasting.
-* **Refactored Cart Backend:** Completely rewritten database schemas and controller endpoints for the cart module. This ensures atomic database updates, handles inventory reservation edge-cases, and speeds up shopping cart load times.
-* **Continuous Integration Pipelines:** Integrated automated linting, type-checking, and build validation configurations on GitHub Actions for both the frontend and backend.
+### AI Assistant Features
+* **Interactive AI Help:** Ask medical or platform questions directly to Rochetta Assistant via a floating chat widget.
+* **Persistent Chat History:** Seamlessly retrieve and browse past conversation history.
+* **Secure Access Control:** Requires user authentication to prevent unauthorized API requests and manage chat history safely.
 
 ---
 
@@ -72,7 +80,7 @@ A centralized view for reviewing, updating quantities, or removing selected item
 
 ## System Architecture and Tech Stack
 
-### Frontend (Client)
+### Frontend (Web)
 * **Framework:** React.js (Vite bundler)
 * **State Management:** Redux Toolkit & RTK Query
 * **Routing:** React Router DOM
@@ -92,7 +100,7 @@ A centralized view for reviewing, updating quantities, or removing selected item
 ## Directory Structure
 
 ```text
-├── Client/                  # Frontend application (Vite + React)
+├── Web/                     # Frontend application (Vite + React)
 │   ├── src/                 # React source code (components, store, router, pages)
 │   ├── eslint.config.js     # Frontend linting rules
 │   └── package.json         # Frontend dependencies and scripts
@@ -147,10 +155,10 @@ Make sure you have the following installed on your machine:
    GROQ_API_KEY=your_groq_ai_api_key
    ```
 
-3. **Configure the Frontend (Client):**
-   Navigate to the `Client` folder and install dependencies:
+3. **Configure the Frontend (Web):**
+   Navigate to the `Web` folder and install dependencies:
    ```bash
-   cd ../Client
+   cd ../Web
    # Install dependencies
    npm install
    ```
@@ -164,9 +172,10 @@ Make sure you have the following installed on your machine:
    ```
    The backend server will run on `http://localhost:4000`.
 
-* **Start Frontend Client:**
-   Navigate to the `Client` folder and run:
+* **Start Frontend Web:**
+   Navigate to the `Web` folder and run:
    ```bash
+   cd ../Web
    npm run dev
    ```
    The frontend will run on `http://localhost:5173`.
@@ -177,11 +186,11 @@ Make sure you have the following installed on your machine:
 
 This repository is configured with automated Continuous Integration (CI) checks on GitHub Actions that trigger on pushes and pull requests targeting the main branch.
 
-* **Frontend Quality Check:** Verifies that the client project compiles without any ESLint warnings or build-time compilation errors.
+* **Frontend Quality Check:** Verifies that the web project compiles without any ESLint warnings or build-time compilation errors.
 * **Backend Quality Check:** Runs ESLint on the Express server folder to ensure consistency, variable safety, and code quality.
 
 To run the linters locally:
-* For Frontend: `cd Client && npm run lint`
+* For Web: `cd Web && npm run lint`
 * For Backend: `cd Server && npm run lint`
 
 ---
