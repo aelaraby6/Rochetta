@@ -1,4 +1,3 @@
-import { Chat } from "../models/Chat/chat.model.js";
 import Product from "../models/Product/product.model.js";
 import { Order } from "../models/Order/order.model.js";
 import { Cart } from "../models/Cart/cart.model.js";
@@ -72,7 +71,7 @@ export const getDbContext = async (userId, userMessage) => {
             let products = [];
             let embedding = null;
 
-            // 1. Try to generate query embedding
+            // try to generate query embedding
             try {
                 embedding = await getEmbedding(userMessage);
             } catch (embedErr) {
@@ -80,7 +79,7 @@ export const getDbContext = async (userId, userMessage) => {
             }
 
             if (embedding) {
-                // Method A: MongoDB Atlas Vector Search
+                // MongoDB Atlas Vector Search
                 try {
                     products = await Product.aggregate([
                         {
@@ -110,7 +109,7 @@ export const getDbContext = async (userId, userMessage) => {
                     products = []; // clear in case of partial aggregation errors
                 }
 
-                // Method B: Local In-Memory Cosine Similarity (fallback if Atlas Vector Search failed/not configured)
+                // Local In-Memory Cosine Similarity (fallback if Atlas Vector Search failed/not configured)
                 if (products.length === 0) {
                     const allProducts = await Product.find({
                         is_active: true,
@@ -138,7 +137,7 @@ export const getDbContext = async (userId, userMessage) => {
                 }
             }
 
-            // Method C: Keyword / Regex Fallback (if embeddings are not configured or no matches were found)
+            // Keyword / Regex Fallback (if embeddings are not configured or no matches were found)
             if (products.length === 0) {
                 console.log("No vector matches found. Performing keyword search fallback.");
                 const cleanWords = userMessage
@@ -164,7 +163,7 @@ export const getDbContext = async (userId, userMessage) => {
                 }
             }
 
-            // Method D: If absolutely no products found, default to top-selling and high-rating
+            // If absolutely no products found, default to top-selling and high-rating
             if (products.length === 0) {
                 products = await Product.find({ is_active: true, is_deleted: false })
                     .sort({ top_selling: -1, rating: -1 })

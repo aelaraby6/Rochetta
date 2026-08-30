@@ -10,11 +10,11 @@ dotenv.config();
  * @returns {Promise<number[]>} The vector embedding array.
  */
 export const getEmbedding = async (text) => {
+
   if (!text || typeof text !== "string" || text.trim() === "") {
     throw new Error("Text must be a non-empty string");
   }
 
-  // 1. Try Gemini if the key is present
   if (process.env.GEMINI_API_KEY) {
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -29,7 +29,6 @@ export const getEmbedding = async (text) => {
     }
   }
 
-  // 2. Try OpenAI if the key is present
   if (process.env.OPENAI_API_KEY) {
     try {
       const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
