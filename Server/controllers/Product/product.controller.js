@@ -8,6 +8,7 @@ import streamifier from "streamifier";
 import { checkAndNotifyLowStock } from "../../services/notification.service.js";
 import SavedProduct from "../../models/Product/savedProduct.model.js";
 import User from "../../models/User/user.model.js";
+import { getEmbedding } from "../../services/embedding.service.js";
 
 export const createProductController = async (req, res, next) => {
   try {
@@ -64,6 +65,14 @@ export const createProductController = async (req, res, next) => {
 
     const result = await uploadStream();
     data.image = result.secure_url;
+
+    // Generate semantic embedding
+    try {
+      const embeddingText = `Product: ${data.name}. Category: ${categoryExists.name}. Description: ${data.description}`;
+      data.embeddings = await getEmbedding(embeddingText);
+    } catch (embedError) {
+      console.error("Failed to generate embedding for new product:", embedError.message);
+    }
 
     const newProduct = new Product(data);
     await newProduct.save();
@@ -330,10 +339,30 @@ export const updateProductController = async (req, res, next) => {
       }
     }
 
+    let categoryExists = null;
     if (body.category) {
       validateObjectId(body.category, "category id");
-      const categoryExists = await Category.findById(body.category);
+      categoryExists = await Category.findById(body.category);
       if (!categoryExists) throw new BadRequestError("Category not found");
+    }
+
+    // Generate semantic embedding if name, description, or category is being updated
+    if (body.name || body.description || body.category) {
+      try {
+        const existingProduct = await Product.findOne({ _id: id, is_deleted: false }).populate("category");
+        if (existingProduct) {
+          const finalName = body.name || existingProduct.name;
+          const finalDescription = body.description || existingProduct.description;
+          const finalCategoryName = categoryExists 
+            ? categoryExists.name 
+            : (existingProduct.category ? existingProduct.category.name : "");
+
+          const embeddingText = `Product: ${finalName}. Category: ${finalCategoryName}. Description: ${finalDescription}`;
+          body.embeddings = await getEmbedding(embeddingText);
+        }
+      } catch (embedError) {
+        console.error("Failed to generate embedding for updated product:", embedError.message);
+      }
     }
 
     const product = await Product.findOneAndUpdate(
