@@ -1,7 +1,7 @@
-import { Chat } from "../models/Chat/chat.model.js";
 import Product from "../models/Product/product.model.js";
 import { Order } from "../models/Order/order.model.js";
 import { Cart } from "../models/Cart/cart.model.js";
+import { getEmbedding, cosineSimilarity } from "../services/embedding.service.js";
 
 
 export const getDbContext = async (userId, userMessage) => {
@@ -63,35 +63,107 @@ export const getDbContext = async (userId, userMessage) => {
         }
     }
 
-    const productKeywords = ["have", "buy", "price", "find", "search", "medicine", "drug", "pill", "tab", "cure", "treatment", "pain", "cold", "flu", "cough", "fever", "diabet", "دواء", "علاج", "سعر", "عندكم", "ابحث", "مسكن", "مضاد", "مرض", "مرضى", "سكر", "ضغط", "صداع", "الم"];
+    const productKeywords = ["have", "buy", "price", "find", "search", "medicine", "drug", "pill", "tab", "cure", "treatment", "pain", "cold", "flu", "cough", "fever", "diabet", "stomach", "headache", "tooth", "throat", "allergy", "sick", "ill", "cream", "gel", "capsule", "syrup", "دواء", "علاج", "سعر", "عندكم", "ابحث", "مسكن", "مضاد", "مرض", "مرضى", "سكر", "ضغط", "صداع", "الم", "مغص", "برد", "احتقان", "حساسية", "كحة", "سخونة", "حرارة"];
     const seemsLikeProductQuery = productKeywords.some(keyword => messageLower.includes(keyword)) || userMessage.split(/\s+/).length < 5;
 
     if (seemsLikeProductQuery) {
         try {
-            const cleanWords = userMessage
-                .replace(/[^\w\s\u0600-\u06FF]/g, '')
-                .split(/\s+/)
-                .filter(w => w.length > 2);
-
             let products = [];
-            if (cleanWords.length > 0) {
-                const queryConditions = cleanWords.map(word => ({
-                    $or: [
-                        { name: { $regex: word, $options: "i" } },
-                        { description: { $regex: word, $options: "i" } }
-                    ]
-                }));
+            let embedding = null;
 
-                products = await Product.find({
-                    $or: queryConditions,
-                    is_active: true,
-                    is_deleted: false
-                })
-                    .limit(5)
-                    .populate("category");
+            // try to generate query embedding
+            try {
+                embedding = await getEmbedding(userMessage);
+            } catch (embedErr) {
+                console.warn("Could not generate query embedding (API key might be missing), falling back to keyword search:", embedErr.message);
             }
 
-            // If no specific match was found, return top selling/highly rated products as recommendations
+            if (embedding) {
+                // MongoDB Atlas Vector Search
+                try {
+                    products = await Product.aggregate([
+                        {
+                            $vectorSearch: {
+                                index: "vector_index",
+                                path: "embeddings",
+                                queryVector: embedding,
+                                numCandidates: 100,
+                                limit: 5
+                            }
+                        },
+                        {
+                            $match: {
+                                is_active: true,
+                                is_deleted: false
+                            }
+                        }
+                    ]);
+
+                    // Populate category after aggregation
+                    if (products.length > 0) {
+                        products = await Product.populate(products, { path: "category" });
+                    }
+                    console.log(`Atlas Vector Search found ${products.length} products.`);
+                } catch (vectorSearchErr) {
+                    console.log("Atlas Vector Search failed or index not set up. Falling back to local in-memory cosine similarity search:", vectorSearchErr.message);
+                    products = []; // clear in case of partial aggregation errors
+                }
+
+                // Local In-Memory Cosine Similarity (fallback if Atlas Vector Search failed/not configured)
+                if (products.length === 0) {
+                    const allProducts = await Product.find({
+                        is_active: true,
+                        is_deleted: false,
+                        embeddings: { $exists: true, $not: { $size: 0 } }
+                    }).populate("category");
+
+                    if (allProducts.length > 0) {
+                        const scoredProducts = allProducts.map(prod => {
+                            const similarity = cosineSimilarity(embedding, prod.embeddings);
+                            return { product: prod, similarity };
+                        });
+
+                        // Sort by similarity descending
+                        scoredProducts.sort((a, b) => b.similarity - a.similarity);
+
+                        // Select top 5 products with a baseline similarity threshold
+                        products = scoredProducts
+                            .filter(item => item.similarity > 0.3)
+                            .slice(0, 5)
+                            .map(item => item.product);
+
+                        console.log(`Local Cosine Similarity Search found ${products.length} products.`);
+                    }
+                }
+            }
+
+            // Keyword / Regex Fallback (if embeddings are not configured or no matches were found)
+            if (products.length === 0) {
+                console.log("No vector matches found. Performing keyword search fallback.");
+                const cleanWords = userMessage
+                    .replace(/[^\w\s\u0600-\u06FF]/g, '')
+                    .split(/\s+/)
+                    .filter(w => w.length > 2);
+
+                if (cleanWords.length > 0) {
+                    const queryConditions = cleanWords.map(word => ({
+                        $or: [
+                            { name: { $regex: word, $options: "i" } },
+                            { description: { $regex: word, $options: "i" } }
+                        ]
+                    }));
+
+                    products = await Product.find({
+                        $or: queryConditions,
+                        is_active: true,
+                        is_deleted: false
+                    })
+                        .limit(5)
+                        .populate("category");
+                }
+            }
+
+            // If absolutely no products found, default to top-selling and high-rating
             if (products.length === 0) {
                 products = await Product.find({ is_active: true, is_deleted: false })
                     .sort({ top_selling: -1, rating: -1 })

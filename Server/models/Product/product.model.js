@@ -74,6 +74,10 @@ const productSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    embeddings: {
+      type: [Number],
+      default: [],
+    },
   },
   {
     timestamps: true,
