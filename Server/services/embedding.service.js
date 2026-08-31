@@ -16,16 +16,18 @@ export const getEmbedding = async (text) => {
   }
 
   if (process.env.GEMINI_API_KEY) {
-    try {
-      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
-      const result = await model.embedContent(text);
-      if (result && result.embedding && result.embedding.values) {
-        return result.embedding.values;
+    const modelsToTry = ["text-embedding-004", "gemini-embedding-001"];
+    for (const modelName of modelsToTry) {
+      try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.embedContent(text);
+        if (result && result.embedding && result.embedding.values) {
+          return result.embedding.values;
+        }
+      } catch (error) {
+        console.error(`Error generating embedding with Gemini (${modelName}):`, error.message);
       }
-    } catch (error) {
-      console.error("Error generating embedding with Gemini:", error.message);
-      // Fall through to OpenAI if Gemini fails and OpenAI key is available
     }
   }
 

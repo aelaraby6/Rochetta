@@ -46,7 +46,7 @@ export const sendMessage = async (req, res, next) => {
     // Get Database Grounding Context dynamically
     const dbContext = await getDbContext(req.user._id, message);
 
-    const defaultModel = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
+    const defaultModel = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 
     // Setup the system instructions
     const systemPrompt = `You are an expert Pharmacy Assistant chatbot for our e-commerce platform.
