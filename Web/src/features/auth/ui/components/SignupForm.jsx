@@ -9,6 +9,7 @@ import { useSignupMutation } from "../../store/authApi";
 import { setCredentials } from "../../store/authSlice";
 import Input from "../../../../components/ui/Input";
 import Button from "../../../../components/ui/Button";
+import emailjs from "@emailjs/browser";
 
 const signupSchema = z
   .object({
@@ -53,7 +54,23 @@ export default function SignupForm() {
       };
       const response = await signupMutation(payload).unwrap();
       dispatch(setCredentials({ user: response.data, token: response.token }));
+
+      try {
+        await emailjs.send(
+          "service_noarme9",
+          "template_j0225k8",
+          {
+            user_name: payload.name,
+            user_email: payload.email,
+          },
+          "j-3XGK0Gpytzm5UwR",
+        );
+      } catch (emailErr) {
+        console.error("Failed to send welcome email:", emailErr);
+      }
+
       navigate("/profile");
+      
     } catch (err) {
       setGlobalError(err.data?.message || "Signup failed. Please try again.");
     }
