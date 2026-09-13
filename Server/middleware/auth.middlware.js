@@ -1,5 +1,5 @@
 import { verifyToken } from "../services/jwt.service.js";
-import User from "../models/User/user.model.js";
+import { UserService } from "../modules/User/user.service.js";
 import { UnAuthorizedError } from "../utils/errors.js";
 
 export const authMiddleware = async (req, res, next) => {
@@ -16,12 +16,12 @@ export const authMiddleware = async (req, res, next) => {
 
     const decoded = verifyToken(token);
 
-    const user = await User.findById(decoded.id).select("-password -refresh_token");
+    const user = await UserService.getAuthUser(decoded.id);
 
     if (!user || user.is_deleted || !user.is_active) {
       throw new UnAuthorizedError("Invalid or expired token");
     }
-    
+
     req.user = user;
     next();
   } catch (error) {
