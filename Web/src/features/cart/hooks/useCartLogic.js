@@ -9,9 +9,10 @@ import {
   useUpdateCartItemMutation,
 } from "../store/cartApi";
 import { useCreateOrderMutation } from "../../orders/store/ordersApi";
+import emailjs from '@emailjs/browser';
 
 export const useCartLogic = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated ,user } = useSelector((state) => state.auth);
 
   const { data: cartData, isLoading: isCartLoading } = useGetCartQuery(
     undefined,
@@ -51,6 +52,8 @@ export const useCartLogic = () => {
     const formattedItems = cartItems.map((item) => ({
       product: item.product?._id || item._id,
       quantity: item.quantity ?? item.NOI ?? 1,
+      name: item.product?.name || "Product",
+      price: item.price || 0
     }));
 
     const payload = {
@@ -68,13 +71,36 @@ export const useCartLogic = () => {
 
       if (response.checkoutUrl) {
         toast.loading("Redirecting to secure payment...", { duration: 1500 });
-
         setTimeout(() => {
           window.location.href = response.checkoutUrl;
         }, 800);
       } else {
         toast.success("Order created successfully!");
         clearCart();
+        
+        try {
+          const itemsHtml = formattedItems.map(
+            item => `<tr>
+                      <td style="padding:8px 0; border-bottom:1px solid #eee;">${item.name}</td>
+                      <td style="padding:8px 0; text-align:center; border-bottom:1px solid #eee;">${item.quantity}</td>
+                    </tr>`
+          ).join('');
+
+          await emailjs.send(
+            'service_noarme9',
+            'template_2utqjlm', 
+            {
+              user_name: user?.name || "Customer",      
+              user_email: user?.email || "test@test.com",
+              order_id: response.order?._id || "N/A",   
+              cost_total: response.order?.total || 0,   
+              items_html: itemsHtml                     
+            },
+            'j-3XGK0Gpytzm5UwR'         
+          );
+        } catch (emailErr) {
+          console.error("Failed to send order email:", emailErr);
+        }
       }
     } catch (error) {
       console.error("Create Order Error:", error);
@@ -82,7 +108,7 @@ export const useCartLogic = () => {
         error?.data?.message || "Failed to create order. Please try again.",
       );
     }
-  };
+};
 
   const handleIncrement = async (item, isStripItem, stripsPerBox) => {
     const id = item.product?._id || item._id;
