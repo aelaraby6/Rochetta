@@ -213,11 +213,10 @@ export default function ProductForm({
             htmlFor="has_strips"
             className="text-sm font-medium text-(--color-text-label) dark:text-gray-300"
           >
-            Has Strips (الشرايط)
+            Has Strips 
           </label>
         </div>
 
-        {/* Strip Details (Conditional) */}
         {formData.has_strips && (
           <>
             <Input
