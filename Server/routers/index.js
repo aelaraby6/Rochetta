@@ -1,26 +1,26 @@
 import { Router } from "express";
-import { AuthRouter } from "./Auth/auth.routes.js";
-import { ProductRouter } from "./Product/product.routes.js";
-import { CartRouter } from "./Cart/cart.routes.js";
-import { OrderRouter } from "./Order/order.routes.js";
-import { UserRouter } from "./User/user.routes.js";
-import { CategoryRouter } from "./Category/category.routes.js";
-import { ReviewRouter } from "./Review/review.routes.js";
-import { ChatRouter } from "./Chat/chat.routes.js";
-import { NotificationRouter } from "./Notification/notification.routes.js";
-import { DashboardRouter } from "./Dashboard/dashboard.routes.js";
+import { AuthRouter } from "../modules/auth/auth.routes.js";
+import { CartRouter } from "../modules/cart/cart.routes.js";
+import { CategoryRouter } from "../modules/category/category.routes.js";
+import { ChatRouter } from "../modules/chat/chat.routes.js";
+import { DashboardRouter } from "../modules/dashboard/dashboard.routes.js";
+import { NotificationRouter } from "../modules/notification/notification.routes.js";
+import { OrderRouter } from "../modules/order/order.routes.js";
+import { ProductRouter } from "../modules/product/product.routes.js";
+import { ReviewRouter } from "../modules/review/review.routes.js";
+import { UserRouter } from "../modules/user/user.routes.js";
 
 const router = Router();
 
-router.use("/user", UserRouter);
 router.use("/auth", AuthRouter);
-router.use("/products", ProductRouter);
 router.use("/cart", CartRouter);
-router.use("/order", OrderRouter);
 router.use("/categories", CategoryRouter);
-router.use("/reviews", ReviewRouter);
 router.use("/chat", ChatRouter);
-router.use("/notifications", NotificationRouter);
 router.use("/dashboard", DashboardRouter);
+router.use("/notifications", NotificationRouter);
+router.use("/order", OrderRouter);
+router.use("/products", ProductRouter);
+router.use("/reviews", ReviewRouter);
+router.use("/user", UserRouter);
 
 export { router as ApiRouter };
