@@ -1,6 +1,6 @@
-import { OrderService } from "../order/order.service.js";
-import { ProductService } from "../product/product.service.js";
-import { UserService } from "../user/user.service.js";
+import { OrderService } from "../Order/order.service.js";
+import { ProductService } from "../Product/product.service.js";
+import { UserService } from "../User/user.service.js";
 import {
   performLinearRegression,
   performKMeans,

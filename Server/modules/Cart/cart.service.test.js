@@ -2,12 +2,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import mongoose from "mongoose";
 import { CartService } from "./cart.service.js";
 import { CartRepository } from "./cart.repository.js";
-import { ProductService } from "../product/product.service.js";
+import { ProductService } from "../Product/product.service.js";
 import { BadRequestError } from "../../utils/errors.js";
 
 
 vi.mock("./cart.repository.js");
-vi.mock("../product/product.service.js");
+vi.mock("../Product/product.service.js");
 
 describe("CartService", () => {
   const mockUserId = "user123";

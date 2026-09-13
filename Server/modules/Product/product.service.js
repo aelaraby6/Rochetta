@@ -1,6 +1,6 @@
 import { ProductRepository } from "./product.repository.js";
-import { CategoryService } from "../category/category.service.js";
-import { ReviewService } from "../review/review.service.js";
+import { CategoryService } from "../Category/category.service.js";
+import { ReviewService } from "../Review/review.service.js";
 import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 import cloudinary from "../../config/cloudinary.js";
 import streamifier from "streamifier";

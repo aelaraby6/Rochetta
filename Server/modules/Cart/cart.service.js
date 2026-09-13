@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { CartRepository } from "./cart.repository.js";
-import { ProductService } from "../product/product.service.js";
+import { ProductService } from "../Product/product.service.js";
 import { BadRequestError } from "../../utils/errors.js";
 
 export const CartService = {

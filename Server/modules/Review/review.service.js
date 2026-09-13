@@ -1,6 +1,6 @@
 import { ReviewRepository } from "./review.repository.js";
-import { ProductService } from "../product/product.service.js"; 
-import { UserService } from "../user/user.service.js"; 
+import { ProductService } from "../Product/product.service.js"; 
+import { UserService } from "../User/user.service.js"; 
 import {
   BadRequestError,
   NotFoundError,

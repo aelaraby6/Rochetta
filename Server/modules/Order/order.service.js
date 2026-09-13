@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { OrderRepository } from "./order.repository.js";
-import { ProductService } from "../product/product.service.js";
-import { UserService } from "../user/user.service.js";
-import { CartService } from "../cart/cart.service.js";
+import { ProductService } from "../Product/product.service.js";
+import { UserService } from "../User/user.service.js";
+import { CartService } from "../Cart/cart.service.js";
 import {
   BadRequestError,
   NotFoundError,

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ProductService } from "./product.service.js";
 import { ProductRepository } from "./product.repository.js";
-import { CategoryService } from "../category/category.service.js";
-import { ReviewService } from "../review/review.service.js";
+import { CategoryService } from "../Category/category.service.js";
+import { ReviewService } from "../Review/review.service.js";
 import { NotificationService } from "../Notification/notification.service.js";
 import { getEmbedding } from "../../services/embedding.service.js";
 import { BadRequestError, NotFoundError } from "../../utils/errors.js";
@@ -10,8 +10,8 @@ import cloudinary from "../../config/cloudinary.js";
 import streamifier from "streamifier";
 
 vi.mock("./product.repository.js");
-vi.mock("../category/category.service.js");
-vi.mock("../review/review.service.js");
+vi.mock("../Category/category.service.js");
+vi.mock("../Review/review.service.js");
 vi.mock("../Notification/notification.service.js");
 vi.mock("../../services/embedding.service.js");
 

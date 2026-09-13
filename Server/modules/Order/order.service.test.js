@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import mongoose from "mongoose";
 import { OrderService } from "./order.service.js";
 import { OrderRepository } from "./order.repository.js";
-import { ProductService } from "../product/product.service.js";
-import { UserService } from "../user/user.service.js";
-import { CartService } from "../cart/cart.service.js";
+import { ProductService } from "../Product/product.service.js";
+import { UserService } from "../User/user.service.js";
+import { CartService } from "../Cart/cart.service.js";
 import { NotificationService } from "../Notification/notification.service.js";
 import {
   authenticatePaymob,
@@ -18,9 +18,9 @@ import {
 } from "../../utils/errors.js";
 
 vi.mock("./order.repository.js");
-vi.mock("../product/product.service.js");
-vi.mock("../user/user.service.js");
-vi.mock("../cart/cart.service.js");
+vi.mock("../Product/product.service.js");
+vi.mock("../User/user.service.js");
+vi.mock("../Cart/cart.service.js");
 vi.mock("../Notification/notification.service.js");
 vi.mock("../../services/email.service.js");
 vi.mock("../../services/paymob.service.js");

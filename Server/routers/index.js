@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { AuthRouter } from "../modules/auth/auth.routes.js";
-import { CartRouter } from "../modules/cart/cart.routes.js";
-import { CategoryRouter } from "../modules/category/category.routes.js";
-import { ChatRouter } from "../modules/chat/chat.routes.js";
-import { DashboardRouter } from "../modules/dashboard/dashboard.routes.js";
-import { NotificationRouter } from "../modules/notification/notification.routes.js";
-import { OrderRouter } from "../modules/order/order.routes.js";
-import { ProductRouter } from "../modules/product/product.routes.js";
-import { ReviewRouter } from "../modules/review/review.routes.js";
-import { UserRouter } from "../modules/user/user.routes.js";
+import { AuthRouter } from "../modules/Auth/auth.routes.js";
+import { CartRouter } from "../modules/Cart/cart.routes.js";
+import { CategoryRouter } from "../modules/Category/category.routes.js";
+import { ChatRouter } from "../modules/Chat/chat.routes.js";
+import { DashboardRouter } from "../modules/Dashboard/dashboard.routes.js";
+import { NotificationRouter } from "../modules/Notification/notification.routes.js";
+import { OrderRouter } from "../modules/Order/order.routes.js";
+import { ProductRouter } from "../modules/Product/product.routes.js";
+import { ReviewRouter } from "../modules/Review/review.routes.js";
+import { UserRouter } from "../modules/User/user.routes.js";
 
 const router = Router();
 

@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { DashboardService } from "./dashboard.service.js";
-import { OrderService } from "../order/order.service.js";
-import { ProductService } from "../product/product.service.js";
-import { UserService } from "../user/user.service.js";
+import { OrderService } from "../Order/order.service.js";
+import { ProductService } from "../Product/product.service.js";
+import { UserService } from "../User/user.service.js";
 import {
   performLinearRegression,
   performKMeans,
   performApriori,
 } from "../../services/ai.service.js";
 
-vi.mock("../order/order.service.js");
-vi.mock("../product/product.service.js");
-vi.mock("../user/user.service.js");
+vi.mock("../Order/order.service.js");
+vi.mock("../Product/product.service.js");
+vi.mock("../User/user.service.js");
 vi.mock("../../services/ai.service.js");
 
 describe("DashboardService", () => {
