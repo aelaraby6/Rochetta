@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
@@ -8,10 +8,13 @@ import SubNavbar from "./components/SubNavBar/SubNavbar";
 import AppRouter from "./app/router/AppRouter";
 import Footer from "./components/Footer/footer";
 import ChatBotWidget from "./features/chatbot/components/ChatBotWidget";
+import GlobalLoader from "./components/ui/GlobalLoader";
 
 export default function App() {
   const { darkMode } = useSelector((state) => state.ui);
   const location = useLocation();
+  const [isNavigating, setIsNavigating] = useState(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -24,14 +27,42 @@ export default function App() {
     }
   }, [darkMode]);
 
+  // Smooth creative page loader transition on every route change (extended display duration)
+  useEffect(() => {
+    setIsNavigating(true);
+    window.scrollTo({ top: 0, behavior: "instant" });
+
+    const timer = setTimeout(() => {
+      setIsNavigating(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   const isDashboard = location.pathname.startsWith("/dashboard");
   const isCourier = location.pathname.startsWith("/courier");
   const authPaths = ["/login", "/signup"];
   const shouldHideNavbar = isDashboard || isCourier || authPaths.includes(location.pathname);
 
   return (
-    <div className="flex flex-col min-h-screen w-full transition ">
+    <div className="flex flex-col min-h-screen w-full transition relative">
       <Toaster position="top-center" reverseOrder={false} />
+
+      {/* Global Page Transition Loader Overlay */}
+      <div
+        className={`fixed inset-0 z-[9999] flex items-center justify-center bg-gray-50/95 dark:bg-[#121212]/95 backdrop-blur-md transition-all duration-500 ease-in-out ${
+          isNavigating
+            ? "opacity-100 pointer-events-auto visible"
+            : "opacity-0 pointer-events-none invisible"
+        }`}
+        aria-hidden={!isNavigating}
+      >
+        <GlobalLoader
+          fullScreen={false}
+          message="Loading your health essentials..."
+          subMessage="Rochetta Healthcare & Pharmacy"
+        />
+      </div>
 
       {!shouldHideNavbar && (
         <>
