@@ -13,8 +13,8 @@ import GlobalLoader from "./components/ui/GlobalLoader";
 export default function App() {
   const { darkMode } = useSelector((state) => state.ui);
   const location = useLocation();
+  const isInitialMount = useRef(true);
   const [isNavigating, setIsNavigating] = useState(false);
-  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -27,16 +27,23 @@ export default function App() {
     }
   }, [darkMode]);
 
-  // Smooth creative page loader transition on every route change (extended display duration)
+  // Smooth creative page loader transition only on the first initial open of Home page ("/")
   useEffect(() => {
-    setIsNavigating(true);
     window.scrollTo({ top: 0, behavior: "instant" });
 
-    const timer = setTimeout(() => {
-      setIsNavigating(false);
-    }, 1500);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (location.pathname === "/") {
+        setIsNavigating(true);
+        const timer = setTimeout(() => {
+          setIsNavigating(false);
+        }, 1500);
 
-    return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      setIsNavigating(false);
+    }
   }, [location.pathname]);
 
   const isDashboard = location.pathname.startsWith("/dashboard");
