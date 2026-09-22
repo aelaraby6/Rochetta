@@ -8,7 +8,7 @@ export default function CourierOverview() {
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <GlobalLoader />
+        <GlobalLoader width="w-10" height="h-10" text="text-(--color-primary-600)" />
       </div>
     );
   }

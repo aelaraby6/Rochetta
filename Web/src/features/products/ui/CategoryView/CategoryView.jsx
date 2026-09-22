@@ -231,7 +231,11 @@ export default function CategoryView() {
         </aside>
 
         <main className="flex-1">
-          {isProductsLoading ? <GlobalLoader/> : isProductsError ? (
+          {isProductsLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <GlobalLoader width="w-10" height="h-10" text="text-(--color-primary-600)" />
+            </div>
+          ) : isProductsError ? (
             <div className="text-(--color-danger-600) text-center mt-10 text-xl font-bold bg-(--color-danger-50) dark:bg-red-900/20 p-6 rounded-2xl">
               Error loading products. Please try again later.
             </div>

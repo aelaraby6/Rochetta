@@ -13,8 +13,14 @@ import GlobalLoader from "./components/ui/GlobalLoader";
 export default function App() {
   const { darkMode } = useSelector((state) => state.ui);
   const location = useLocation();
-  const isInitialMount = useRef(true);
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(() => {
+    if (typeof window !== "undefined") {
+      const hasSeenHomeLoader = sessionStorage.getItem("hasSeenHomeLoader");
+      const isHome = window.location.pathname === "/" || window.location.pathname === "";
+      return !hasSeenHomeLoader && isHome;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const root = document.documentElement;
@@ -27,24 +33,22 @@ export default function App() {
     }
   }, [darkMode]);
 
-  // Smooth creative page loader transition only on the first initial open of Home page ("/")
+  // Scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
-
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      if (location.pathname === "/") {
-        setIsNavigating(true);
-        const timer = setTimeout(() => {
-          setIsNavigating(false);
-        }, 1500);
-
-        return () => clearTimeout(timer);
-      }
-    } else {
-      setIsNavigating(false);
-    }
   }, [location.pathname]);
+
+  // Handle the initial home loader timeout
+  useEffect(() => {
+    if (isNavigating) {
+      sessionStorage.setItem("hasSeenHomeLoader", "true");
+      const timer = setTimeout(() => {
+        setIsNavigating(false);
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNavigating]);
 
   const isDashboard = location.pathname.startsWith("/dashboard");
   const isCourier = location.pathname.startsWith("/courier");
@@ -55,7 +59,7 @@ export default function App() {
     <div className="flex flex-col min-h-screen w-full transition relative">
       <Toaster position="top-center" reverseOrder={false} />
 
-      {/* Global Page Transition Loader Overlay */}
+      {/* Global Page Transition Loader Overlay - Only on first initial open of Home */}
       <div
         className={`fixed inset-0 z-[9999] flex items-center justify-center bg-gray-50/95 dark:bg-[#121212]/95 backdrop-blur-md transition-all duration-500 ease-in-out ${
           isNavigating
@@ -65,6 +69,7 @@ export default function App() {
         aria-hidden={!isNavigating}
       >
         <GlobalLoader
+          creative={true}
           fullScreen={false}
           message="Loading your health essentials..."
           subMessage="Rochetta Healthcare & Pharmacy"

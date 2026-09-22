@@ -36,9 +36,9 @@ export default function DashboardPage() {
 
   if (isAnyLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <GlobalLoader />
-        <p className="text-(--color-text-secondary) dark:text-gray-400 font-medium">
+      <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+        <GlobalLoader width="w-10" height="h-10" text="text-(--color-primary-600)" />
+        <p className="text-(--color-text-secondary) dark:text-gray-400 font-medium text-sm">
           Running analytics algorithms and loading dashboard...
         </p>
       </div>

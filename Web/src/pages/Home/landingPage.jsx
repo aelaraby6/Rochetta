@@ -16,7 +16,7 @@ export default function LandingPage() {
       <HeroSection />
       <FeatureCards />
 
-      <Suspense fallback={<GlobalLoader />}>
+      <Suspense fallback={null}>
         <PromoBanners />
         <TopProducts />
         <SpecialOffers />

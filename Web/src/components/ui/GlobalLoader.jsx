@@ -1,14 +1,15 @@
 import React from "react";
 
 export default function GlobalLoader({
-  width = "w-12",
-  height = "h-12",
+  width = "w-10",
+  height = "h-10",
   className = "",
   fullScreen = false,
   message = "Preparing your prescription...",
   subMessage = "Rochetta Healthcare & Pharmacy",
   showBrand = true,
   showProgress = true,
+  creative = false,
   compact = false,
   text = "text-(--color-primary-600)",
 }) {
@@ -20,20 +21,8 @@ export default function GlobalLoader({
         : text
       : text;
 
-  // Detect if compact mode is intended (e.g., small buttons, small avatar spinners)
-  const isSmallSize =
-    compact ||
-    width === "w-4" ||
-    width === "w-5" ||
-    width === "w-6" ||
-    width === "w-8" ||
-    height === "h-4" ||
-    height === "h-5" ||
-    height === "h-6" ||
-    height === "h-8";
-
-  // Compact Spinner for buttons, avatars, inline small loaders
-  if (isSmallSize) {
+  // Render normal spinner unless creative mode is explicitly requested
+  if (!creative) {
     return (
       <div
         role="status"

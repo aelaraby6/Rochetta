@@ -31,7 +31,9 @@ export default function TopProducts() {
       </h3>
 
       {isLoading ? (
-        <GlobalLoader />
+        <div className="flex justify-center items-center py-12">
+          <GlobalLoader width="w-10" height="h-10" text="text-(--color-primary-600)" />
+        </div>
       ) : (
         <div className="relative group">
           {productsToShow.length > 0 && (

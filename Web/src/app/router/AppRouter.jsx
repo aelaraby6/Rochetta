@@ -104,7 +104,7 @@ const CourierRoute = ({ children }) => {
 
 export default function AppRouter() {
   return (
-    <Suspense fallback={<GlobalLoader />}>
+    <Suspense fallback={null}>
       <Routes>
         {/* Home */}
         <Route path="/" element={<RootHandler />} />
